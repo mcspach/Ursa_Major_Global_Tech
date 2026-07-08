@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/sections/PageHero.astro";
+import CTABand from "../../components/sections/CTABand.astro";
+import ProductCard from "../../components/ui/ProductCard.astro";
+
+const products = (await getCollection("products")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Products | Ursa Major Global Tech"
+  description="Software products built in-house by Ursa Major Global Tech — live platforms, betas, and products available for acquisition."
+  canonicalPath="/products/"
+>
+  <PageHero
+    eyebrow="What We've Built"
+    title="Products in the wild"
+    lead="We don't just build for clients — we ship our own products. Live platforms, betas on the way up, and select products available for acquisition."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <div class="products-grid" data-animate-children>
+        {products.map((product) => <ProductCard product={product} />)}
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Want one of these under your brand?"
+    copy="Every product we build is available for white-label licensing or acquisition conversations. Let's talk terms."
+    buttonLabel="Start the Conversation"
+  />
+</BaseLayout>
+
+<style lang="scss">
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  @media (max-width: 960px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+      max-width: 26rem;
+      margin-inline: auto;
+    }
+  }
+</style>

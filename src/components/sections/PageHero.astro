@@ -1,0 +1,27 @@
+---
+const { eyebrow, title, lead } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container">
+    {eyebrow && <p class="eyebrow" data-animate="fade">{eyebrow}</p>}
+    <h1 data-split="lines">{title}</h1>
+    {lead && <p class="lead" data-animate="fade-up" data-animate-delay="0.35">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style lang="scss">
+  .page-hero {
+    padding-block: calc(var(--header-height) + var(--section-space)) var(--section-space-sm);
+
+    h1 {
+      max-width: 18ch;
+      margin-block: var(--space-sm) 0;
+    }
+
+    .lead {
+      margin-top: var(--space-md);
+    }
+  }
+</style>

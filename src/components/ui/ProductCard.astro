@@ -1,0 +1,137 @@
+---
+import { withBase } from "../../utils/paths";
+import BrowserFrame from "./BrowserFrame.astro";
+
+const { product } = Astro.props;
+const { title, tagline, status, acquire, placeholder } = product.data;
+
+const MOCK_VARIANTS = {
+  "funnel-fixer-pro": "funnel",
+  "northstar-metrics": "metrics",
+  stackaudit: "audit",
+};
+
+const variant = MOCK_VARIANTS[product.id] ?? "app";
+const mockLabel = placeholder
+  ? `${product.id}.app — preview`
+  : `${product.id.replace(/-/g, "")}.ai`;
+
+const STATUS_BADGES = {
+  live: { class: "badge--live", label: "Live" },
+  beta: { class: "badge--beta", label: "In Beta" },
+  "coming-soon": { class: "badge--soon", label: "Coming Soon" },
+};
+
+const statusBadge = STATUS_BADGES[status];
+---
+
+<article class="card product-card">
+  <a
+    class="product-card__link"
+    href={withBase(`/products/${product.id}/`)}
+    aria-label={`${title} — view product`}></a>
+
+  <div class="product-card__visual">
+    <BrowserFrame variant={variant} label={mockLabel} />
+  </div>
+
+  <div class="product-card__body">
+    <div class="product-card__title-row">
+      <h3>{title}</h3>
+      <div class="product-card__badges">
+        <span class={`badge ${statusBadge.class}`}>{statusBadge.label}</span>
+        {acquire && <span class="badge badge--acquire">Acquire</span>}
+      </div>
+    </div>
+    <p class="product-card__tagline">{tagline}</p>
+    <span class="product-card__cta">
+      View Product <span class="btn__arrow">→</span>
+    </span>
+  </div>
+</article>
+
+<style lang="scss">
+  .product-card {
+    height: 100%;
+  }
+
+  .product-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .product-card__visual {
+    padding: var(--space-md) var(--space-md) 0;
+
+    /* Standardized thumbnail ratio: 4:3. Real images should match. */
+    :global(.browser-frame) {
+      aspect-ratio: 4 / 3;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(0);
+      transition: transform var(--transition-slow);
+    }
+
+    :global(.browser-frame__body) {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+  }
+
+  .product-card:hover .product-card__visual :global(.browser-frame) {
+    transform: translateY(-4px);
+  }
+
+  .product-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: var(--space-md);
+    flex: 1;
+  }
+
+  .product-card__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    h3 {
+      font-size: var(--text-lg);
+    }
+  }
+
+  .product-card__badges {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .product-card__tagline {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    flex: 1;
+  }
+
+  .product-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: 560;
+    color: var(--color-text-strong);
+
+    .btn__arrow {
+      display: inline-block;
+      transition: transform var(--transition-base);
+      color: var(--peri-400);
+    }
+  }
+
+  .product-card:hover .product-card__cta .btn__arrow {
+    transform: translateX(4px);
+  }
+</style>

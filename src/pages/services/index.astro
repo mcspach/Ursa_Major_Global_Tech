@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/sections/PageHero.astro";
+import CTABand from "../../components/sections/CTABand.astro";
+import ServiceCard from "../../components/ui/ServiceCard.astro";
+
+const services = (await getCollection("services")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Services | Ursa Major Global Tech"
+  description="MVP builds, AI automation systems, white-label product development, and ongoing product engineering. Real implementations, not demos."
+  canonicalPath="/services/"
+>
+  <PageHero
+    eyebrow="What We Do"
+    title="Real implementations, not demos"
+    lead="AI & automation, white-label products, and custom software development — scoped tight, shipped fast, and built to production standards from day one."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <div class="services-grid" data-animate-children>
+        {services.map((service, index) => <ServiceCard service={service} index={index} />)}
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Not sure which service fits your needs?"
+    copy="Let's discuss your project and find the perfect solution together."
+    buttonLabel="Book a Free Discovery Call"
+  />
+</BaseLayout>
+
+<style lang="scss">
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  @media (max-width: 960px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+      max-width: 30rem;
+      margin-inline: auto;
+    }
+  }
+</style>

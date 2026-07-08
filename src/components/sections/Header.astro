@@ -1,0 +1,400 @@
+---
+import { withBase } from "../../utils/paths";
+import ConstellationMark from "../ui/ConstellationMark.astro";
+
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Products", href: "/products/" },
+  { label: "Services", href: "/services/" },
+  { label: "Blog", href: "/blog/" },
+  { label: "About", href: "/about/" },
+  { label: "Contact", href: "/contact/" },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+
+const isActive = (href: string) => {
+  const normalized = href.replace(/\/+$/, "") || "/";
+  if (normalized === "/") {
+    return currentPath === "/";
+  }
+  return currentPath === normalized || currentPath.startsWith(`${normalized}/`);
+};
+---
+
+<header class="site-header" data-header>
+  <div class="container container--wide site-header__inner">
+    <a href={withBase("/")} class="site-header__brand" aria-label="Ursa Major Global Tech — home">
+      <ConstellationMark class="site-header__mark" />
+      <span class="site-header__name">
+        Ursa Major
+        <span class="site-header__name-sub">Global Tech</span>
+      </span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul>
+        {
+          NAV_LINKS.map((link) => (
+            <li>
+              <a
+                href={withBase(link.href)}
+                aria-current={isActive(link.href) ? "page" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a href={withBase("/contact/")} class="btn btn--primary site-header__cta">Book a Call</a>
+      <button
+        class="site-header__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-nav-toggle
+      >
+        <span class="visually-hidden">Toggle menu</span>
+        <span class="site-header__toggle-bar"></span>
+        <span class="site-header__toggle-bar"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" data-mobile-menu>
+  <nav aria-label="Mobile">
+    <ul class="mobile-menu__list">
+      {
+        NAV_LINKS.map((link, index) => (
+          <li style={`--i: ${index}`}>
+            <a
+              href={withBase(link.href)}
+              aria-current={isActive(link.href) ? "page" : undefined}
+            >
+              <span class="mobile-menu__index">0{index + 1}</span>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="mobile-menu__footer">
+    <a href="mailto:hello@ursamajorglobaltech.com">hello@ursamajorglobaltech.com</a>
+    <a href={withBase("/contact/")} class="btn btn--primary">Book a Call</a>
+  </div>
+</div>
+
+<script>
+  const header = document.querySelector("[data-header]");
+  const toggle = document.querySelector("[data-nav-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+
+  const onScroll = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 12);
+  };
+
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  const closeMenu = () => {
+    document.body.classList.remove("nav-open");
+    toggle?.setAttribute("aria-expanded", "false");
+  };
+
+  toggle?.addEventListener("click", () => {
+    const open = document.body.classList.toggle("nav-open");
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+</script>
+
+<style lang="scss">
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9000;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color var(--transition-base),
+      border-color var(--transition-base),
+      backdrop-filter var(--transition-base);
+
+    &.is-scrolled {
+      background: rgba(8, 11, 21, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom-color: var(--color-border);
+    }
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .site-header__mark {
+    width: 2.4rem;
+    height: auto;
+    color: var(--peri-400);
+    flex-shrink: 0;
+
+    :global(.cstar) {
+      fill: var(--star-100);
+    }
+
+    :global(.cline) {
+      stroke: rgba(165, 175, 251, 0.55);
+    }
+  }
+
+  .site-header__name {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 590;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--color-text-strong);
+    white-space: nowrap;
+  }
+
+  .site-header__name-sub {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--peri-400);
+    margin-top: 0.2rem;
+  }
+
+  .site-header__nav {
+    ul {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 2vw, 2rem);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      position: relative;
+      font-size: var(--text-sm);
+      font-weight: 480;
+      color: var(--color-text-muted);
+      padding-block: 0.375rem;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 100%;
+        bottom: 0;
+        height: 1px;
+        background: var(--peri-400);
+        transition: right var(--transition-base);
+      }
+
+      &:hover {
+        color: var(--color-text-strong);
+      }
+
+      &:hover::after {
+        right: 0;
+      }
+
+      &[aria-current="page"] {
+        color: var(--color-text-strong);
+
+        &::after {
+          right: 0;
+        }
+      }
+    }
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .site-header__cta {
+    padding: 0.625rem 1.375rem;
+  }
+
+  .site-header__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.625rem;
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+  }
+
+  .site-header__toggle-bar {
+    display: block;
+    width: 100%;
+    height: 1.5px;
+    background: var(--color-text-strong);
+    transition: transform var(--transition-base), opacity var(--transition-base);
+    transform-origin: center;
+  }
+
+  :global(body.nav-open) .site-header__toggle-bar {
+    &:first-child {
+      transform: translateY(4.25px) rotate(45deg);
+    }
+
+    &:last-child {
+      transform: translateY(-4.25px) rotate(-45deg);
+    }
+  }
+
+  /* ----------------------------------------------------------------
+     Mobile menu
+     ---------------------------------------------------------------- */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 8990;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(var(--header-height) + var(--space-xl)) var(--container-padding)
+      var(--space-xl);
+    background: rgba(6, 9, 18, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--transition-base),
+      visibility 0ms linear 300ms;
+  }
+
+  :global(body.nav-open) .mobile-menu {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--transition-base),
+      visibility 0ms;
+  }
+
+  .mobile-menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+
+    li {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      transition:
+        opacity 400ms var(--ease-out-expo),
+        transform 400ms var(--ease-out-expo);
+      transition-delay: 0ms;
+    }
+
+    a {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 550;
+      color: var(--color-text-strong);
+
+      &[aria-current="page"] {
+        color: var(--peri-400);
+      }
+    }
+  }
+
+  .mobile-menu__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--peri-400);
+    letter-spacing: 0.1em;
+  }
+
+  :global(body.nav-open) .mobile-menu__list li {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(80ms + var(--i) * 55ms);
+  }
+
+  .mobile-menu__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: flex-start;
+
+    > a:first-child {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+
+      &:hover {
+        color: var(--peri-300);
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    .site-header__nav {
+      display: none;
+    }
+
+    .site-header__cta {
+      display: none;
+    }
+
+    .site-header__toggle {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 901px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+</style>

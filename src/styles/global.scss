@@ -1,0 +1,213 @@
+@use "tokens";
+@use "base";
+@use "utilities";
+
+:root {
+  color-scheme: dark;
+  --page-transition-duration: 450ms;
+  --page-transition-out-duration: 600ms;
+  --page-transition-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --page-transition-curve: 12vh;
+  --page-nav-hold: 450ms;
+  --page-nav-max-wait: 1500ms;
+  --page-intro-min-hold: 1900ms;
+  --page-intro-max-wait: 3100ms;
+}
+
+/* Keep layout width constant when the scrollbar is hidden during
+   transitions, so content and the centered overlay never shift. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Covered boots hide the scrollbar before first paint; the body-level
+   overflow rules below only apply once JS has booted. */
+html.um-intro-boot,
+html.um-nav-boot {
+  overflow: hidden;
+}
+
+#site-root {
+  position: relative;
+  isolation: isolate;
+}
+
+body.nav-open,
+body.is-transitioning,
+body.is-initial-loading {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Page-transition curtain
+   ------------------------------------------------------------------ */
+.site-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  visibility: hidden;
+  background: var(--ink-950);
+  will-change: transform;
+  transform: translate3d(0, calc(-100% - var(--page-transition-curve)), 0);
+  transition:
+    transform var(--page-transition-out-duration) var(--page-transition-ease),
+    visibility 0ms linear var(--page-transition-out-duration);
+}
+
+/* Curved leading edge that hangs below the curtain while it moves.
+   1px overlap prevents a subpixel seam during composited animation. */
+.site-transition::after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  width: 100%;
+  height: calc(var(--page-transition-curve) + 1px);
+  background: var(--ink-950);
+  border-bottom-left-radius: 50% 100%;
+  border-bottom-right-radius: 50% 100%;
+}
+
+html.um-intro-boot .site-transition,
+html.um-nav-boot .site-transition {
+  visibility: visible;
+  transform: translate3d(0, 0, 0);
+  transition: none;
+}
+
+body.is-initial-loading .site-transition {
+  visibility: visible;
+  transform: translate3d(0, 0, 0);
+  transition: none;
+}
+
+body.is-initial-loading.is-initial-loading-exit .site-transition {
+  visibility: hidden;
+  transform: translate3d(0, calc(-100% - var(--page-transition-curve)), 0);
+  transition:
+    transform var(--page-transition-out-duration) var(--page-transition-ease),
+    visibility 0ms linear var(--page-transition-out-duration);
+}
+
+body.is-transitioning .site-transition {
+  visibility: visible;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform var(--page-transition-duration) var(--page-transition-ease),
+    visibility 0ms;
+}
+
+/* Intro mark inside the curtain: seven stars of the Big Dipper
+   draw in, then the wordmark fades up under them. */
+.site-transition__mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.site-transition__constellation {
+  width: clamp(160px, 22vw, 260px);
+  height: auto;
+
+  .cline {
+    stroke: rgba(165, 175, 251, 0.4);
+    stroke-width: 1;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+  }
+
+  .cstar {
+    fill: var(--star-100);
+    opacity: 0;
+  }
+}
+
+.site-transition__wordmark {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--peri-300);
+  opacity: 0;
+}
+
+body.is-initial-loading .site-transition__constellation .cline {
+  animation: um-line-draw 750ms 300ms var(--ease-out-expo) forwards;
+}
+
+body.is-initial-loading .site-transition__constellation .cstar {
+  animation: um-star-in 500ms var(--ease-out-expo) forwards;
+
+  @for $i from 1 through 7 {
+    &:nth-of-type(#{$i}) {
+      animation-delay: #{70 * $i}ms;
+    }
+  }
+}
+
+body.is-initial-loading .site-transition__wordmark {
+  animation: um-fade-in 600ms 650ms ease forwards;
+}
+
+@keyframes um-line-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes um-star-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+}
+
+@keyframes um-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-transition,
+  body.is-transitioning .site-transition,
+  body.is-initial-loading .site-transition,
+  body.is-initial-loading.is-initial-loading-exit .site-transition {
+    transition: none;
+  }
+
+  .site-transition::after {
+    display: none;
+  }
+}
+
+main,
+.site-main {
+  min-height: 100vh;
+}
+
+/* Lenis recommended styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}

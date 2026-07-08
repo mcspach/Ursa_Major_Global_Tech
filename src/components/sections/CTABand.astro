@@ -1,0 +1,53 @@
+---
+import { withBase } from "../../utils/paths";
+
+const {
+  title = "Ready to Move Fast?",
+  copy = "Book a free discovery call. No fluff, no pitch decks — just a real conversation about what you need built.",
+  buttonLabel = "Book a Discovery Call",
+  buttonHref = "/contact/",
+} = Astro.props;
+---
+
+<section class="section section--sm">
+  <div class="container">
+    <div class="cta-band" data-animate="fade-up">
+      <h2 class="cta-band__title">{title}</h2>
+      <p class="cta-band__copy">{copy}</p>
+      <a href={withBase(buttonHref)} class="btn btn--primary btn--lg">
+        {buttonLabel}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .cta-band {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    text-align: center;
+    padding: clamp(3rem, 7vw, 5.5rem) var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(
+        60% 100% at 50% 0%,
+        rgba(139, 92, 246, 0.16) 0%,
+        transparent 70%
+      ),
+      var(--ink-850);
+    overflow: hidden;
+  }
+
+  .cta-band__title {
+    font-size: var(--text-2xl);
+  }
+
+  .cta-band__copy {
+    max-width: 34rem;
+    color: var(--color-text-muted);
+  }
+</style>

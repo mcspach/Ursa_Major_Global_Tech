@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ConstellationMark from "../components/ui/ConstellationMark.astro";
+import { withBase } from "../utils/paths";
+---
+
+<BaseLayout
+  title="404 — Lost in Space | Ursa Major Global Tech"
+  description="This page drifted off the star chart."
+  canonicalPath="/404"
+  noindex={true}
+>
+  <section class="lost">
+    <div class="container lost__inner">
+      <ConstellationMark class="lost__mark" />
+      <p class="lost__code">404</p>
+      <h1 data-split="lines">Lost in space</h1>
+      <p class="lead">
+        This page drifted off the star chart. Let's navigate you back to
+        familiar skies.
+      </p>
+      <div class="lost__actions">
+        <a href={withBase("/")} class="btn btn--primary btn--lg">
+          Back to Home
+        </a>
+        <a href={withBase("/contact/")} class="btn btn--ghost btn--lg">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style lang="scss">
+  .lost {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    background:
+      radial-gradient(50% 55% at 50% 30%, rgba(139, 92, 246, 0.12) 0%, transparent 70%),
+      var(--color-bg);
+  }
+
+  .lost__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-md);
+    padding-block: calc(var(--header-height) + var(--space-xl)) var(--space-xl);
+  }
+
+  .lost__mark {
+    width: 11rem;
+    color: var(--peri-400);
+    opacity: 0.8;
+
+    :global(.cstar) {
+      fill: var(--star-100);
+    }
+
+    :global(.cline) {
+      stroke: rgba(165, 175, 251, 0.4);
+    }
+  }
+
+  .lost__code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: 0.4em;
+    color: var(--peri-400);
+  }
+
+  .lost__actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-sm);
+  }
+</style>

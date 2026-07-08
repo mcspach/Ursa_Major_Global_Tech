@@ -1,0 +1,125 @@
+---
+import "../styles/global.scss";
+
+import Grain from "../components/sections/Grain.astro";
+import Header from "../components/sections/Header.astro";
+import Footer from "../components/sections/Footer.astro";
+import ConstellationMark from "../components/ui/ConstellationMark.astro";
+import { toAbsoluteUrl, withBase } from "../utils/paths";
+
+const SITE_NAME = "Ursa Major Global Tech";
+const DEFAULT_TITLE = "Ursa Major Global Tech | Coding at the Speed of Thought";
+const DEFAULT_DESCRIPTION =
+  "We build production-ready software, AI automation systems, and white-label products. What takes most teams months takes us days.";
+const DEFAULT_SOCIAL_IMAGE_PATH = "/og_image.png";
+const THEME_COLOR = "#0a0e1a";
+
+const {
+  title = DEFAULT_TITLE,
+  description = DEFAULT_DESCRIPTION,
+  canonicalPath = "/",
+  socialImagePath = DEFAULT_SOCIAL_IMAGE_PATH,
+  ogType = "website",
+  noindex = false,
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const canonicalUrl = toAbsoluteUrl(canonicalPath, siteUrl);
+const socialImageUrl = toAbsoluteUrl(socialImagePath, siteUrl);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={THEME_COLOR} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
+
+    <link
+      rel="preload"
+      href={withBase("/fonts/ClashDisplay-Variable.woff2")}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={withBase("/fonts/Satoshi-Variable.woff2")}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const reduced =
+          window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
+        if (!reduced) {
+          root.classList.add("um-js");
+        }
+
+        try {
+          if (window.sessionStorage.getItem("um:navCover") === "true") {
+            root.classList.add("um-nav-boot");
+          } else if (
+            !reduced &&
+            window.sessionStorage.getItem("um:hasSeenIntro") !== "true"
+          ) {
+            root.classList.add("um-intro-boot");
+          }
+        } catch {
+          // Storage unavailable — boot uncovered.
+        }
+
+        // If the motion module never boots, force-reveal all hidden content.
+        window.setTimeout(() => root.classList.add("um-anim-failsafe"), 3200);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="site-transition" data-site-transition aria-hidden="true">
+      <div class="site-transition__mark">
+        <ConstellationMark class="site-transition__constellation" />
+        <span class="site-transition__wordmark">Ursa Major Global Tech</span>
+      </div>
+    </div>
+
+    <Header />
+
+    <div id="site-root">
+      <main class="site-main">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <Grain />
+
+    <script>
+      import "../scripts/transitions.js";
+      import "../scripts/motion.js";
+    </script>
+  </body>
+</html>

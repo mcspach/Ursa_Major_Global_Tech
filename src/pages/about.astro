@@ -1,0 +1,357 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import CTABand from "../components/sections/CTABand.astro";
+import ConstellationMark from "../components/ui/ConstellationMark.astro";
+import { withBase } from "../utils/paths";
+
+const PRINCIPLES = [
+  {
+    title: "Production-ready or not shipped",
+    detail:
+      "Every build gets real auth, real error handling, and a real deploy pipeline. \"It's just an MVP\" is never an excuse for fragile software — minimum scope, maximum integrity.",
+  },
+  {
+    title: "Speed is a discipline, not a shortcut",
+    detail:
+      "AI-accelerated development compresses the typing, not the thinking. Fixed timelines, written cut lines, and Friday demos keep the speed honest.",
+  },
+  {
+    title: "You own everything",
+    detail:
+      "Source code, infrastructure, data, and documentation transfer completely. No lock-in, no hostage licensing, no dependency on us to keep the lights on.",
+  },
+  {
+    title: "Plain answers, plain English",
+    detail:
+      "Estimates in dollars and weeks, trade-offs explained without jargon, and a straight no when a project shouldn't be built. Navigation only works with honest instruments.",
+  },
+];
+
+const STACK_GROUPS = [
+  {
+    label: "Build",
+    items: ["React", "TypeScript", "Astro", "Next.js", "Tailwind CSS"],
+  },
+  {
+    label: "Backend",
+    items: ["Supabase", "PostgreSQL", "Edge Functions", "Stripe"],
+  },
+  {
+    label: "AI & Automation",
+    items: ["Claude Code", "OpenAI", "n8n", "Make", "Gumloop"],
+  },
+  {
+    label: "Ship",
+    items: ["Vercel", "GitHub Actions", "Sentry", "PostHog"],
+  },
+];
+---
+
+<BaseLayout
+  title="About | Ursa Major Global Tech"
+  description="Ursa Major Global Tech is an AI-accelerated software studio. We build production-ready MVPs, automation systems, and white-label products — in weeks, not quarters."
+  canonicalPath="/about/"
+>
+  <PageHero
+    eyebrow="About Us"
+    title="Built to help you navigate"
+    lead="For thousands of years, travelers found their way by Ursa Major — follow the pointer stars and you find true north. That's the job: pointing product ideas at the shortest honest path to production."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <div class="about-story">
+        <div class="about-story__text" data-animate="fade-up">
+          <h2>The studio</h2>
+          <p>
+            Ursa Major Global Tech is a small, senior software studio built
+            around one bet: that AI-assisted development, wielded by people who
+            know what production software has to survive, collapses the
+            distance between idea and launch from quarters to weeks.
+          </p>
+          <p>
+            We build MVPs for founders, automation systems for operators, and
+            white-label products for agencies — and we ship our own products in
+            between, because nothing keeps engineering judgment sharp like
+            running software you have to answer for.
+          </p>
+          <p>
+            No account managers, no handoffs between departments, no decks
+            about decks. You talk to the people writing the code, and you watch
+            working software appear every Friday.
+          </p>
+        </div>
+        <div class="about-story__visual" data-animate="fade" data-animate-delay="0.2">
+          <ConstellationMark class="about-story__mark" />
+          <p class="mono-note">Ursa Major — the Great Bear.<br />Home of the pointer stars.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section-header">
+        <p class="eyebrow" data-animate="fade">How We Work</p>
+        <h2 data-animate="fade-up">Four principles, no fine print</h2>
+      </header>
+
+      <ol class="about-principles" data-animate-children>
+        {
+          PRINCIPLES.map((principle, index) => (
+            <li class="about-principles__item">
+              <span class="about-principles__number">0{index + 1}</span>
+              <h3>{principle.title}</h3>
+              <p>{principle.detail}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section-header">
+        <p class="eyebrow" data-animate="fade">The Stack</p>
+        <h2 data-animate="fade-up">Boring where it should be, sharp where it counts</h2>
+        <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
+          We pick proven tools and know them deeply — the innovation budget gets
+          spent on your product, not our stack.
+        </p>
+      </header>
+
+      <div class="about-stack" data-animate-children>
+        {
+          STACK_GROUPS.map((group) => (
+            <div class="about-stack__group">
+              <h3>{group.label}</h3>
+              <ul>
+                {group.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="about-founder" data-animate="fade-up">
+        <div class="about-founder__portrait" aria-hidden="true">
+          <span>✦</span>
+        </div>
+        <div class="about-founder__text">
+          <p class="eyebrow">The Founder</p>
+          <h2>Matthew — builder in chief</h2>
+          <p>
+            Ursa Major is led by Matthew, a product engineer who has spent his
+            career shipping software at the messy intersection of "the business
+            needs it Friday" and "it still has to work in a year." He started
+            the studio after watching too many good ideas die in six-month
+            development cycles that AI-era tooling had already made obsolete.
+          </p>
+          <p class="mono-note">
+            Placeholder bio — swap in the real story and a photo before launch.
+          </p>
+          <a href={withBase("/contact/")} class="btn btn--ghost">Say hello</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Let's find your true north"
+    copy="Thirty minutes, no pitch deck. Bring the idea — we'll bring an honest read on scope, cost, and timeline."
+  />
+</BaseLayout>
+
+<style lang="scss">
+  .about-story {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .about-story__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+
+    h2 {
+      margin-bottom: var(--space-xs);
+    }
+
+    p {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+  }
+
+  .about-story__visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-xl) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(80% 90% at 50% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 70%),
+      var(--ink-850);
+
+    .mono-note {
+      text-align: center;
+      line-height: 1.7;
+    }
+  }
+
+  .about-story__mark {
+    width: min(16rem, 70%);
+    color: var(--peri-400);
+
+    :global(.cstar) {
+      fill: var(--star-100);
+    }
+
+    :global(.cline) {
+      stroke: rgba(165, 175, 251, 0.45);
+    }
+  }
+
+  .about-principles {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .about-principles__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--ink-850);
+
+    h3 {
+      font-size: var(--text-lg);
+    }
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.65;
+    }
+  }
+
+  .about-principles__number {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--peri-400);
+  }
+
+  .about-stack {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+  }
+
+  .about-stack__group {
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--ink-850);
+
+    h3 {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--peri-400);
+      margin-bottom: var(--space-sm);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      li {
+        font-size: var(--text-sm);
+        color: var(--color-text);
+      }
+    }
+  }
+
+  .about-founder {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--space-2xl);
+    align-items: center;
+    padding: var(--space-xl);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--ink-850);
+  }
+
+  .about-founder__portrait {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(70% 70% at 50% 35%, rgba(139, 147, 214, 0.2) 0%, transparent 70%),
+      var(--ink-700);
+    border: 1px solid var(--color-border);
+
+    span {
+      font-size: 3rem;
+      color: var(--peri-400);
+    }
+  }
+
+  .about-founder__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    align-items: flex-start;
+
+    p {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .about-story,
+    .about-founder {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+
+    .about-principles {
+      grid-template-columns: 1fr;
+    }
+
+    .about-stack {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .about-stack {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

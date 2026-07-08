@@ -1,0 +1,380 @@
+---
+/**
+ * Stylized browser-chrome mockup with abstract UI, used instead of raster
+ * screenshots. Variants sketch different product shapes:
+ *   funnel  — funnel bars + stat chips
+ *   metrics — line chart + KPI tiles
+ *   audit   — code report rows with status pills
+ *   app     — generic app shell (sidebar + cards)
+ */
+const { variant = "app", label = "app.example.com", class: className = "" } = Astro.props;
+---
+
+<div class={`browser-frame ${className}`} aria-hidden="true">
+  <div class="browser-frame__bar">
+    <span class="browser-frame__dot"></span>
+    <span class="browser-frame__dot"></span>
+    <span class="browser-frame__dot"></span>
+    <span class="browser-frame__url">{label}</span>
+  </div>
+
+  <div class="browser-frame__body">
+    {
+      variant === "funnel" && (
+        <div class="mock mock--funnel">
+          <div class="mock__chips">
+            <span class="mock__chip mock__chip--positive">+24%</span>
+            <span class="mock__chip">$2.4M recovered</span>
+          </div>
+          <div class="mock__funnel">
+            <span style="--w: 100%; --o: 0.9;" />
+            <span style="--w: 78%; --o: 0.7;" />
+            <span style="--w: 52%; --o: 0.55;" />
+            <span style="--w: 31%; --o: 0.4;" />
+            <span class="mock__funnel-fix" style="--w: 24%; --o: 1;" />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      variant === "metrics" && (
+        <div class="mock mock--metrics">
+          <div class="mock__kpis">
+            <span class="mock__kpi" />
+            <span class="mock__kpi" />
+            <span class="mock__kpi mock__kpi--accent" />
+          </div>
+          <svg class="mock__chart" viewBox="0 0 300 110" preserveAspectRatio="none">
+            <polyline
+              points="0,92 30,84 60,88 90,70 120,74 150,58 180,62 210,44 240,38 270,26 300,18"
+              fill="none"
+              stroke="url(#mockline)"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            />
+            <defs>
+              <linearGradient id="mockline" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8b93d6" />
+                <stop offset="1" stop-color="#8b5cf6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="mock__rows">
+            <span style="--w: 70%" />
+            <span style="--w: 48%" />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      variant === "audit" && (
+        <div class="mock mock--audit">
+          <div class="mock__report">
+            <div class="mock__report-row">
+              <span class="mock__line" style="--w: 55%" />
+              <span class="mock__pill mock__pill--ok">pass</span>
+            </div>
+            <div class="mock__report-row">
+              <span class="mock__line" style="--w: 68%" />
+              <span class="mock__pill mock__pill--ok">pass</span>
+            </div>
+            <div class="mock__report-row">
+              <span class="mock__line" style="--w: 42%" />
+              <span class="mock__pill mock__pill--warn">warn</span>
+            </div>
+            <div class="mock__report-row">
+              <span class="mock__line" style="--w: 61%" />
+              <span class="mock__pill mock__pill--risk">risk</span>
+            </div>
+            <div class="mock__report-row">
+              <span class="mock__line" style="--w: 50%" />
+              <span class="mock__pill mock__pill--ok">pass</span>
+            </div>
+          </div>
+          <div class="mock__score">B+</div>
+        </div>
+      )
+    }
+
+    {
+      variant === "app" && (
+        <div class="mock mock--app">
+          <div class="mock__sidebar">
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+          <div class="mock__main">
+            <div class="mock__cards">
+              <span />
+              <span />
+              <span />
+            </div>
+            <div class="mock__rows">
+              <span style="--w: 82%" />
+              <span style="--w: 64%" />
+              <span style="--w: 71%" />
+            </div>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<style lang="scss">
+  .browser-frame {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--ink-850);
+    box-shadow: 0 18px 50px rgba(3, 5, 12, 0.45);
+  }
+
+  .browser-frame__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.875rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .browser-frame__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(169, 178, 200, 0.25);
+  }
+
+  .browser-frame__url {
+    margin-left: 0.625rem;
+    padding: 0.2rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.04);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .browser-frame__body {
+    padding: 1.25rem;
+    min-height: 13rem;
+    display: flex;
+  }
+
+  .mock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  /* Shared atoms */
+  .mock__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    span {
+      display: block;
+      width: var(--w, 60%);
+      height: 0.45rem;
+      border-radius: var(--radius-pill);
+      background: rgba(169, 178, 200, 0.14);
+    }
+  }
+
+  .mock__chips {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .mock__chip {
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-text-muted);
+
+    &--positive {
+      color: var(--emerald-400);
+      border-color: rgba(52, 211, 153, 0.35);
+    }
+  }
+
+  /* Funnel */
+  .mock__funnel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+
+    span {
+      display: block;
+      width: var(--w);
+      height: 0.9rem;
+      border-radius: var(--radius-xs);
+      background: linear-gradient(
+        90deg,
+        rgba(139, 147, 214, var(--o)),
+        rgba(139, 92, 246, calc(var(--o) * 0.8))
+      );
+    }
+  }
+
+  .mock__funnel-fix {
+    outline: 1px dashed rgba(52, 211, 153, 0.7);
+    outline-offset: 3px;
+  }
+
+  /* Metrics */
+  .mock__kpis {
+    display: flex;
+    gap: 0.625rem;
+  }
+
+  .mock__kpi {
+    flex: 1;
+    height: 2.6rem;
+    border-radius: var(--radius-sm);
+    background: rgba(169, 178, 200, 0.08);
+    border: 1px solid var(--color-border);
+
+    &--accent {
+      background: rgba(139, 92, 246, 0.14);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+  }
+
+  .mock__chart {
+    width: 100%;
+    height: 6rem;
+  }
+
+  /* Audit */
+  .mock--audit {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .mock__report {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+
+  .mock__report-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .mock__line {
+    display: block;
+    width: var(--w, 50%);
+    height: 0.45rem;
+    border-radius: var(--radius-pill);
+    background: rgba(169, 178, 200, 0.14);
+  }
+
+  .mock__pill {
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    &--ok {
+      color: var(--emerald-400);
+      background: rgba(52, 211, 153, 0.1);
+    }
+
+    &--warn {
+      color: var(--amber-400);
+      background: rgba(251, 198, 92, 0.1);
+    }
+
+    &--risk {
+      color: #f87171;
+      background: rgba(248, 113, 113, 0.1);
+    }
+  }
+
+  .mock__score {
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    border: 2px solid rgba(139, 92, 246, 0.5);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--peri-300);
+  }
+
+  /* App shell */
+  .mock--app {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .mock__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 22%;
+    padding: 0.75rem 0.625rem;
+    border-radius: var(--radius-sm);
+    background: rgba(169, 178, 200, 0.05);
+
+    span {
+      display: block;
+      height: 0.45rem;
+      border-radius: var(--radius-pill);
+      background: rgba(169, 178, 200, 0.16);
+
+      &:first-child {
+        background: rgba(139, 147, 214, 0.5);
+      }
+    }
+  }
+
+  .mock__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mock__cards {
+    display: flex;
+    gap: 0.625rem;
+
+    span {
+      flex: 1;
+      height: 2.4rem;
+      border-radius: var(--radius-sm);
+      background: rgba(169, 178, 200, 0.08);
+      border: 1px solid var(--color-border);
+    }
+  }
+</style>

@@ -1,0 +1,416 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BrowserFrame from "../../components/ui/BrowserFrame.astro";
+import CTABand from "../../components/sections/CTABand.astro";
+import { withBase } from "../../utils/paths";
+
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const { Content } = await render(product);
+const {
+  title,
+  tagline,
+  summary,
+  status,
+  acquire,
+  url,
+  heroStats,
+  techStack,
+  features,
+  placeholder,
+} = product.data;
+
+const MOCK_VARIANTS = {
+  "funnel-fixer-pro": "funnel",
+  "northstar-metrics": "metrics",
+  stackaudit: "audit",
+};
+
+const variant = MOCK_VARIANTS[product.id] ?? "app";
+
+const STATUS_BADGES = {
+  live: { class: "badge--live", label: "Live" },
+  beta: { class: "badge--beta", label: "In Beta" },
+  "coming-soon": { class: "badge--soon", label: "Coming Soon" },
+};
+
+const statusBadge = STATUS_BADGES[status];
+const domain = url ? new URL(url).hostname : `${product.id}.app`;
+---
+
+<BaseLayout
+  title={`${title} | Ursa Major Global Tech`}
+  description={summary}
+  canonicalPath={`/products/${product.id}/`}
+  ogType="article"
+>
+  <article class="product-page">
+    <div class="container">
+      <a href={withBase("/products/")} class="product-page__back" data-animate="fade">
+        ← Back to All Products
+      </a>
+
+      <div class="product-page__mockup" data-animate="fade-up">
+        <BrowserFrame variant={variant} label={domain} class="product-page__frame" />
+        {
+          heroStats.length > 0 && (
+            <dl class="product-page__stats">
+              {heroStats.map((stat) => (
+                <div>
+                  <dd>{stat.value}</dd>
+                  <dt>{stat.label}</dt>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+      </div>
+
+      <header class="product-page__header" data-animate="fade-up">
+        <div class="product-page__title-row">
+          <h1>{title}</h1>
+          <div class="product-page__badges">
+            <span class={`badge ${statusBadge.class}`}>{statusBadge.label}</span>
+            {acquire && <span class="badge badge--acquire">Acquire</span>}
+          </div>
+        </div>
+        <p class="lead">{tagline}</p>
+      </header>
+
+      <div class="product-page__layout">
+        <div class="product-page__main">
+          <section data-animate="fade-up">
+            <h2 class="product-page__section-title">About This Product</h2>
+            <div class="prose">
+              <Content />
+            </div>
+          </section>
+
+          {
+            features.length > 0 && (
+              <section data-animate="fade-up">
+                <h2 class="product-page__section-title">Core Features</h2>
+                <ol class="product-page__features">
+                  {features.map((feature) => (
+                    <li>
+                      <h3>{feature.title}</h3>
+                      <ul class="checklist">
+                        {feature.points.map((point) => (
+                          <li>{point}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )
+          }
+        </div>
+
+        <aside class="product-page__sidebar">
+          {
+            url && (
+              <div class="product-page__panel" data-animate="fade-up">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn--primary product-page__visit"
+                >
+                  Visit Product ↗
+                </a>
+                <p class="mono-note">Opens in a new tab</p>
+              </div>
+            )
+          }
+
+          {
+            acquire && (
+              <div class="product-page__panel product-page__panel--acquire" data-animate="fade-up">
+                <h2>Available for Acquisition</h2>
+                <p>
+                  Interested in acquiring this product? Let's discuss terms and
+                  transition.
+                </p>
+                <a href={withBase("/contact/")} class="btn btn--primary product-page__acquire-btn">
+                  Inquire About Acquisition
+                </a>
+              </div>
+            )
+          }
+
+          {
+            placeholder && (
+              <div class="product-page__panel" data-animate="fade-up">
+                <h2>Early Access</h2>
+                <p>
+                  This product hasn't launched publicly yet. Reach out for a
+                  preview or waitlist spot.
+                </p>
+                <a href={withBase("/contact/")} class="btn btn--ghost product-page__acquire-btn">
+                  Request Access
+                </a>
+              </div>
+            )
+          }
+
+          {
+            techStack.length > 0 && (
+              <div class="product-page__panel" data-animate="fade-up">
+                <h2>Tech Stack</h2>
+                <dl class="product-page__stack">
+                  {techStack.map((item) => (
+                    <div>
+                      <dt>{item.label}</dt>
+                      <dd>{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )
+          }
+        </aside>
+      </div>
+    </div>
+  </article>
+
+  <CTABand
+    title="Want something like this built for you?"
+    copy="This product started as an idea and shipped in weeks. Yours can too."
+  />
+</BaseLayout>
+
+<style lang="scss">
+  .product-page {
+    padding-block: calc(var(--header-height) + var(--space-xl)) 0;
+  }
+
+  .product-page__back {
+    display: inline-block;
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--peri-300);
+    }
+  }
+
+  .product-page__mockup {
+    margin-bottom: var(--space-xl);
+  }
+
+  .product-page__frame {
+    :global(.browser-frame__body) {
+      min-height: clamp(14rem, 32vw, 22rem);
+    }
+  }
+
+  .product-page__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin: var(--space-lg) 0 0;
+
+    div {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 0.25rem;
+      text-align: center;
+    }
+
+    dd {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 590;
+      color: var(--peri-300);
+    }
+
+    dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+    }
+  }
+
+  .product-page__header {
+    margin-bottom: var(--space-xl);
+
+    .lead {
+      margin-top: var(--space-sm);
+    }
+  }
+
+  .product-page__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .product-page__badges {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .product-page__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .product-page__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .product-page__section-title {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .product-page__features {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    counter-reset: feature;
+
+    > li {
+      counter-increment: feature;
+
+      h3 {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        font-size: var(--text-lg);
+        margin-bottom: var(--space-sm);
+
+        &::before {
+          content: counter(feature, decimal-leading-zero);
+          font-family: var(--font-mono);
+          font-size: var(--text-sm);
+          color: var(--peri-400);
+        }
+      }
+    }
+  }
+
+  .product-page__sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-md));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .product-page__panel {
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--ink-850);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+
+    h2 {
+      font-size: var(--text-base);
+    }
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .mono-note {
+      text-align: center;
+      font-size: var(--text-xs);
+    }
+
+    &--acquire {
+      border-color: rgba(52, 211, 153, 0.3);
+
+      h2::before {
+        content: "◈ ";
+        color: var(--emerald-400);
+      }
+
+      .product-page__acquire-btn {
+        background: var(--emerald-400);
+        color: var(--ink-950);
+
+        &:hover {
+          background: #4ee0a8;
+          box-shadow: 0 0 32px rgba(52, 211, 153, 0.3);
+        }
+      }
+    }
+  }
+
+  .product-page__visit {
+    width: 100%;
+  }
+
+  .product-page__stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--color-border);
+
+      &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+    }
+
+    dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+    }
+
+    dd {
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .product-page__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .product-page__sidebar {
+      position: static;
+    }
+
+    .product-page__stats {
+      gap: var(--space-sm);
+    }
+  }
+</style>

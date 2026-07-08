@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/sections/PageHero.astro";
+import CTABand from "../../components/sections/CTABand.astro";
+import PostCard from "../../components/ui/PostCard.astro";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Blog | Ursa Major Global Tech"
+  description="Notes from the workshop — practical writing on AI-assisted development, architecture decisions, automation, and shipping software fast."
+  canonicalPath="/blog/"
+>
+  <PageHero
+    eyebrow="The Blog"
+    title="Notes from the workshop"
+    lead="Practical writing on AI-assisted development, architecture calls we actually make, and what shipping fast looks like when it has to hold up in production."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <div class="blog-grid" data-animate-children>
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Have a project these posts could help with?"
+    copy="Reading about it is one thing. Watching your product ship in four weeks is better."
+  />
+</BaseLayout>
+
+<style lang="scss">
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  @media (max-width: 960px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+      max-width: 26rem;
+      margin-inline: auto;
+    }
+  }
+</style>

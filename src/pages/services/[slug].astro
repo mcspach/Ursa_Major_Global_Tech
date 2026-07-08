@@ -1,0 +1,276 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CTABand from "../../components/sections/CTABand.astro";
+import { withBase } from "../../utils/paths";
+
+export async function getStaticPaths() {
+  const services = await getCollection("services");
+  return services.map((service) => ({
+    params: { slug: service.id },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const { Content } = await render(service);
+const { title, summary, priceLabel, timeline, deliverables, process, forWho } =
+  service.data;
+---
+
+<BaseLayout
+  title={`${title} | Ursa Major Global Tech`}
+  description={summary}
+  canonicalPath={`/services/${service.id}/`}
+  ogType="article"
+>
+  <article class="service-page">
+    <div class="container">
+      <a href={withBase("/services/")} class="service-page__back" data-animate="fade">
+        ← Back to All Services
+      </a>
+
+      <header class="service-page__header">
+        <h1 data-split="lines">{title}</h1>
+        <p class="lead" data-animate="fade-up" data-animate-delay="0.3">{summary}</p>
+
+        <dl class="service-page__meta" data-animate="fade-up" data-animate-delay="0.4">
+          {
+            priceLabel && (
+              <div>
+                <dt>Pricing</dt>
+                <dd>{priceLabel}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Timeline</dt>
+            <dd>{timeline}</dd>
+          </div>
+        </dl>
+      </header>
+
+      <div class="service-page__layout">
+        <div class="service-page__main">
+          <section data-animate="fade-up">
+            <div class="prose">
+              <Content />
+            </div>
+          </section>
+
+          {
+            process.length > 0 && (
+              <section data-animate="fade-up">
+                <h2 class="service-page__section-title">How It Works</h2>
+                <ol class="service-page__process">
+                  {process.map((phase, index) => (
+                    <li>
+                      <span class="service-page__process-number">
+                        0{index + 1}
+                      </span>
+                      <div>
+                        <h3>{phase.step}</h3>
+                        <p>{phase.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )
+          }
+        </div>
+
+        <aside class="service-page__sidebar">
+          {
+            forWho && (
+              <div class="service-page__panel" data-animate="fade-up">
+                <h2>Who it's for</h2>
+                <p>{forWho}</p>
+              </div>
+            )
+          }
+
+          {
+            deliverables.length > 0 && (
+              <div class="service-page__panel" data-animate="fade-up">
+                <h2>Everything you get</h2>
+                <ul class="checklist">
+                  {deliverables.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+
+          <div class="service-page__panel" data-animate="fade-up">
+            <a href={withBase("/contact/")} class="btn btn--primary service-page__cta">
+              Get Started <span class="btn__arrow">→</span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </article>
+
+  <CTABand
+    title="Ready to scope your project?"
+    copy="A 30-minute call is enough to tell you what it costs, how long it takes, and whether we're the right fit."
+  />
+</BaseLayout>
+
+<style lang="scss">
+  .service-page {
+    padding-block: calc(var(--header-height) + var(--space-xl)) 0;
+  }
+
+  .service-page__back {
+    display: inline-block;
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--peri-300);
+    }
+  }
+
+  .service-page__header {
+    margin-bottom: var(--space-xl);
+    max-width: 52rem;
+
+    .lead {
+      margin-top: var(--space-md);
+    }
+  }
+
+  .service-page__meta {
+    display: flex;
+    gap: var(--space-xl);
+    margin: var(--space-lg) 0 0;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+    }
+
+    dd {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 590;
+      color: var(--color-text-strong);
+    }
+  }
+
+  .service-page__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .service-page__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .service-page__section-title {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .service-page__process {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+
+    li {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      margin-bottom: 0.375rem;
+    }
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+  }
+
+  .service-page__process-number {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--peri-300);
+  }
+
+  .service-page__sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-md));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .service-page__panel {
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--ink-850);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+
+    h2 {
+      font-size: var(--text-base);
+    }
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    :global(.checklist li) {
+      font-size: var(--text-sm);
+    }
+  }
+
+  .service-page__cta {
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .service-page__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .service-page__sidebar {
+      position: static;
+    }
+  }
+</style>
