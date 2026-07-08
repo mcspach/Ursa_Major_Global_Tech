@@ -2,6 +2,7 @@
 title: Northstar Metrics
 tagline: One dashboard. Every number that matters.
 summary: A focused analytics platform for indie SaaS founders — MRR, churn, activation, and runway in one glance, with AI-written weekly summaries.
+thumbnail: ../../assets/northstar-metrics-placeholder.png
 status: coming-soon
 order: 2
 placeholder: true

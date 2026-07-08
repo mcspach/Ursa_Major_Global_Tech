@@ -12,6 +12,10 @@ const {
 <section class="section section--sm">
   <div class="container">
     <div class="cta-band" data-animate="fade-up">
+      <div class="cta-band__bg" aria-hidden="true">
+        <span class="cta-band__pattern"></span>
+        <span class="cta-band__mesh"></span>
+      </div>
       <h2 class="cta-band__title">{title}</h2>
       <p class="cta-band__copy">{copy}</p>
       <a href={withBase(buttonHref)} class="btn btn--primary btn--lg">
@@ -30,16 +34,74 @@ const {
     gap: var(--space-md);
     text-align: center;
     padding: clamp(3rem, 7vw, 5.5rem) var(--space-lg);
-    border: 1px solid var(--color-border);
+    /* border: 1px solid var(--color-border); */
     border-radius: var(--radius-lg);
-    background:
-      radial-gradient(
-        60% 100% at 50% 0%,
-        rgba(139, 92, 246, 0.16) 0%,
-        transparent 70%
-      ),
-      var(--ink-850);
+    /* Same surface as the other cards so it sits in the same family. */
+    background: linear-gradient(160deg, var(--ink-700) 0%, var(--ink-800) 60%);
     overflow: hidden;
+    /* Contain the pattern's blend mode so it can't bleed onto the page. */
+    isolation: isolate;
+  }
+
+  /* Background stack: brand pattern underneath, mesh gradient on top. */
+  .cta-band__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .cta-band__pattern {
+    position: absolute;
+    inset: 0;
+    background-image: url("../../assets/UM_pattern1-black.png");
+    background-repeat: repeat;
+    background-size: 200px auto;
+    /* Center the tiling so the grid isn't flush to the corners. */
+    background-position: center;
+    /* The art is black-on-transparent; invert + screen keeps only faint,
+       light shapes so it reads as texture on the dark ground. */
+    filter: invert(1);
+    mix-blend-mode: screen;
+    opacity: 0.16;
+    /* Reveal the grid in two opposite regions for diagonal balance: a broad
+       lower-right zone that climbs the right edge, and the top-left corner. */
+    -webkit-mask:
+      radial-gradient(130% 125% at 100% 100%, #000 0%, transparent 60%),
+      radial-gradient(85% 100% at 0% 0%, #000 0%, transparent 52%);
+    mask:
+      radial-gradient(130% 125% at 100% 100%, #000 0%, transparent 60%),
+      radial-gradient(85% 100% at 0% 0%, #000 0%, transparent 52%);
+  }
+
+  .cta-band__mesh {
+    position: absolute;
+    /* Oversized + blurred so the drift never exposes a hard edge. */
+    inset: -25%;
+    background:
+      radial-gradient(90% 105% at 16% 12%, rgba(109, 92, 245, 0.44), transparent 66%),
+      radial-gradient(92% 108% at 90% 6%, rgba(47, 111, 230, 0.36), transparent 68%),
+      radial-gradient(100% 110% at 24% 84%, rgba(9, 12, 22, 0.92), transparent 72%),
+      radial-gradient(85% 95% at 55% 40%, rgba(13, 19, 34, 0.7), transparent 74%);
+    filter: blur(14px);
+    animation: cta-mesh-drift 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  @keyframes cta-mesh-drift {
+    from {
+      transform: translate3d(-2%, -1%, 0) scale(1.06);
+    }
+    to {
+      transform: translate3d(3%, 2%, 0) scale(1.14);
+    }
+  }
+
+  /* Keep copy and button above the background stack. */
+  .cta-band__title,
+  .cta-band__copy,
+  .cta-band .btn {
+    position: relative;
+    z-index: 1;
   }
 
   .cta-band__title {
@@ -49,5 +111,11 @@ const {
   .cta-band__copy {
     max-width: 34rem;
     color: var(--color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-band__mesh {
+      animation: none;
+    }
   }
 </style>

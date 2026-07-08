@@ -3,25 +3,28 @@ import { glob } from "astro/loaders";
 
 const products = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/products" }),
-  schema: z.object({
-    title: z.string(),
-    tagline: z.string(),
-    summary: z.string(),
-    status: z.enum(["live", "beta", "coming-soon"]),
-    acquire: z.boolean().default(false),
-    url: z.string().url().optional(),
-    order: z.number().default(99),
-    placeholder: z.boolean().default(false),
-    heroStats: z
-      .array(z.object({ value: z.string(), label: z.string() }))
-      .default([]),
-    techStack: z
-      .array(z.object({ label: z.string(), value: z.string() }))
-      .default([]),
-    features: z
-      .array(z.object({ title: z.string(), points: z.array(z.string()) }))
-      .default([]),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      tagline: z.string(),
+      summary: z.string(),
+      status: z.enum(["live", "beta", "coming-soon"]),
+      acquire: z.boolean().default(false),
+      url: z.string().url().optional(),
+      order: z.number().default(99),
+      placeholder: z.boolean().default(false),
+      // Card thumbnail; when set it replaces the generated browser mock.
+      thumbnail: image().optional(),
+      heroStats: z
+        .array(z.object({ value: z.string(), label: z.string() }))
+        .default([]),
+      techStack: z
+        .array(z.object({ label: z.string(), value: z.string() }))
+        .default([]),
+      features: z
+        .array(z.object({ title: z.string(), points: z.array(z.string()) }))
+        .default([]),
+    }),
 });
 
 const services = defineCollection({

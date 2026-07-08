@@ -16,7 +16,7 @@ const STATS = [
           <div class="stats__item">
             <dd class="stats__value">
               <span data-counter data-target={stat.value}>{stat.value}</span
-              >{stat.suffix}
+              ><span class="stats__suffix">{stat.suffix}</span>
             </dd>
             <dt class="stats__label">{stat.label}</dt>
           </div>
@@ -46,8 +46,12 @@ const STATS = [
     font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: 590;
-    color: var(--color-text-strong);
+    color: var(--blue-400);
     line-height: 1;
+  }
+
+  .stats__suffix {
+    color: var(--color-link);
   }
 
   .stats__label {
@@ -55,7 +59,7 @@ const STATS = [
     font-size: var(--text-xs);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-text-subtle);
+    color: var(--color-text);
   }
 
   @media (max-width: 800px) {

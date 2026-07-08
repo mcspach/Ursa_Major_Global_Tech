@@ -1,20 +1,16 @@
 ---
+import { Image } from "astro:assets";
 import { withBase } from "../../utils/paths";
-import BrowserFrame from "./BrowserFrame.astro";
 
 const { product } = Astro.props;
-const { title, tagline, status, acquire, placeholder } = product.data;
+const { title, tagline, status, acquire, thumbnail } = product.data;
 
-const MOCK_VARIANTS = {
-  "funnel-fixer-pro": "funnel",
-  "northstar-metrics": "metrics",
-  stackaudit: "audit",
-};
-
-const variant = MOCK_VARIANTS[product.id] ?? "app";
-const mockLabel = placeholder
-  ? `${product.id}.app — preview`
-  : `${product.id.replace(/-/g, "")}.ai`;
+// Temporary fallback when a product has no thumbnail: a keyworded stock image,
+// seeded per-product so they aren't all identical. Swap for real art at launch.
+const seed = Math.abs(
+  [...product.id].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) | 0, 7),
+);
+const placeholderThumb = `https://loremflickr.com/640/480/technology,software?lock=${seed}`;
 
 const STATUS_BADGES = {
   live: { class: "badge--live", label: "Live" },
@@ -32,7 +28,24 @@ const statusBadge = STATUS_BADGES[status];
     aria-label={`${title} — view product`}></a>
 
   <div class="product-card__visual">
-    <BrowserFrame variant={variant} label={mockLabel} />
+    {
+      thumbnail ? (
+        <Image
+          class="product-card__thumb"
+          src={thumbnail}
+          alt={`${title} preview`}
+        />
+      ) : (
+        <img
+          class="product-card__thumb"
+          src={placeholderThumb}
+          alt={`${title} preview`}
+          width="640"
+          height="480"
+          loading="lazy"
+        />
+      )
+    }
   </div>
 
   <div class="product-card__body">
@@ -63,24 +76,23 @@ const statusBadge = STATUS_BADGES[status];
 
   .product-card__visual {
     padding: var(--space-md) var(--space-md) 0;
-
-    /* Standardized thumbnail ratio: 4:3. Real images should match. */
-    :global(.browser-frame) {
-      aspect-ratio: 4 / 3;
-      display: flex;
-      flex-direction: column;
-      transform: translateY(0);
-      transition: transform var(--transition-slow);
-    }
-
-    :global(.browser-frame__body) {
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
   }
 
-  .product-card:hover .product-card__visual :global(.browser-frame) {
+  /* Standardized thumbnail ratio: 4:3; real and placeholder images both
+     fill the slot via object-fit. */
+  .product-card__visual :global(.product-card__thumb) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    transform: translateY(0);
+    transition: transform var(--transition-slow);
+  }
+
+  .product-card:hover .product-card__visual :global(.product-card__thumb) {
     transform: translateY(-4px);
   }
 

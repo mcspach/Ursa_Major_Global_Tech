@@ -2,6 +2,7 @@
 title: StackAudit
 tagline: Know exactly what you're buying before you buy it.
 summary: AI-assisted codebase audits for acquisitions, agency handoffs, and technical due diligence — a full health report in days, not weeks.
+thumbnail: ../../assets/stackaudit-placeholder.png
 status: beta
 order: 3
 placeholder: true

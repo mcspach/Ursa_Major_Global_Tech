@@ -2,16 +2,17 @@
 title: Funnel Fixer Pro
 tagline: Optimize Every Stage. Maximize Every Dollar. Convert Every Click.
 summary: AI-powered funnel analysis and conversion optimization that finds where your marketing is leaking revenue — and tells you exactly how to fix it.
+thumbnail: ../../assets/funnelfixerpro1.png
 status: live
 acquire: true
 url: https://funnelfixerpro.ai
 order: 1
 heroStats:
-  - value: "24%"
+  - value: "44%"
     label: Average conversion increase
   - value: "<2 min"
     label: Analysis completion time
-  - value: "$2.4M"
+  - value: "$1.3M"
     label: Total revenue recovered
 techStack:
   - label: Frontend
