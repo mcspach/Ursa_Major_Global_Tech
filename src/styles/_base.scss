@@ -154,12 +154,12 @@ code {
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
+  background: rgba(109, 92, 245, 0.35);
   color: var(--star-100);
 }
 
 :focus-visible {
-  outline: 2px solid var(--peri-400);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
   border-radius: 2px;
 }

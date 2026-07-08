@@ -112,7 +112,9 @@ const main = async () => {
     htmlFiles.map(async (filePath) => {
       const prefix = getRelativePrefix(filePath);
       const originalHtml = await readFile(filePath, "utf8");
-      const rewrittenHtml = relativizeHtml(originalHtml, prefix);
+      // Rewrite URL attributes, then any url(/…) inside inline <style> blocks
+      // or style attributes (Astro inlines small component styles).
+      const rewrittenHtml = relativizeCss(relativizeHtml(originalHtml, prefix), prefix);
 
       if (rewrittenHtml !== originalHtml) {
         await writeFile(filePath, rewrittenHtml);
