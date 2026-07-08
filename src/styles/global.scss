@@ -116,13 +116,13 @@ body.is-transitioning .site-transition {
   .cline {
     stroke: rgba(165, 175, 251, 0.4);
     stroke-width: 1;
-    stroke-dasharray: 200;
-    stroke-dashoffset: 200;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
   }
 
   .cstar {
     fill: var(--star-100);
-    opacity: 0;
+    opacity: 1;
   }
 }
 
@@ -132,51 +132,15 @@ body.is-transitioning .site-transition {
   letter-spacing: 0.34em;
   text-transform: uppercase;
   color: var(--peri-300);
-  opacity: 0;
 }
 
 body.is-initial-loading .site-transition__constellation .cline {
-  animation: um-line-draw 750ms 300ms var(--ease-out-expo) forwards;
-}
-
-body.is-initial-loading .site-transition__constellation .cstar {
-  animation: um-star-in 500ms var(--ease-out-expo) forwards;
-
-  @for $i from 1 through 7 {
-    &:nth-of-type(#{$i}) {
-      animation-delay: #{70 * $i}ms;
-    }
-  }
-}
-
-body.is-initial-loading .site-transition__wordmark {
-  animation: um-fade-in 600ms 650ms ease forwards;
+  animation: um-line-draw 650ms var(--ease-out-expo) forwards;
 }
 
 @keyframes um-line-draw {
   to {
     stroke-dashoffset: 0;
-  }
-}
-
-@keyframes um-star-in {
-  from {
-    opacity: 0;
-    transform: scale(0.2);
-    transform-origin: center;
-    transform-box: fill-box;
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-    transform-origin: center;
-    transform-box: fill-box;
-  }
-}
-
-@keyframes um-fade-in {
-  to {
-    opacity: 1;
   }
 }
 
