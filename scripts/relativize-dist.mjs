@@ -3,6 +3,7 @@ import path from "node:path";
 
 const DIST_DIR = path.resolve("dist");
 const HTML_EXT = ".html";
+const CSS_EXT = ".css";
 const URL_ATTRIBUTES = new Set(["href", "src", "poster", "content", "srcset"]);
 
 const toPosixPath = (value) => value.split(path.sep).join("/");
@@ -20,6 +21,26 @@ const getHtmlFiles = async (dir) => {
     }
 
     if (entry.isFile() && entry.name.endsWith(HTML_EXT)) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+};
+
+const getCssFiles = async (dir) => {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...(await getCssFiles(fullPath)));
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.endsWith(CSS_EXT)) {
       files.push(fullPath);
     }
   }
@@ -76,8 +97,16 @@ const relativizeHtml = (html, prefix) =>
     return `${attr}=${quote}${rewrittenValue}${quote}`;
   });
 
+const relativizeCss = (css, prefix) =>
+  css.replace(/url\((['"]?)(\/[^)'"\s]+)\1\)/g, (match, quote, value) => {
+    const rewrittenValue = rewriteUrl(value, prefix);
+
+    return `url(${quote}${rewrittenValue}${quote})`;
+  });
+
 const main = async () => {
   const htmlFiles = await getHtmlFiles(DIST_DIR);
+  const cssFiles = await getCssFiles(DIST_DIR);
 
   await Promise.all(
     htmlFiles.map(async (filePath) => {
@@ -87,6 +116,18 @@ const main = async () => {
 
       if (rewrittenHtml !== originalHtml) {
         await writeFile(filePath, rewrittenHtml);
+      }
+    }),
+  );
+
+  await Promise.all(
+    cssFiles.map(async (filePath) => {
+      const prefix = getRelativePrefix(filePath);
+      const originalCss = await readFile(filePath, "utf8");
+      const rewrittenCss = relativizeCss(originalCss, prefix);
+
+      if (rewrittenCss !== originalCss) {
+        await writeFile(filePath, rewrittenCss);
       }
     }),
   );
