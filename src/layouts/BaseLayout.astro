@@ -8,7 +8,7 @@ import ConstellationMark from "../components/ui/ConstellationMark.astro";
 import { toAbsoluteUrl, withBase } from "../utils/paths";
 
 const SITE_NAME = "Ursa Major Global Tech";
-const DEFAULT_TITLE = "Ursa Major Global Tech | Coding at the Speed of Thought";
+const DEFAULT_TITLE = "Ursa Major Global Tech | AI Automation & Custom Software";
 const DEFAULT_DESCRIPTION =
   "We build production-ready software, AI automation systems, and white-label products. What takes most teams months takes us days.";
 const DEFAULT_SOCIAL_IMAGE_PATH = "/og_image.png";
@@ -97,6 +97,9 @@ const socialImageUrl = toAbsoluteUrl(socialImagePath, siteUrl);
         window.setTimeout(() => root.classList.add("um-anim-failsafe"), 3200);
       })();
     </script>
+
+    {/* Per-page additions — structured data lives here. */}
+    <slot name="head" />
   </head>
   <body>
     <div class="site-transition" data-site-transition aria-hidden="true">

@@ -1,0 +1,99 @@
+---
+/**
+ * Renders an offer's price according to its display mode.
+ *
+ * When `gated` is true the figure is withheld everywhere — the real number
+ * stays in the content file, and flipping `priceGate` to false publishes it
+ * across every surface at once.
+ */
+interface Pricing {
+  amount?: number;
+  display?: "fixed" | "from" | "monthly" | "inquire";
+  note?: string;
+}
+
+interface Props {
+  pricing?: Pricing;
+  gated?: boolean;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { pricing, gated = false, size = "md", class: className = "" } = Astro.props as Props;
+
+const currency = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+const withheld = gated || !pricing?.amount || pricing?.display === "inquire";
+
+const figure = withheld ? "Pricing on request" : currency.format(pricing!.amount!);
+const prefix = !withheld && pricing?.display === "from" ? "Starting at" : null;
+const suffix = !withheld && pricing?.display === "monthly" ? "/mo" : null;
+const note = withheld ? null : pricing?.note;
+---
+
+<p class:list={["price-tag", `price-tag--${size}`, withheld && "price-tag--withheld", className]}>
+  {prefix && <span class="price-tag__prefix">{prefix}</span>}
+  <span class="price-tag__figure">
+    {figure}{suffix && <span class="price-tag__suffix">{suffix}</span>}
+  </span>
+  {note && <span class="price-tag__note">{note}</span>}
+</p>
+
+<style lang="scss">
+  .price-tag {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .price-tag__prefix {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  .price-tag__figure {
+    font-family: var(--font-display);
+    font-weight: 580;
+    line-height: 1.05;
+    color: var(--color-text-strong);
+    letter-spacing: -0.01em;
+  }
+
+  .price-tag__suffix {
+    font-size: 0.55em;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .price-tag__note {
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .price-tag--sm .price-tag__figure {
+    font-size: var(--text-lg);
+  }
+
+  .price-tag--md .price-tag__figure {
+    font-size: var(--text-xl);
+  }
+
+  .price-tag--lg .price-tag__figure {
+    font-size: var(--text-2xl);
+  }
+
+  /* Withheld prices read as deliberate, not missing. */
+  .price-tag--withheld .price-tag__figure {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--text-md);
+    color: var(--color-text-muted);
+  }
+</style>
