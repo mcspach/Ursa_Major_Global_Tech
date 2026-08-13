@@ -4,6 +4,9 @@ summary: Get your product built right, fast, and production-ready. A complete MV
 priceLabel: Project-Based
 timeline: 4–6 weeks
 order: 1
+# Retired as a headline SKU — app builds now live behind the Audit in Custom.
+# Page stays reachable so existing links and proposals still resolve.
+unlisted: true
 forWho: Founders with a validated idea who need a real product in front of users this quarter — not a Figma file and a promise.
 deliverables:
   - Fully functional, production-ready web application

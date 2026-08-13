@@ -4,6 +4,9 @@ summary: Launch a SaaS under your brand without building an engineering org. We 
 priceLabel: Project-Based
 timeline: 6–10 weeks
 order: 3
+# Retired as a headline SKU — white-label work now runs through Custom, and the
+# licensing angle lives on the products side. Page stays reachable.
+unlisted: true
 forWho: Agencies and domain experts with an audience and distribution, who need product engineering muscle behind the brand.
 deliverables:
   - Complete product built under your brand, on your infrastructure

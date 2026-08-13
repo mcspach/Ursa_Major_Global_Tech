@@ -1,0 +1,323 @@
+---
+/**
+ * The advisory ladder drawn as an asterism: four nodes rising left to right,
+ * hairlines between them, each node dropping a thread to its step.
+ *
+ * Geometry notes, because they're easy to break:
+ *   - The band is a FIXED 96px tall and fluid-width. The polyline lives in a
+ *     `preserveAspectRatio="none"` viewBox of 0 0 100 96, so x stretches with
+ *     the container while y stays in real pixels.
+ *   - Node dots are CSS elements, not SVG circles — non-uniform scaling would
+ *     squash circles into ellipses.
+ *   - Each column's `--drop` is 96 minus its node's y, so the hairline rising
+ *     out of the column lands exactly on the node. Change one, change both.
+ */
+import PriceTag from "../ui/PriceTag.astro";
+import { withBase } from "../../utils/paths";
+import { getAdvisorySteps } from "../../utils/offers";
+
+const steps = await getAdvisorySteps();
+
+// Node y positions inside the 96px band, ascending left to right.
+const NODE_Y = [76, 56, 34, 12];
+const BAND_HEIGHT = 96;
+const NODE_X = [12.5, 37.5, 62.5, 87.5];
+
+const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
+---
+
+{
+  steps.length > 0 && (
+    <section class="ascent">
+      <div class="container">
+        <header class="ascent__head">
+          <p class="eyebrow" data-animate="fade">Advisory</p>
+          <h2 data-animate="fade-up">AI advisory in four ascending steps</h2>
+          <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
+            An opportunity audit, a strategy engagement, fractional AI
+            leadership, executive advisory. Fixed scope, published exclusions,
+            and a named next purchase at every step.
+          </p>
+        </header>
+
+        <div class="ascent__band" aria-hidden="true" data-animate="fade">
+          <svg viewBox={`0 0 100 ${BAND_HEIGHT}`} preserveAspectRatio="none" role="presentation">
+            <polyline
+              points={polyline}
+              fill="none"
+              stroke="rgba(165,175,251,0.42)"
+              stroke-width="1"
+              vector-effect="non-scaling-stroke"
+            />
+            {/* The asterism continues past both ends — it isn't a closed set. */}
+            <polyline
+              points={`4,88 ${NODE_X[0]},${NODE_Y[0]}`}
+              fill="none"
+              stroke="rgba(165,175,251,0.16)"
+              stroke-width="1"
+              stroke-dasharray="3 3"
+              vector-effect="non-scaling-stroke"
+            />
+            <polyline
+              points={`${NODE_X[3]},${NODE_Y[3]} 96,6`}
+              fill="none"
+              stroke="rgba(165,175,251,0.16)"
+              stroke-width="1"
+              stroke-dasharray="3 3"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+
+          {NODE_X.map((x, i) => (
+            <span
+              class:list={["ascent__dot", i === 0 && "ascent__dot--first"]}
+              style={`left: ${x}%; top: ${NODE_Y[i]}px`}
+            />
+          ))}
+        </div>
+
+        <ol class="ascent__grid" data-animate-children>
+          {steps.map((offer, i) => (
+            <li
+              class="ascent__step"
+              style={`--drop: ${BAND_HEIGHT - (NODE_Y[i] ?? 0)}px`}
+            >
+              <span class="ascent__stepno">
+                Step {String(offer.data.step ?? i + 1).padStart(2, "0")}
+              </span>
+
+              <h3 class="ascent__title">
+                <a href={withBase(`/advisory/${offer.id}/`)}>{offer.data.title}</a>
+              </h3>
+
+              {offer.data.question && <p class="ascent__ask">{offer.data.question}</p>}
+
+              <div class="ascent__facts">
+                <PriceTag pricing={offer.data.pricing} gated={offer.data.priceGate} size="sm" />
+                {offer.data.timeline && (
+                  <span class="ascent__timeline">{offer.data.timeline}</span>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="ascent__foot" data-animate="fade-up">
+          <p>
+            <b>Strategy without an attached build is shelfware.</b> Every step
+            credits toward the work it recommends — the Audit in full against any
+            engagement over $10,000.
+          </p>
+          <a href={withBase("/advisory/")} class="btn btn--primary">
+            See the advisory ladder <span class="btn__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style lang="scss">
+  .ascent {
+    position: relative;
+    padding-block: var(--section-space);
+    background:
+      radial-gradient(70% 90% at 78% 8%, rgba(109, 92, 245, 0.16) 0%, transparent 62%),
+      radial-gradient(50% 70% at 10% 95%, rgba(139, 147, 214, 0.09) 0%, transparent 60%),
+      var(--color-bg-deep);
+    border-block: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .ascent__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-width: 44rem;
+  }
+
+  /* ---- the asterism band -------------------------------------------- */
+  .ascent__band {
+    position: relative;
+    height: 96px;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .ascent__band svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 96px;
+  }
+
+  .ascent__dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--peri-300);
+    box-shadow:
+      0 0 0 4px rgba(165, 175, 251, 0.14),
+      0 0 18px rgba(165, 175, 251, 0.7);
+  }
+
+  /* Step one reads as the entry point, so it gets the brighter star. */
+  .ascent__dot--first {
+    background: var(--star-100);
+    box-shadow:
+      0 0 0 5px rgba(116, 167, 244, 0.18),
+      0 0 26px rgba(174, 184, 244, 0.9);
+  }
+
+  /* ---- the four steps ----------------------------------------------- */
+  .ascent__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ascent__step {
+    position: relative;
+    padding-inline: clamp(0.75rem, 1.6vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ascent__step:first-child {
+    padding-inline-start: 0;
+  }
+
+  .ascent__step + .ascent__step {
+    border-left: 1px solid var(--color-border);
+  }
+
+  /* Hairline rising from the column head to its node on the band. */
+  .ascent__step::before {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--drop));
+    left: 50%;
+    width: 1px;
+    height: var(--drop);
+    background: linear-gradient(
+      180deg,
+      rgba(165, 175, 251, 0.5),
+      rgba(165, 175, 251, 0.05)
+    );
+  }
+
+  .ascent__stepno {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--peri-400);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ascent__title {
+    font-size: var(--text-lg);
+    line-height: 1.15;
+
+    a {
+      color: var(--color-text-strong);
+      /* Underline drawn with a background so it can wipe in on hover. */
+      background-image: linear-gradient(var(--color-link), var(--color-link));
+      background-size: 0% 1px;
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      transition:
+        background-size var(--transition-base),
+        color var(--transition-base);
+
+      &:hover {
+        color: var(--peri-300);
+        background-size: 100% 1px;
+      }
+    }
+  }
+
+  .ascent__ask {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.55;
+  }
+
+  .ascent__facts {
+    margin-top: auto;
+    padding-top: var(--space-xs);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .ascent__timeline {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  /* ---- footer ------------------------------------------------------- */
+  .ascent__foot {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      max-width: 48ch;
+      line-height: 1.65;
+    }
+
+    b {
+      color: var(--color-text-strong);
+      font-weight: 560;
+    }
+  }
+
+  @media (max-width: 860px) {
+    /* The band's geometry needs four columns to mean anything; on a stack it
+       becomes a vertical rail with a dot per step. */
+    .ascent__band {
+      display: none;
+    }
+
+    .ascent__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .ascent__step,
+    .ascent__step:first-child {
+      padding-inline: var(--space-md) 0;
+      border-left: 1px solid var(--color-border);
+    }
+
+    .ascent__step::before {
+      top: 0.5rem;
+      left: -5px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--peri-300);
+      box-shadow: 0 0 12px rgba(165, 175, 251, 0.6);
+    }
+
+    .ascent__facts {
+      margin-top: 0;
+    }
+  }
+</style>

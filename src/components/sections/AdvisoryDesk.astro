@@ -1,0 +1,316 @@
+---
+/**
+ * Decision Desk — the advisory ladder as a diagnostic instead of a list.
+ *
+ * Four buyer situations, four answers. The reveal is radio inputs plus CSS
+ * sibling selectors, deliberately no JavaScript: every answer is in the static
+ * HTML at load, so crawlers and answer engines read all four regardless of
+ * which one a visitor selects.
+ *
+ * Two structural rules the CSS depends on:
+ *   - The radios, `.desk__chips`, and `.desk__panels` must stay siblings, with
+ *     the radios first (sibling combinators only look forward).
+ *   - Panels are stacked in one grid cell rather than toggled with `display`,
+ *     so the section is always as tall as its tallest panel and switching
+ *     answers never shifts the page.
+ */
+import PriceTag from "../ui/PriceTag.astro";
+import BuyButton from "../ui/BuyButton.astro";
+import { getAdvisorySteps } from "../../utils/offers";
+
+const steps = await getAdvisorySteps();
+
+/**
+ * The spec column beside each answer. Scope lines are the good case; offers
+ * with no scope (the pure-judgment retainers) fall back to their published
+ * exclusions, which is the more useful thing to know about them anyway.
+ */
+type SpecRow = { label: string; value: string };
+
+const specRows = (data: (typeof steps)[number]["data"]): SpecRow[] => {
+  const rows: SpecRow[] = [];
+
+  if (data.timeline) {
+    rows.push({ label: "Timeline", value: data.timeline });
+  }
+
+  if (data.scope.length > 0) {
+    rows.push(...data.scope.slice(0, 2));
+  } else if (data.notFor.length > 0) {
+    rows.push({ label: "Not for", value: data.notFor[0] });
+  }
+
+  if (data.creditMechanic) {
+    rows.push({ label: "Credit", value: data.creditMechanic });
+  }
+
+  return rows.slice(0, 4);
+};
+---
+
+{
+  steps.length > 0 && (
+    <section class="section desk-section">
+      <div class="container">
+        <header class="section-header">
+          <p class="eyebrow" data-animate="fade">Not sure which one</p>
+          <h2 data-animate="fade-up">Which advisory step are you on?</h2>
+          <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
+            The expensive mistake isn't the price — it's buying the wrong step.
+            Pick the sentence closest to what you'd say in your own words.
+          </p>
+        </header>
+
+        <fieldset class="desk" data-animate="fade-up">
+          <legend class="visually-hidden">Which advisory step are you on?</legend>
+
+          {steps.map((offer, i) => (
+            <input
+              class="desk__radio"
+              type="radio"
+              name="advisory-step"
+              id={`desk-${offer.id}`}
+              checked={i === 0}
+            />
+          ))}
+
+          <div class="desk__chips">
+            {steps.map((offer) => (
+              <label class="desk__chip" for={`desk-${offer.id}`}>
+                <span class="desk__chip-tick">If you're saying</span>
+                <q class="desk__chip-quote">{offer.data.situation ?? offer.data.forWho}</q>
+              </label>
+            ))}
+          </div>
+
+          <div class="desk__panels">
+            {steps.map((offer) => (
+              <article class="desk__panel">
+                <div class="desk__panel-grid">
+                  <div class="desk__answer">
+                    <span class="desk__chip-tick">
+                      Step {String(offer.data.step ?? 1).padStart(2, "0")} · your answer
+                    </span>
+                    <h3 class="desk__title">{offer.data.title}</h3>
+                    <p>{offer.data.answer ?? offer.data.summary}</p>
+                    <BuyButton buying={offer.data.buying} published={offer.data.published} />
+                  </div>
+
+                  <dl class="desk__spec">
+                    <div class="desk__spec-row">
+                      <dt>Price</dt>
+                      <dd>
+                        <PriceTag
+                          pricing={offer.data.pricing}
+                          gated={offer.data.priceGate}
+                          size="sm"
+                        />
+                      </dd>
+                    </div>
+
+                    {specRows(offer.data).map((row) => (
+                      <div class="desk__spec-row">
+                        <dt>{row.label}</dt>
+                        <dd>{row.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </article>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+    </section>
+  )
+}
+
+<style lang="scss">
+  .desk-section {
+    background:
+      radial-gradient(60% 80% at 50% 0%, rgba(47, 111, 230, 0.1) 0%, transparent 65%),
+      transparent;
+  }
+
+  .desk {
+    /* Fieldset resets — the default border, padding, and min-width: min-content
+       all fight a grid layout. */
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .desk__radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .desk__chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--space-xs);
+  }
+
+  .desk__chip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: var(--space-sm) 1.1rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: rgba(13, 19, 34, 0.7);
+    cursor: pointer;
+    transition:
+      border-color var(--transition-base),
+      background-color var(--transition-base),
+      transform var(--transition-base);
+
+    &:hover {
+      border-color: var(--color-border-accent);
+      transform: translateY(-2px);
+    }
+  }
+
+  .desk__chip-quote {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--star-200);
+    quotes: "“" "”";
+  }
+
+  .desk__chip-tick {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  /* ---- panels: all four stacked in one grid cell --------------------- */
+  .desk__panels {
+    display: grid;
+    grid-template-areas: "stack";
+    margin-top: var(--space-sm);
+  }
+
+  .desk__panel {
+    grid-area: stack;
+    visibility: hidden;
+    opacity: 0;
+    border: 1px solid var(--color-border-accent);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(150deg, var(--ink-700) 0%, var(--ink-850) 68%);
+    padding: clamp(1.35rem, 3vw, 2rem);
+    transition: opacity var(--transition-base);
+  }
+
+  .desk__panel-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 16rem);
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+    align-items: start;
+  }
+
+  .desk__answer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: flex-start;
+
+    p {
+      font-size: var(--text-base);
+      line-height: 1.65;
+      color: var(--star-200);
+      max-width: 52ch;
+    }
+  }
+
+  .desk__title {
+    font-size: var(--text-xl);
+  }
+
+  .desk__spec {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: 0;
+    padding-left: clamp(1.25rem, 3vw, 2rem);
+    border-left: 1px solid var(--color-border);
+  }
+
+  .desk__spec-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-subtle);
+    }
+
+    dd {
+      margin: 0;
+      font-size: var(--text-sm);
+      color: var(--star-200);
+      line-height: 1.55;
+    }
+  }
+
+  /* ---- selection state ----------------------------------------------
+     Positional rather than id-based, so the rules hold however many
+     advisory steps the collection grows to (up to six).
+     ------------------------------------------------------------------ */
+  @for $i from 1 through 6 {
+    .desk__radio:nth-of-type(#{$i}):checked ~ .desk__chips .desk__chip:nth-of-type(#{$i}) {
+      border-color: var(--peri-400);
+      background: rgba(109, 92, 245, 0.14);
+      box-shadow: var(--glow-accent);
+    }
+
+    .desk__radio:nth-of-type(#{$i}):checked
+      ~ .desk__chips
+      .desk__chip:nth-of-type(#{$i})
+      .desk__chip-tick {
+      color: var(--peri-300);
+    }
+
+    /* The radios are visually hidden, so their focus ring has to be drawn
+       on the label the visitor can actually see. */
+    .desk__radio:nth-of-type(#{$i}):focus-visible ~ .desk__chips .desk__chip:nth-of-type(#{$i}) {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 3px;
+    }
+
+    .desk__radio:nth-of-type(#{$i}):checked ~ .desk__panels .desk__panel:nth-of-type(#{$i}) {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .desk__panel-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .desk__spec {
+      padding-left: 0;
+      padding-top: var(--space-sm);
+      border-left: none;
+      border-top: 1px solid var(--color-border);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .desk__chip,
+    .desk__panel {
+      transition: none;
+    }
+  }
+</style>

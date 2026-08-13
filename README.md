@@ -32,6 +32,29 @@ npm run build    # dist/ + relativized paths
 - All animation is progressive enhancement: no JS / reduced motion → fully
   visible static site
 
+## Content conventions
+
+Frontmatter flags that change how an entry is surfaced, rather than what it says.
+
+**`unlisted: true`** (services) — the entry keeps its page, so existing links and
+anything already sent out still resolve, but it disappears from the services
+index and the homepage grid. Use this to retire an offer without creating a dead
+URL. Filtering happens at the two grid queries; `[slug].astro` deliberately does
+*not* filter, which is what keeps the page reachable.
+
+**`placeholder: true`** (products) — marks invented filler content that must be
+reviewed or removed before launch.
+
+**`priceGate: true`** (offers — lands with the offering rework) — a feature flag
+for pricing. The real figure stays in the content file, but every surface that
+renders a price checks this flag first and prints "Pricing on request" instead.
+
+The point is that one offer's price appears in several places — an index table, a
+detail page, a comparison table, structured data. Without a single switch,
+publishing a held-back price means editing each of them and hoping none is
+missed, and a half-published price is worse than none at all. With the flag, you
+change `true` to `false`, rebuild, and the number appears everywhere at once.
+
 ## Regenerating the OG image
 
 `public/og_image.png` is a real screenshot of the hero. After changing the hero,

@@ -1,0 +1,126 @@
+---
+/**
+ * Renders the purchase path for an offer (offering doc §2.9).
+ *
+ *   buy-now             → Stripe Payment Link
+ *   call-then-link      → 20-min scoping call, payment link follows
+ *   call-then-proposal  → call, then a one-page proposal
+ *   inquire             → sold in conversation
+ *
+ * An unpublished offer, or a buy-now offer with no checkout URL yet, falls
+ * back to the contact page rather than rendering a dead button.
+ */
+import { withBase } from "../../utils/paths";
+
+interface Buying {
+  mode: "buy-now" | "call-then-link" | "call-then-proposal" | "inquire";
+  checkoutUrl?: string;
+  callUrl?: string;
+  intakeUrl?: string;
+  ctaLabel?: string;
+}
+
+interface Props {
+  buying?: Buying;
+  published?: boolean;
+  size?: "md" | "lg";
+  class?: string;
+}
+
+const {
+  buying,
+  published = false,
+  size = "md",
+  class: className = "",
+} = Astro.props as Props;
+
+const CONTACT = withBase("/contact/");
+
+const DEFAULT_LABELS: Record<Buying["mode"], string> = {
+  "buy-now": "Buy Now",
+  "call-then-link": "Book a Scoping Call",
+  "call-then-proposal": "Book a Call",
+  inquire: "Enquire",
+};
+
+const mode = buying?.mode ?? "inquire";
+const live = published && Boolean(buying);
+
+// A buy-now button only points at Stripe once the link exists and the offer is
+// published; otherwise it degrades to the contact page.
+const checkoutReady = live && mode === "buy-now" && Boolean(buying?.checkoutUrl);
+const callReady =
+  live && (mode === "call-then-link" || mode === "call-then-proposal") && Boolean(buying?.callUrl);
+
+let href = CONTACT;
+let external = false;
+
+if (checkoutReady) {
+  href = buying!.checkoutUrl!;
+  external = true;
+} else if (callReady) {
+  href = buying!.callUrl!;
+  external = true;
+}
+
+const label = checkoutReady || callReady ? (buying?.ctaLabel ?? DEFAULT_LABELS[mode]) : "Get in Touch";
+
+// The optional 15-minute call offered alongside a $2,500 buy-now tier.
+const secondaryCall = checkoutReady && buying?.callUrl ? buying.callUrl : null;
+---
+
+<div class:list={["buy", className]}>
+  <a
+    href={href}
+    class:list={["btn", "btn--primary", size === "lg" && "btn--lg"]}
+    {...external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+  >
+    {label}
+    {external ? <span aria-hidden="true">↗</span> : <span class="btn__arrow" aria-hidden="true">→</span>}
+  </a>
+
+  {
+    secondaryCall && (
+      <a href={secondaryCall} class="buy__secondary" target="_blank" rel="noopener noreferrer">
+        or book 15 minutes first
+      </a>
+    )
+  }
+
+  {
+    !live && (
+      <p class="buy__pending">
+        Card checkout and invoicing both available — tell us which and we'll send
+        the link today.
+      </p>
+    )
+  }
+</div>
+
+<style lang="scss">
+  .buy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.625rem;
+  }
+
+  .buy__secondary {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: var(--peri-300);
+    }
+  }
+
+  .buy__pending {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    color: var(--color-text-subtle);
+    max-width: 34ch;
+  }
+</style>

@@ -4,52 +4,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/sections/Hero.astro";
 import TechMarquee from "../components/sections/TechMarquee.astro";
 import StatsStrip from "../components/sections/StatsStrip.astro";
+import AdvisoryAscent from "../components/sections/AdvisoryAscent.astro";
 import CTABand from "../components/sections/CTABand.astro";
 import ProductCard from "../components/ui/ProductCard.astro";
 import ServiceCard from "../components/ui/ServiceCard.astro";
 import PostCard from "../components/ui/PostCard.astro";
 import { withBase } from "../utils/paths";
+import { getAdvisorySteps } from "../utils/offers";
+import { advisoryCatalog } from "../utils/schema";
 
 const products = (await getCollection("products")).sort(
   (a, b) => a.data.order - b.data.order,
 );
 
-const services = (await getCollection("services")).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const services = (await getCollection("services"))
+  .filter((service) => !service.data.unlisted)
+  .sort((a, b) => a.data.order - b.data.order);
 
 const posts = (await getCollection("blog"))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
+
+// The Ascent section renders these four steps, so the catalog describes what
+// the page actually shows. AdvisoryAscent fetches the same list itself.
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const advisoryLd = advisoryCatalog(await getAdvisorySteps(), siteUrl);
 ---
 
 <BaseLayout canonicalPath="/">
+  <Fragment slot="head">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(advisoryLd)} />
+  </Fragment>
+
   <Hero />
 
   <TechMarquee />
 
   <StatsStrip />
-
-  <section class="section">
-    <div class="container">
-      <header class="section-header section-header--center">
-        <p class="eyebrow" data-animate="fade">What We've Built</p>
-        <h2 data-animate="fade-up">Products in the wild</h2>
-        <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
-          Real platforms with real users — built in-house, battle-tested, and in
-          some cases available for acquisition.
-        </p>
-      </header>
-
-      <div class="home-grid home-grid--3" data-animate-children>
-        {products.map((product) => <ProductCard product={product} />)}
-      </div>
-
-      <div class="section-cta" data-animate="fade">
-        <a href={withBase("/products/")} class="btn btn--ghost">View All Products</a>
-      </div>
-    </div>
-  </section>
 
   <section class="section">
     <div class="container">
@@ -68,6 +59,29 @@ const posts = (await getCollection("blog"))
 
       <div class="section-cta" data-animate="fade">
         <a href={withBase("/services/")} class="btn btn--ghost">Explore All Services</a>
+      </div>
+    </div>
+  </section>
+
+  <AdvisoryAscent />
+
+  <section class="section">
+    <div class="container">
+      <header class="section-header section-header--center">
+        <p class="eyebrow" data-animate="fade">What We've Built</p>
+        <h2 data-animate="fade-up">Products in the wild</h2>
+        <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
+          Real platforms with real users — built in-house, battle-tested, and in
+          some cases available for acquisition.
+        </p>
+      </header>
+
+      <div class="home-grid home-grid--3" data-animate-children>
+        {products.map((product) => <ProductCard product={product} />)}
+      </div>
+
+      <div class="section-cta" data-animate="fade">
+        <a href={withBase("/products/")} class="btn btn--ghost">View All Products</a>
       </div>
     </div>
   </section>
