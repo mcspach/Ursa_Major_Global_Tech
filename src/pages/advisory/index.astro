@@ -14,13 +14,15 @@ const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
 const catalog = advisoryCatalog(steps, siteUrl);
 const faq = advisoryFaq(steps);
 
+// Row labels are written from the buyer's side of the table — "starts from",
+// "your time", "what you get" — rather than describing our method to us.
 const COMPARISON = [
-  { row: "Direction", audit: "Bottom-up, process level", strategy: "Top-down, business level" },
-  { row: "Question", audit: "What can we automate", strategy: "Where does AI change how we operate" },
-  { row: "Buyer", audit: "Owner, operator", strategy: "Executive or board" },
-  { row: "Duration", audit: "1 week", strategy: "5–6 weeks" },
-  { row: "Live contact", audit: "75 minutes total", strategy: "12 interviews, 2 workshops, a readout" },
-  { row: "Deliverable", audit: "Ranked, priced opportunity list", strategy: "Written strategy plus executive presentation" },
+  { row: "Starts from", audit: "Your day-to-day processes", strategy: "Your business model" },
+  { row: "Answers", audit: "What can we automate", strategy: "Where does AI change how we operate" },
+  { row: "Who buys it", audit: "Owner or operator", strategy: "Executive team or board" },
+  { row: "How long", audit: "1 week", strategy: "5–6 weeks" },
+  { row: "Your time", audit: "75 minutes total", strategy: "12 interviews, 2 workshops, a readout" },
+  { row: "What you get", audit: "A ranked, priced list of what to automate", strategy: "A written strategy and an executive presentation" },
 ];
 ---
 
@@ -43,8 +45,8 @@ const COMPARISON = [
   <section class="section section--flush-top">
     <div class="container">
       <header class="section-header">
-        <p class="eyebrow" data-animate="fade">The ladder</p>
-        <h2 data-animate="fade-up">What each step costs</h2>
+        <p class="eyebrow" data-animate="fade">All four, priced</p>
+        <h2 data-animate="fade-up">What AI advisory actually costs</h2>
       </header>
 
       <ol class="ladder" data-animate-children>
@@ -52,9 +54,10 @@ const COMPARISON = [
           steps.map((offer) => (
             <li class="ladder__item">
               <a href={withBase(`/advisory/${offer.id}/`)} class="ladder__link">
-                <span class="ladder__step">Step {offer.data.step}</span>
-
                 <div class="ladder__body">
+                  {offer.data.category && (
+                    <span class="ladder__category">{offer.data.category}</span>
+                  )}
                   <h3 class="ladder__title">{offer.data.title}</h3>
                   <p class="ladder__summary">{offer.data.summary}</p>
                   {offer.data.forWho && <p class="ladder__for">{offer.data.forWho}</p>}
@@ -173,7 +176,7 @@ const COMPARISON = [
 
   .ladder__link {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) minmax(0, 14rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 14rem);
     gap: var(--space-lg);
     align-items: center;
     padding: var(--space-lg);
@@ -192,14 +195,15 @@ const COMPARISON = [
     }
   }
 
-  .ladder__step {
+  /* Was a rotated "Step N" rail in its own grid column. The category that
+     replaced it is far too long to set vertically, so it runs horizontally
+     above the title instead — same slot the homepage Ascent uses. */
+  .ladder__category {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--peri-400);
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
   }
 
   .ladder__body {
@@ -365,11 +369,6 @@ const COMPARISON = [
     .ladder__link {
       grid-template-columns: 1fr;
       gap: var(--space-md);
-    }
-
-    .ladder__step {
-      writing-mode: horizontal-tb;
-      transform: none;
     }
 
     .ladder__meta {

@@ -5,6 +5,7 @@ step: 1
 kicker: Advisory step 1
 summary: Five business days, one working session, and a ranked list of what to automate — every opportunity scored, sequenced, and priced before you commit to building anything.
 forWho: Operators and owners at 10–150 people who can name the pain without prompting, have a few systems with real APIs, and have budget for a follow-on build.
+category: AI readiness assessment
 question: What should we automate first, and what is each one worth?
 situation: We know what's broken. We don't know what to fix first.
 # Answers the question first, then names the product and the number. This field

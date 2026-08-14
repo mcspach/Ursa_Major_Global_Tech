@@ -106,6 +106,11 @@ const offers = defineCollection({
          copy, and so the same sentences feed the FAQPage structured
          data. Keep them in the buyer's words, not ours.
          -------------------------------------------------------------- */
+      // The generic category this offer belongs to, in the words a buyer
+      // would search. Our product names are proprietary and have no search
+      // volume of their own — this sits beside them so the page can rank for
+      // the category while keeping the name.
+      category: z.string().optional(),
       // The question this step answers, phrased the way it gets typed
       // into a search box or an assistant.
       question: z.string().optional(),
