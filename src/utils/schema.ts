@@ -25,6 +25,7 @@ export interface OfferLike {
     timeline?: string;
     pricing?: Pricing;
     priceGate: boolean;
+    category?: string;
     question?: string;
     answer?: string;
   };
@@ -80,7 +81,7 @@ export const advisoryCatalog = (offers: OfferLike[], site: URL | string) => ({
   "@type": "OfferCatalog",
   name: "AI Advisory",
   description:
-    "A four-step advisory ladder: opportunity audit, strategy engagement, fractional AI leadership, and executive advisory. Each step has a fixed scope and credits toward the work it recommends.",
+    "Four ways to decide what AI is worth before you build it: an opportunity audit, a strategy engagement, fractional AI leadership, and an advisory retainer. Every price is published, and what you spend deciding credits toward what you build.",
   provider: PROVIDER,
   itemListElement: offers.map((offer, index) => {
     const url = toAbsoluteUrl(`/advisory/${offer.id}/`, site);
@@ -94,8 +95,13 @@ export const advisoryCatalog = (offers: OfferLike[], site: URL | string) => ({
       itemOffered: {
         "@type": "Service",
         name: offer.data.title,
+        // Our product names carry no search volume of their own. The generic
+        // category rides alongside as an alternateName so an assistant learns
+        // that "AI Opportunity Audit" and "AI readiness assessment" name the
+        // same thing.
+        ...(offer.data.category ? { alternateName: offer.data.category } : {}),
         description: offer.data.summary,
-        serviceType: "AI advisory",
+        serviceType: offer.data.category ?? "AI advisory",
         url,
         provider: PROVIDER,
       },

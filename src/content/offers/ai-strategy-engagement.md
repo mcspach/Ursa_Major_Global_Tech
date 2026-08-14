@@ -5,6 +5,7 @@ step: 2
 kicker: Advisory step 2
 summary: A top-down answer to where AI changes how you operate — written strategy, executive presentation, 12-month roadmap, and an investment case a CFO can defend.
 forWho: Executives at 100+ people (or smaller with a heavy operational spine) with budget authority, a real forcing function, and a decision that has to be made.
+category: AI strategy consulting
 question: Where does AI change how we operate, at the business level?
 situation: The board is asking what our AI plan is, and we don't have one.
 # No figure here while priceGate holds — this field is a price surface too.
@@ -127,10 +128,10 @@ No work begins until one sentence is written down and confirmed by the sponsor:
 
 > *This engagement informs [decision] by [date].*
 
-That single artifact prevents the most common failure mode in strategy work. An
-engagement with no decision attached becomes shelfware no matter how good the
-document is — so if by the end of week two we can't name the decision, we stop
-and convert this to an Audit plus a credit.
+That single sentence prevents the most common failure mode in strategy work. A
+strategy nobody funds is a document nobody reads, however good it is — so if by
+the end of week two we can't name the decision, we stop and convert this to an
+Audit plus a credit.
 
 ## Why the interview cap matters
 

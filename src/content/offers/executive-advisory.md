@@ -5,6 +5,7 @@ step: 4
 kicker: Advisory step 4
 summary: Two sessions a month plus async access. Judgment on demand, no delivery — for teams who now own the work and want a second opinion that already knows the context.
 forWho: Post-engagement clients running AI themselves, who want someone in the room at the next budget cycle rather than starting cold.
+category: AI advisory retainer
 question: Who pressure-tests our AI decisions once we own the work?
 situation: We're running it ourselves. We want a second opinion in the room.
 answer: "Someone who already knows your business and has no stake in you building more. Executive Advisory is $4,000 a month for two 60-minute sessions plus async access, cancel on 30 days' notice — architecture and vendor decisions checked before you commit, so a bad call gets caught while it's still cheap."

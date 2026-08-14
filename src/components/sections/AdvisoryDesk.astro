@@ -54,15 +54,15 @@ const specRows = (data: (typeof steps)[number]["data"]): SpecRow[] => {
       <div class="container">
         <header class="section-header">
           <p class="eyebrow" data-animate="fade">Not sure which one</p>
-          <h2 data-animate="fade-up">Which advisory step are you on?</h2>
+          <h2 data-animate="fade-up">Which AI advisory service do you need?</h2>
           <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
-            The expensive mistake isn't the price — it's buying the wrong step.
+            The expensive mistake isn't the price — it's buying the wrong one.
             Pick the sentence closest to what you'd say in your own words.
           </p>
         </header>
 
         <fieldset class="desk" data-animate="fade-up">
-          <legend class="visually-hidden">Which advisory step are you on?</legend>
+          <legend class="visually-hidden">Which AI advisory service do you need?</legend>
 
           {steps.map((offer, i) => (
             <input
@@ -89,7 +89,7 @@ const specRows = (data: (typeof steps)[number]["data"]): SpecRow[] => {
                 <div class="desk__panel-grid">
                   <div class="desk__answer">
                     <span class="desk__chip-tick">
-                      Step {String(offer.data.step ?? 1).padStart(2, "0")} · your answer
+                      {offer.data.category ?? "Your answer"}
                     </span>
                     <h3 class="desk__title">{offer.data.title}</h3>
                     <p>{offer.data.answer ?? offer.data.summary}</p>

@@ -5,6 +5,7 @@ step: 3
 kicker: Advisory step 3
 summary: Enablement, builds, and roadmap ownership from a senior operator who is accountable for outcomes — without the hiring cycle or the headcount.
 forWho: Executives who want AI ownership inside the business but aren't ready to recruit for a role they can't yet write a job spec for.
+category: Part-time AI leadership
 question: Who owns the AI roadmap when we can't write the job spec yet?
 situation: We need someone accountable for AI, but we can't write the job spec.
 answer: "A fractional AI lead: a senior operator who owns the sequence, ships against it weekly, and makes the vendor calls, for $12,000 a month on a three-month minimum. That's roughly half the loaded cost of the equivalent hire, it starts in weeks instead of quarters, and it ends when your own team can take the roadmap over."
