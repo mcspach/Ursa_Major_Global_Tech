@@ -12,7 +12,7 @@ import { withBase } from "../../utils/paths";
     </p>
 
     <h1 class="hero__title" data-split="lines" data-split-delay="0.15">
-      Frontier AI<br/> brought down to earth.
+      Bringing</br> <span class="hero__title--large">Frontier AI</span> <br/>down to earth.
     </h1>
 
     <p class="hero__lead" data-animate="fade-up" data-animate-delay="1.05">
@@ -80,9 +80,16 @@ import { withBase } from "../../utils/paths";
   }
 
   .hero__title {
-    max-width: 14ch;
-    font-size: var(--text-hero);
+    max-width: 18ch;
+    font-size: var(--text-3xl);
     font-weight: 570;
+    line-height: var(--text-3xl);
+
+    span.hero__title--large { 
+      font-size: var(--text-hero);
+      line-height: calc(var(--text-hero) - 12px);
+      display: block;
+     }
 
     /* Gradient is applied per split line so background-clip survives the
        SplitType wrappers; the fallback covers the pre-split state. */
