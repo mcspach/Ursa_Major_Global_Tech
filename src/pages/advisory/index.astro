@@ -99,25 +99,6 @@ const COMPARISON = [
     </div>
   </section>
 
-  {/* The one question this band of buyer arrives with. Answered in a single
-      self-contained paragraph, with both numbers inline, so it survives being
-      quoted without the page around it. */}
-  <section class="section section--sm">
-    <div class="container">
-      <div class="fork" data-animate="fade-up">
-        <p class="eyebrow">The first fork</p>
-        <h2 class="fork__q">Do you need an AI strategy, or just automation?</h2>
-        <p class="fork__a">
-          If you can already name the process bleeding hours, you need an
-          <b>audit</b>: five business days, $2,500, a ranked and priced list of
-          what to automate. If the question is where AI changes how the business
-          operates, that's a <b>strategy engagement</b> — five to six weeks,
-          twelve stakeholder interviews, an investment case a CFO can defend.
-        </p>
-      </div>
-    </div>
-  </section>
-
   <AdvisoryDesk />
 
   <section class="section">
@@ -128,7 +109,9 @@ const COMPARISON = [
         <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
           They answer different questions for different buyers. Picking the wrong
           one is the most expensive mistake on this page, so here they are side
-          by side.
+          by side — and if you want the longer version, we wrote up
+          <a href={withBase("/blog/ai-strategy-or-automation/")}>
+            how to tell which one you need</a>.
         </p>
       </header>
 
@@ -275,43 +258,6 @@ const COMPARISON = [
     color: var(--color-text);
     max-width: 68ch;
     text-wrap: pretty;
-  }
-
-  /* ---------------------------------------------------------------- */
-  .fork {
-    position: relative;
-    max-width: 52rem;
-    padding: clamp(1.5rem, 4vw, 2.75rem);
-    border: 1px solid var(--color-border);
-    border-left: 2px solid var(--peri-500);
-    border-radius: var(--radius-lg);
-    background: linear-gradient(115deg, var(--ink-850) 0%, var(--ink-900) 70%);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  .fork__q {
-    font-size: var(--text-2xl);
-    line-height: 1.06;
-    letter-spacing: -0.015em;
-    max-width: 24ch;
-  }
-
-  .fork__a {
-    font-size: var(--text-md);
-    line-height: 1.65;
-    color: var(--star-200);
-    max-width: 54ch;
-    text-wrap: pretty;
-
-    b {
-      font-weight: 560;
-      color: var(--color-text-strong);
-      /* Highlight sits behind the baseline rather than under it, so the two
-         forks are scannable without turning into links. */
-      box-shadow: inset 0 -0.45em 0 rgba(109, 92, 245, 0.22);
-    }
   }
 
   /* ---------------------------------------------------------------- */

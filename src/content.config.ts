@@ -225,7 +225,12 @@ const blog = defineCollection({
     description: z.string(),
     category: z.string(),
     pubDate: z.coerce.date(),
-    readTime: z.string().default("5 min read"),
+    // Derived from the body by `readingTime()` unless set explicitly here.
+    readTime: z.string().optional(),
+    // A draft still builds its page so it can be previewed at its real URL,
+    // but it stays out of the blog index and the homepage list and renders
+    // noindex. Flip to false to publish.
+    draft: z.boolean().default(false),
   }),
 });
 

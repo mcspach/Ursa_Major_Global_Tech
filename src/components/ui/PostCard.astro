@@ -1,8 +1,11 @@
 ---
 import { withBase } from "../../utils/paths";
+import { readingTime } from "../../utils/reading";
 
 const { post } = Astro.props;
-const { title, description, category, pubDate, readTime } = post.data;
+const { title, description, category, pubDate } = post.data;
+
+const readTime = post.data.readTime ?? readingTime(post.body);
 
 const formattedDate = pubDate.toLocaleDateString("en-US", {
   month: "short",

@@ -3,7 +3,6 @@ title: "n8n vs Make vs Gumloop: Picking the Right Automation Backbone"
 description: We build client automations on all three. Here's the honest breakdown of when each one is the right call — and when you should skip them all and write code.
 category: Automation
 pubDate: 2026-02-19
-readTime: 6 min read
 ---
 
 Every automation project starts with the same question, so let's answer it
