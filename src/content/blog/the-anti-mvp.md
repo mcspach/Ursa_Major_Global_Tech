@@ -3,7 +3,6 @@ title: "The Anti-MVP: Why Modern Founders Should Stop Shipping Fragile Products"
 description: The MVP playbook was written when building software was slow and expensive. It isn't anymore. Here's the Anti-MVP approach — production-ready from day one.
 category: MVP
 pubDate: 2026-05-27
-readTime: 5 min read
 ---
 
 The Minimum Viable Product was a rational response to a world where software

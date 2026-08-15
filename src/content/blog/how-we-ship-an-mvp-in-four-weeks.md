@@ -3,7 +3,6 @@ title: How We Ship a Production MVP in 4 Weeks (The Actual Playbook)
 description: No magic, no 80-hour weeks — a repeatable four-week structure we run on every MVP build, from discovery sprint to production handoff.
 category: Process
 pubDate: 2026-03-25
-readTime: 7 min read
 ---
 
 When we tell founders their MVP will be in production in four to six weeks,

@@ -3,7 +3,6 @@ title: "Ursa's Top 5 Favorite Vibe Coding Tools for 2026"
 description: We ship client products with AI-assisted development every day. These are the five tools that survived a year of real production work.
 category: Vibe Coding Tools
 pubDate: 2026-04-30
-readTime: 5 min read
 ---
 
 "Vibe coding" started as a joke and became a job description. But there's a

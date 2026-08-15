@@ -3,7 +3,6 @@ title: "Buy vs Build in the AI Era: The Math Changed, Check Yours"
 description: SaaS subscriptions used to be obviously cheaper than custom software. AI-assisted development quietly broke that math for a whole class of tools.
 category: Strategy
 pubDate: 2026-01-28
-readTime: 5 min read
 ---
 
 For fifteen years the advice was automatic: never build what you can rent.

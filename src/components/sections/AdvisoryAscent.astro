@@ -29,6 +29,8 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
 {
   steps.length > 0 && (
     <section class="ascent">
+      <span class="ascent__pattern" aria-hidden="true" />
+
       <div class="container">
         <header class="ascent__head">
           <p class="eyebrow" data-animate="fade">AI Advisory</p>
@@ -132,6 +134,46 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
       var(--color-bg-deep);
     border-block: 1px solid var(--color-border);
     overflow: hidden;
+    /* Contain the pattern's blend mode so it can't reach the sections above
+       and below — same guard the CTA band uses. */
+    isolation: isolate;
+  }
+
+  /* Brand grid texture, the same treatment as the CTA band. The mask repeats
+     the two radial geometries from the section background verbatim, so the
+     texture lives exactly inside the existing glow and disappears at the same
+     stop where the purple already fades to transparent. Change a gradient
+     above and this mask has to change with it. */
+  .ascent__pattern {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("../../assets/UM_pattern1-black.png");
+    background-repeat: repeat;
+    background-size: 200px auto;
+    background-position: center;
+    /* The art is black-on-transparent; invert + screen keeps only the faint
+       light shapes so it reads as texture rather than a printed grid. */
+    filter: invert(1);
+    mix-blend-mode: screen;
+    opacity: 0.11;
+
+    /* Mask alphas mirror the background alphas (0.16 and 0.09), so the
+       texture is strongest where the purple is strongest and proportionally
+       fainter over the cooler periwinkle pool. */
+    -webkit-mask:
+      radial-gradient(70% 90% at 78% 8%, #000 0%, transparent 62%),
+      radial-gradient(50% 70% at 10% 95%, rgba(0, 0, 0, 0.56) 0%, transparent 60%);
+    mask:
+      radial-gradient(70% 90% at 78% 8%, #000 0%, transparent 62%),
+      radial-gradient(50% 70% at 10% 95%, rgba(0, 0, 0, 0.56) 0%, transparent 60%);
+  }
+
+  /* The pattern is absolutely positioned, so the content needs its own
+     stacking position to stay above it. */
+  .ascent .container {
+    position: relative;
+    z-index: 1;
   }
 
   .ascent__head {

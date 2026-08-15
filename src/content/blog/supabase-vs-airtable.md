@@ -3,7 +3,6 @@ title: "Supabase vs Airtable: What to Use When, and Why Supabase Usually Wins"
 description: Airtable is a spreadsheet wearing a database costume. Supabase is a database with batteries included. Here's how we decide between them on real client projects.
 category: Architecture
 pubDate: 2026-06-18
-readTime: 6 min read
 ---
 
 Every few weeks a client arrives with the same architecture: an Airtable base

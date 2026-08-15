@@ -11,8 +11,17 @@ import { withBase } from "../../utils/paths";
       AI Automation &amp; Custom Software
     </p>
 
-    <h1 class="hero__title" data-split="lines" data-split-delay="0.15">
-      Bringing</br> <span class="hero__title--large">Frontier AI</span> <br/>down to earth.
+    {/* Deliberately NOT data-split: SplitType rewrites the subtree into
+        per-line spans wrapped in overflow:hidden masks, which breaks a
+        headline with a nested, differently-sized block child. The line breaks
+        here are manual anyway, so the split bought nothing. */}
+    {/* No <br>. The middle span is display:block, so it already breaks the
+        line on both sides — adding a <br> next to it produces an empty line
+        box each time. The three stacked blocks below are the three lines. */}
+    <h1 class="hero__title" data-animate="fade-up" data-animate-delay="0.95">
+      Bringing
+      <span class="hero__title--large">Frontier AI</span>
+      down to earth.
     </h1>
 
     <p class="hero__lead" data-animate="fade-up" data-animate-delay="1.05">
@@ -83,34 +92,32 @@ import { withBase } from "../../utils/paths";
     max-width: 18ch;
     font-size: var(--text-3xl);
     font-weight: 570;
-    line-height: var(--text-3xl);
+    /* Unitless. A length here (var(--text-3xl)) is a fixed line box that stops
+       tracking the font size once the clamp bottoms out on small screens. */
+    line-height: 1.05;
 
-    span.hero__title--large { 
-      font-size: var(--text-hero);
-      line-height: calc(var(--text-hero) - 12px);
-      display: block;
-     }
-
-    /* Gradient is applied per split line so background-clip survives the
-       SplitType wrappers; the fallback covers the pre-split state. */
     background: var(--gradient-headline);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
 
-    /* Once split, the lines paint their own gradient. The parent's clipped
-       background must go away: Chrome renders it as a static ghost copy
-       because background-clip: text ignores descendant transforms. */
-    &:global(.is-split) {
-      background: none;
-    }
+  .hero__title--large {
+    display: block;
+    font-size: var(--text-hero);
+    /* Also unitless, and this is the one that hid the text. The old
+       calc(var(--text-hero) - 12px) subtracted a constant from a clamped
+       size: harmless at 106px on desktop, but at the 46.4px mobile floor it
+       cut the line box to 74% of the font size, pushing the caps out of the
+       box — where the mask around each split line then clipped them away. */
+    line-height: 0.95;
 
-    :global(.line) {
-      background: var(--gradient-headline);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    /* Its own clipped background rather than relying on an ancestor's. Text
+       painted with -webkit-text-fill-color: transparent is invisible unless
+       something behind it is being clipped to its shape. */
+    background: var(--gradient-headline);
+    background-clip: text;
+    -webkit-background-clip: text;
   }
 
   .hero__lead {

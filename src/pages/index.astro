@@ -22,6 +22,7 @@ const services = (await getCollection("services"))
   .sort((a, b) => a.data.order - b.data.order);
 
 const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
