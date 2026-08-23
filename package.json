@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node ./scripts/relativize-dist.mjs",
+    "build": "astro build && node ./scripts/check-schema.mjs && node ./scripts/relativize-dist.mjs",
     "preview": "astro preview"
   },
   "devDependencies": {

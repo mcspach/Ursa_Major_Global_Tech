@@ -4,7 +4,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import CTABand from "../../components/sections/CTABand.astro";
 import PostCard from "../../components/ui/PostCard.astro";
 import { withBase } from "../../utils/paths";
-import { readingTime } from "../../utils/reading";
+import { readingMinutes, readingTime, wordCount } from "../../utils/reading";
+import { blogNode, blogPosting } from "../../utils/schema";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -27,6 +28,19 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   timeZone: "UTC",
 });
 
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+// The Blog node is declared here too, not just on /blog/. The post's
+// `isPartOf` has to resolve within this page's own graph.
+const schema = [
+  blogNode(siteUrl),
+  blogPosting({
+    post,
+    site: siteUrl,
+    wordCount: wordCount(post.body),
+    readingMinutes: readingMinutes(post.body),
+  }),
+];
+
 const related = (await getCollection("blog"))
   .filter((entry) => entry.id !== post.id && !entry.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -37,6 +51,8 @@ const related = (await getCollection("blog"))
   title={`${title} | Ursa Major Global Tech`}
   description={description}
   canonicalPath={`/blog/${post.id}/`}
+  pageName={title}
+  schema={schema}
   ogType="article"
   noindex={draft}
 >

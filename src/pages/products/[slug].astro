@@ -4,6 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import BrowserFrame from "../../components/ui/BrowserFrame.astro";
 import CTABand from "../../components/sections/CTABand.astro";
 import { withBase } from "../../utils/paths";
+import { softwareApplication } from "../../utils/schema";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -36,6 +37,9 @@ const MOCK_VARIANTS = {
 
 const variant = MOCK_VARIANTS[product.id] ?? "app";
 
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [softwareApplication(product, siteUrl)];
+
 const STATUS_BADGES = {
   live: { class: "badge--live", label: "Live" },
   beta: { class: "badge--beta", label: "In Beta" },
@@ -50,6 +54,8 @@ const domain = url ? new URL(url).hostname : `${product.id}.app`;
   title={`${title} | Ursa Major Global Tech`}
   description={summary}
   canonicalPath={`/products/${product.id}/`}
+  pageName={title}
+  schema={schema}
   ogType="article"
 >
   <article class="product-page">

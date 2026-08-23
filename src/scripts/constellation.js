@@ -1,12 +1,12 @@
 /**
- * Hero "sparkle field" — a warped grid of dots over a drifting starfield.
+ * Hero "sparkle field": a warped grid of dots over a drifting starfield.
  *
  * A full-bleed grid of purple dots rides a shallow dome: dots near the centre
  * bulge toward the viewer while the edges fall away, and slow diagonal waves
  * ripple through the field in depth, morphing each dot from a circle into a
  * four-point sparkle at the crest. Behind it, a randomised starfield twinkles
- * and drifts to seat the grid in space. The pointer parallaxes both layers —
- * nearer dots track the cursor more than far ones — and the whole field also
+ * and drifts to seat the grid in space. The pointer parallaxes both layers, with
+ * nearer dots tracking the cursor more than far ones, and the whole field also
  * scrolls up a touch slower than the hero content. Static single render under
  * reduced motion.
  */
@@ -50,7 +50,7 @@ const rand = (min, max) => min + Math.random() * (max - min);
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const lerp = (a, b, m) => a + (b - a) * m;
 const wrap = (v, max) => ((v % max) + max) % max;
-// Sign-preserving power — drives the circle→sparkle morph.
+// Sign-preserving power, which drives the circle→sparkle morph.
 const spow = (v, e) => Math.sign(v) * Math.pow(Math.abs(v), e);
 const mixColor = (c1, c2, m) =>
   `rgb(${Math.round(lerp(c1[0], c2[0], m))}, ${Math.round(

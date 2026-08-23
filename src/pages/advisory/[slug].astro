@@ -5,6 +5,7 @@ import CTABand from "../../components/sections/CTABand.astro";
 import PriceTag from "../../components/ui/PriceTag.astro";
 import BuyButton from "../../components/ui/BuyButton.astro";
 import { withBase } from "../../utils/paths";
+import { advisoryOffer, faqPage } from "../../utils/schema";
 
 export async function getStaticPaths() {
   const offers = await getCollection("offers");
@@ -22,12 +23,29 @@ const currency = new Intl.NumberFormat("en-US", {
   currency: "USD",
   maximumFractionDigits: 0,
 });
+
+// Emitted regardless of `published`, so the structured data goes live the
+// moment the page's checkout and intake URLs do. `priceGate` still withholds
+// the figure: advisoryOffer only carries a price the page itself prints.
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const path = `/advisory/${offer.id}/`;
+const schema = [
+  advisoryOffer(offer, siteUrl),
+  d.question &&
+    faqPage(
+      [{ question: d.question, answer: d.answer ?? d.summary }],
+      siteUrl,
+      path,
+    ),
+];
 ---
 
 <BaseLayout
   title={`${d.title} | Ursa Major Global Tech`}
   description={d.summary}
-  canonicalPath={`/advisory/${offer.id}/`}
+  canonicalPath={path}
+  pageName={d.title}
+  schema={schema}
   ogType="article"
 >
   <article class="offer">
@@ -133,7 +151,7 @@ const currency = new Intl.NumberFormat("en-US", {
                     <li>
                       <span>
                         {addOn.label}
-                        {addOn.note && <em> — {addOn.note}</em>}
+                        {addOn.note && <em> ({addOn.note})</em>}
                       </span>
                       <b>{currency.format(addOn.amount)}</b>
                     </li>
@@ -194,7 +212,7 @@ const currency = new Intl.NumberFormat("en-US", {
 
   <CTABand
     title="Ready when you are"
-    copy="Bring the decision you're trying to make. We'll tell you which step fits — or that you don't need one yet."
+    copy="Bring the decision you're trying to make. We'll tell you which step fits, or that you don't need one yet."
   />
 </BaseLayout>
 
@@ -340,7 +358,7 @@ const currency = new Intl.NumberFormat("en-US", {
       line-height: 1.6;
 
       &::before {
-        content: "—";
+        content: "-";
         position: absolute;
         left: 0;
         color: var(--color-text-subtle);

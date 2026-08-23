@@ -11,11 +11,13 @@ import { advisoryCatalog, advisoryFaq } from "../../utils/schema";
 const steps = await getAdvisorySteps();
 
 const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
-const catalog = advisoryCatalog(steps, siteUrl);
-const faq = advisoryFaq(steps);
+const schema = [
+  advisoryCatalog(steps, siteUrl),
+  advisoryFaq(steps, siteUrl, "/advisory/"),
+];
 
-// Row labels are written from the buyer's side of the table — "starts from",
-// "your time", "what you get" — rather than describing our method to us.
+// Row labels are written from the buyer's side of the table ("starts from",
+// "your time", "what you get") rather than describing our method to us.
 const COMPARISON = [
   { row: "Starts from", audit: "Your day-to-day processes", strategy: "Your business model" },
   { row: "Answers", audit: "What can we automate", strategy: "Where does AI change how we operate" },
@@ -28,13 +30,12 @@ const COMPARISON = [
 
 <BaseLayout
   title="AI Advisory & Strategy Consulting | Ursa Major Global Tech"
-  description="Fixed-price AI advisory, from a $2,500 opportunity audit to fractional AI leadership. Every price published — and the audit is free if you build with us."
+  description="Fixed-price AI advisory, from a $2,500 opportunity audit to fractional AI leadership. Every price published, and the audit is free if you build with us."
   canonicalPath="/advisory/"
+  pageName="Advisory"
+  pageType="CollectionPage"
+  schema={schema}
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(catalog)} />
-    {faq && <script type="application/ld+json" is:inline set:html={JSON.stringify(faq)} />}
-  </Fragment>
 
   <PageHero
     eyebrow="AI Advisory"
@@ -83,7 +84,7 @@ const COMPARISON = [
       </ol>
 
       {/* The objection-killer for a cold $2,500 purchase. Every clause here is
-          already in the content files (creditMechanic, exitArtifact) — this
+          already in the content files (creditMechanic, exitArtifact). This
           promotes it out of a subordinate clause and does the arithmetic for
           the reader instead of leaving it to them. */}
       <div class="reversal" data-animate="fade-up">
@@ -91,7 +92,7 @@ const COMPARISON = [
         <p class="reversal__body">
           The $2,500 Opportunity Audit credits back in full against any build over
           $10,000. If you don't build with us, you keep a document you own
-          outright — process maps, a scored opportunity register, and a priced
+          outright: process maps, a scored opportunity register, and a priced
           menu you can hand to any other firm. Either way, you're not paying for a
           sales presentation.
         </p>
@@ -109,7 +110,7 @@ const COMPARISON = [
         <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
           They answer different questions for different buyers. Picking the wrong
           one is the most expensive mistake on this page, so here they are side
-          by side — and if you want the longer version, we wrote up
+          by side, and if you want the longer version, we wrote up
           <a href={withBase("/blog/ai-strategy-or-automation/")}>
             how to tell which one you need</a>.
         </p>
@@ -180,7 +181,7 @@ const COMPARISON = [
 
   /* Was a rotated "Step N" rail in its own grid column. The category that
      replaced it is far too long to set vertically, so it runs horizontally
-     above the title instead — same slot the homepage Ascent uses. */
+     above the title instead, the same slot the homepage Ascent uses. */
   .ladder__category {
     font-family: var(--font-mono);
     font-size: var(--text-xs);

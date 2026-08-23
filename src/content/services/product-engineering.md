@@ -1,6 +1,6 @@
 ---
 title: Ongoing Product Engineering
-summary: A senior product engineering team on retainer — shipping features, fixing what breaks, and keeping your roadmap moving without the hiring cycle.
+summary: A senior product engineering team on retainer, shipping features, fixing what breaks, and keeping your roadmap moving without the hiring cycle.
 priceLabel: Retainer
 timeline: Ongoing
 order: 4
@@ -11,15 +11,15 @@ deliverables:
   - Bug triage with response-time commitments
   - Performance, security, and dependency upkeep
   - Architecture reviews before big bets, not after
-  - Async-first communication — Slack, Loom, and demos
+  - Async-first communication over Slack, Loom, and demos
   - Cancel monthly. We earn the renewal.
 process:
   - step: Embed
-    detail: First two weeks inside your codebase — we map it with StackAudit, fix quick wins, and calibrate velocity.
+    detail: First two weeks inside your codebase. We map it with StackAudit, fix quick wins, and calibrate velocity.
   - step: Ship on Rhythm
     detail: A weekly cadence of shipped, demoed work. Roadmap planned monthly, adjusted as reality happens.
   - step: Compound
-    detail: The codebase gets healthier while features ship — debt paid down continuously, not in a scary rewrite.
+    detail: The codebase gets healthier while features ship, with debt paid down continuously rather than in a scary rewrite.
 ---
 
 Hiring a senior engineer takes six months and $200k+ a year, and one person

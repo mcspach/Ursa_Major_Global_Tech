@@ -3,14 +3,14 @@ title: AI Opportunity Audit
 family: advisory
 step: 1
 kicker: Advisory step 1
-summary: Five business days, one working session, and a ranked list of what to automate — every opportunity scored, sequenced, and priced before you commit to building anything.
+summary: Five business days, one working session, and a ranked list of what to automate, with every opportunity scored, sequenced, and priced before you commit to building anything.
 forWho: Operators and owners at 10–150 people who can name the pain without prompting, have a few systems with real APIs, and have budget for a follow-on build.
 category: AI readiness assessment
 question: What should we automate first, and what is each one worth?
 situation: We know what's broken. We don't know what to fix first.
 # Answers the question first, then names the product and the number. This field
 # feeds the FAQPage schema, so it is the text an assistant quotes back.
-answer: "Start with your highest-volume process that has a real API and doesn't change every week — usually document handling, lead routing, or reporting. The AI Opportunity Audit scores 8–15 candidates on impact and feasibility, prices the top five against your own volumes, and hands you the order to build them in. $2,500, five business days."
+answer: "Start with your highest-volume process that has a real API and doesn't change every week. That is usually document handling, lead routing, or reporting. The AI Opportunity Audit scores 8–15 candidates on impact and feasibility, prices the top five against your own volumes, and hands you the order to build them in. $2,500, five business days."
 order: 1
 featured: true
 timeline: 5 business days
@@ -25,12 +25,12 @@ pricing:
 buying:
   mode: buy-now
   ctaLabel: Buy the Audit
-  # checkoutUrl: TODO — Stripe Payment Link
-  # intakeUrl: TODO — hosted intake form (19 questions)
+  # checkoutUrl: TODO, Stripe Payment Link
+  # intakeUrl: TODO, hosted intake form (19 questions)
 
 revisionCap: 1 round, consolidated, within 10 days of delivery
 creditMechanic: Credited in full toward any engagement over $10,000. Expires 90 days after delivery.
-exitArtifact: A priced menu of next steps — every opportunity carries a price before you ask for one.
+exitArtifact: A priced menu of next steps, where every opportunity carries a price before you ask for one.
 
 scope:
   - label: Working session
@@ -53,10 +53,10 @@ scope:
 deliverables:
   - Audit document, 10–18 pages, including the full scored opportunity register
   - Current-state process map for the departments in scope, plus a systems inventory
-  - Top 5 opportunities detailed — current cost, what changes, effort class, price, dependencies, risks
+  - Top 5 opportunities detailed by current cost, what changes, effort class, price, dependencies, risks
   - Recommended build sequence, with the reasoning and the dependencies stated
   - A "not recommended" section covering what we looked at and rejected, and why
-  - Priced menu — a standalone one-pager you can circulate without the full report
+  - Priced menu, a standalone one-pager you can circulate without the full report
   - Recorded walkthrough, 10–12 minutes, so the deliverable survives people who missed the readout
 
 notFor:
@@ -64,7 +64,7 @@ notFor:
   - Not a technology or vendor selection process
   - Not an org design, hiring, or governance exercise
   - Not a data quality or security assessment
-  - Not a company-wide strategy — that is the AI Strategy Engagement
+  - Not a company-wide strategy; that is the AI Strategy Engagement
   - Not a custom-built financial model
 
 exclusions:
@@ -76,7 +76,7 @@ exclusions:
   - No custom financial modeling beyond the included sizing
   - No more than 2 departments, 15 documents, or 8 systems
   - No additional sessions beyond the working session and the readout
-  - No written implementation specs — available as an add-on
+  - No written implementation specs, though they are available as an add-on
 
 addOns:
   - label: Additional department in scope
@@ -89,15 +89,15 @@ addOns:
     amount: 1500
 
 process:
-  - step: Day 1 — Review
+  - step: 'Day 1: Review'
     detail: We read your intake form, documents, and systems, then draft the working-session agenda as eight to ten hypotheses framed as questions. You get it the evening before.
-  - step: Day 2 — Working session
+  - step: 'Day 2: Working session'
     detail: 45 minutes, recorded. We confirm or kill each hypothesis, walk your two highest-volume processes step by step, and get the volume and time numbers in the room.
-  - step: Day 3 — Analysis
+  - step: 'Day 3: Analysis'
     detail: Every opportunity identified, scored on impact and feasibility, classified by effort, and sequenced. The top five get sized against real baselines.
-  - step: Day 4 — Assembly
-    detail: Document, priced menu, and recorded walkthrough built and delivered — before the readout, not at it, so you arrive having read it.
-  - step: Day 5 — Readout
+  - step: 'Day 4: Assembly'
+    detail: Document, priced menu, and recorded walkthrough built and delivered before the readout, not at it, so you arrive having read it.
+  - step: 'Day 5: Readout'
     detail: 30 minutes on the three findings, the recommended first move, and the priced menu. The next-step proposal follows within two hours.
 ---
 
@@ -108,7 +108,7 @@ be automated, nobody can agree what goes first, and no one has put a number on
 any of it. The Audit ends that argument with evidence.
 
 It works bottom-up, at the process level. The question it answers is **what
-should we automate, in what order, and what will it cost** — not the broader
+should we automate, in what order, and what will it cost**, not the broader
 question of where AI changes how the business operates. That one is the
 [AI Strategy Engagement](/advisory/ai-strategy-engagement/), and it's a
 different product, not a bigger version of this one.
@@ -120,7 +120,7 @@ recommendations because nobody does forty hours of research for free.
 
 This is a paid engagement with a deliverable you own. If you go on to build with
 us it costs you nothing, because it credits in full. If you don't, you keep a
-document you can hand to anyone — including whoever you hire instead.
+document you can hand to anyone, including whoever you hire instead.
 
 ## How opportunities get ranked
 
@@ -131,7 +131,7 @@ in the document so you can check our work.
 hours, a direct revenue effect, or a removed compliance risk. **Feasibility**
 (1–5) runs from *no API and a process that changes constantly* up to *documented
 APIs everywhere, stable process, clean data, no judgment calls*. **Effort** maps
-to the build classes — A, B, or C — which is what sets the price.
+to the build classes (A, B, or C), which is what sets the price.
 
 Priority score is `(Impact × Feasibility) ÷ Effort`, ranked descending. Three
 overrides then apply, and we state them where we use them:
@@ -157,4 +157,4 @@ month gets confirmed with you before it goes in.
 Projected effect is **always a range, never a single number**, with a confidence
 rating and its basis on every line. A point estimate invites one question nobody
 can answer, and the credibility of the whole document goes with it. We also model
-the residual — automation reduces a process, it rarely eliminates one.
+the residual, because automation reduces a process, it rarely eliminates one.

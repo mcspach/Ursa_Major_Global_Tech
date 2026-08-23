@@ -1,22 +1,31 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/sections/PageHero.astro";
+import { contactPoint } from "../utils/schema";
 
-// Placeholder endpoint — create a Formspree form (or similar) and swap the ID.
+// Placeholder endpoint. Create a Formspree form (or similar) and swap the ID.
 const FORM_ACTION = "https://formspree.io/f/YOUR_FORM_ID";
-// Placeholder booking link — swap for the real Cal.com / Calendly URL.
+// Placeholder booking link. Swap for the real Cal.com / Calendly URL.
 const BOOKING_URL = "https://cal.com/ursamajor/discovery";
+
+// The email is real. The booking URL and form endpoint are placeholders, so
+// neither goes into structured data yet. See reference/punchlist.md.
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [contactPoint(siteUrl)];
 ---
 
 <BaseLayout
   title="Contact | Ursa Major Global Tech"
-  description="Book a free discovery call or send us a note about your project. No fluff, no pitch decks — just a real conversation about what you need built."
+  description="Book a free discovery call or send us a note about your project. No fluff, no pitch decks, just a real conversation about what you need built."
   canonicalPath="/contact/"
+  pageName="Contact"
+  pageType="ContactPage"
+  schema={schema}
 >
   <PageHero
     eyebrow="Contact"
     title="Let's talk about what you're building"
-    lead="Tell us where you're headed and we'll give you an honest read on scope, cost, and timeline — usually within one business day."
+    lead="Tell us where you're headed and we'll give you an honest read on scope, cost, and timeline, usually within one business day."
   />
 
   <section class="section section--flush-top">
@@ -65,7 +74,7 @@ const BOOKING_URL = "https://cal.com/ursamajor/discovery";
             Send Message <span class="btn__arrow">→</span>
           </button>
           <p class="mono-note">
-            Form posts to a placeholder endpoint — wire up Formspree before launch.
+            Form posts to a placeholder endpoint. Wire up Formspree before launch.
           </p>
         </form>
 
@@ -101,7 +110,7 @@ const BOOKING_URL = "https://cal.com/ursamajor/discovery";
             <ol class="contact-aside__steps">
               <li>We reply within one business day</li>
               <li>A short call to understand the project</li>
-              <li>A written proposal — scope, price, timeline</li>
+              <li>A written proposal covering scope, price, and timeline</li>
             </ol>
           </div>
         </aside>

@@ -1,6 +1,6 @@
 ---
 title: "n8n vs Make vs Gumloop: Picking the Right Automation Backbone"
-description: We build client automations on all three. Here's the honest breakdown of when each one is the right call — and when you should skip them all and write code.
+description: We build client automations on all three. Here's the honest breakdown of when each one is the right call, and when you should skip them all and write code.
 category: Automation
 pubDate: 2026-02-19
 ---
@@ -13,20 +13,20 @@ one is the right answer to a different question.
 
 Self-hostable, source-available, and unashamedly technical. Nodes are
 JavaScript when you need them to be, the LLM tooling is first-class, and your
-data can stay on your own infrastructure — which matters more every year.
+data can stay on your own infrastructure, which matters more every year.
 
 **Choose n8n when:** the workflow is core to your business, touches sensitive
 data, or will grow branches for years. It's the closest thing to "real
 software" in the no-code aisle, and the one we default to for client builds.
 
-**The catch:** someone has to own the instance. Updates, monitoring, scaling —
+**The catch:** someone has to own the instance. Updates, monitoring, scaling:
 it's your server. (That someone can be us; it shouldn't be nobody.)
 
 ## Make: the operator's choice
 
 The most approachable visual builder of the three, a huge connector library,
 and pricing that's friendly at small scale. Ops folks genuinely maintain Make
-scenarios themselves after we hand them off — that's not nothing.
+scenarios themselves after we hand them off, which is not nothing.
 
 **Choose Make when:** the workflow is glue between SaaS tools, volume is
 moderate, and the person maintaining it isn't an engineer.
@@ -38,11 +38,11 @@ their automation worked *too* well.
 ## Gumloop: the AI-native choice
 
 Built LLM-first rather than LLM-bolted-on. Where n8n and Make treat AI as
-another node, Gumloop treats the model as the runtime — which makes
+another node, Gumloop treats the model as the runtime, which makes
 document-heavy and classification-heavy flows remarkably quick to stand up.
 
-**Choose Gumloop when:** the workflow is mostly AI steps — parse, extract,
-classify, draft — with light glue around them.
+**Choose Gumloop when:** the workflow is mostly AI steps (parse, extract,
+classify, draft) with light glue around them.
 
 **The catch:** youngest platform of the three. We keep exit ramps in mind for
 anything mission-critical.

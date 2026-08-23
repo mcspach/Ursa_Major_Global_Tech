@@ -20,5 +20,5 @@ pnpm-debug.log*
 # macOS
 .DS_Store
 
-# internal offering specs and working plans — never published
+# internal offering specs and working plans, never published
 reference/

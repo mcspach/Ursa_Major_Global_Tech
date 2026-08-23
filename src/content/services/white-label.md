@@ -1,10 +1,10 @@
 ---
 title: White-Label Product Development
-summary: Launch a SaaS under your brand without building an engineering org. We build it, you own it — or license one of ours and go to market this month.
+summary: Launch a SaaS under your brand without building an engineering org. We build it, you own it, or license one of ours and go to market this month.
 priceLabel: Project-Based
 timeline: 6–10 weeks
 order: 3
-# Retired as a headline SKU — white-label work now runs through Custom, and the
+# Retired as a headline SKU. White-label work now runs through Custom, and the
 # licensing angle lives on the products side. Page stays reachable.
 unlisted: true
 forWho: Agencies and domain experts with an audience and distribution, who need product engineering muscle behind the brand.
@@ -13,11 +13,11 @@ deliverables:
   - Multi-tenant architecture ready for your customer base
   - Billing, onboarding, and customer admin out of the box
   - White-label licensing options on our existing products
-  - Brand integration — your design system, not a template
+  - Brand integration using your design system, not a template
   - Ongoing maintenance plans or full handoff, your call
 process:
   - step: Product Strategy
-    detail: We pressure-test the model — build custom, or license and re-skin one of ours to reach market in weeks.
+    detail: We pressure-test the model, then either build custom or license and re-skin one of ours to reach market in weeks.
   - step: Build Under Your Flag
     detail: Your brand, your domain, your customer relationships. Our engineering, invisible behind it.
   - step: Launch & Scale

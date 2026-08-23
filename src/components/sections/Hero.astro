@@ -16,7 +16,7 @@ import { withBase } from "../../utils/paths";
         headline with a nested, differently-sized block child. The line breaks
         here are manual anyway, so the split bought nothing. */}
     {/* No <br>. The middle span is display:block, so it already breaks the
-        line on both sides — adding a <br> next to it produces an empty line
+        line on both sides, so adding a <br> next to it produces an empty line
         box each time. The three stacked blocks below are the three lines. */}
     <h1 class="hero__title" data-animate="fade-up" data-animate-delay="0.95">
       Bringing
@@ -26,7 +26,7 @@ import { withBase } from "../../utils/paths";
 
     <p class="hero__lead" data-animate="fade-up" data-animate-delay="1.05">
       Workflow automation, custom applications, and AI systems that run in
-      production — not in a sandbox. Built by a small senior team, shipped in
+      production, not in a sandbox. Built by a small senior team, shipped in
       weeks, and yours end to end.
     </p>
 
@@ -109,7 +109,7 @@ import { withBase } from "../../utils/paths";
        calc(var(--text-hero) - 12px) subtracted a constant from a clamped
        size: harmless at 106px on desktop, but at the 46.4px mobile floor it
        cut the line box to 74% of the font size, pushing the caps out of the
-       box — where the mask around each split line then clipped them away. */
+       box, where the mask around each split line then clipped them away. */
     line-height: 0.95;
 
     /* Its own clipped background rather than relying on an ancestor's. Text

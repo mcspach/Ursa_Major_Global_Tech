@@ -4,21 +4,40 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/sections/PageHero.astro";
 import CTABand from "../../components/sections/CTABand.astro";
 import ServiceCard from "../../components/ui/ServiceCard.astro";
+import { pageItemList } from "../../utils/schema";
 
 const services = (await getCollection("services"))
   .filter((service) => !service.data.unlisted)
   .sort((a, b) => a.data.order - b.data.order);
+
+// Listed services only. An `unlisted` service keeps its own page and its own
+// Service node, but naming it here would contradict a page it's hidden from.
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [
+  pageItemList(
+    "/services/",
+    services.map((service) => ({
+      path: `/services/${service.id}/`,
+      name: service.data.title,
+    })),
+    siteUrl,
+    "Services",
+  ),
+];
 ---
 
 <BaseLayout
   title="Services | Ursa Major Global Tech"
   description="MVP builds, AI automation systems, white-label product development, and ongoing product engineering. Real implementations, not demos."
   canonicalPath="/services/"
+  pageName="Services"
+  pageType="CollectionPage"
+  schema={schema}
 >
   <PageHero
     eyebrow="What We Do"
     title="Real implementations, not demos"
-    lead="AI & automation, white-label products, and custom software development — scoped tight, shipped fast, and built to production standards from day one."
+    lead="AI & automation, white-label products, and custom software development, scoped tight, shipped fast, and built to production standards from day one."
   />
 
   <section class="section section--flush-top">

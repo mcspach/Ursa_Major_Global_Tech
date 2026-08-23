@@ -2,13 +2,13 @@
  * Motion core: Lenis smooth scroll synced to GSAP ScrollTrigger, plus the
  * shared animation primitives used across every page:
  *
- *   [data-animate="fade-up" | "fade"]   — single-element scroll reveal
- *   [data-animate-delay="0.15"]         — optional stagger offset (seconds)
- *   [data-animate-children]             — staggered reveal of direct children
- *   [data-split="lines"]                — masked line-by-line headline reveal
- *   [data-marquee]                      — infinite marquee (slows on hover)
- *   [data-counter data-target="24"]     — count-up stat on enter
- *   [data-parallax data-parallax-speed] — scrubbed parallax drift
+ *   [data-animate="fade-up" | "fade"]   single-element scroll reveal
+ *   [data-animate-delay="0.15"]         optional stagger offset (seconds)
+ *   [data-animate-children]             staggered reveal of direct children
+ *   [data-split="lines"]                masked line-by-line headline reveal
+ *   [data-marquee]                      infinite marquee (slows on hover)
+ *   [data-counter data-target="24"]     count-up stat on enter
+ *   [data-parallax data-parallax-speed] scrubbed parallax drift
  *
  * Everything here is progressive enhancement: without JS (or with reduced
  * motion) the html.um-js class is absent and all content is fully visible.
@@ -139,7 +139,7 @@ const initSplitHeadlines = () => {
     });
 
     // Lets CSS hand effects like gradient text off from the element to its
-    // lines — Chrome paints a static ghost if a background-clip: text parent
+    // lines, because Chrome paints a static ghost if a background-clip: text parent
     // keeps its background while the lines transform underneath it.
     element.classList.add("is-split");
 
