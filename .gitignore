@@ -20,5 +20,10 @@ pnpm-debug.log*
 # macOS
 .DS_Store
 
-# internal offering specs and working plans, never published
-reference/
+# Internal offering specs and working plans. The repo is public, so reference/
+# is ignored by default and docs are opted in one at a time. Pricing strategy
+# and positioning stay out; the working checklists are committed because
+# CLAUDE.md and the README link to them.
+reference/*
+!reference/punchlist.md
+!reference/launch-inputs.md
