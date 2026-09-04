@@ -130,7 +130,11 @@
     color: var(--star-100);
 
     &:hover {
-      background: color-mix(in srgb, var(--color-action) 84%, white);
+      /* Darkens rather than lightens. Mixing toward white raised the ground
+         under --star-100 and cut text contrast to 3.24:1; going the other way
+         puts hover above the rest state at 6.11:1, and the glow still carries
+         the "brighter on hover" read. */
+      background: color-mix(in srgb, var(--color-action) 86%, var(--ink-950));
       box-shadow: var(--glow-action);
     }
   }
