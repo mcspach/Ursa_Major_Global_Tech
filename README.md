@@ -73,8 +73,8 @@ sips -z 630 1200 og_raw.png --out public/og_image.png && rm og_raw.png
 
 ## Placeholders to swap before launch
 
-- [ ] **Contact form**: `src/pages/contact.astro` posts to a Formspree
-      placeholder (`YOUR_FORM_ID`); create the form and swap the ID
+- [x] **Contact form**: native form posting to a Google Form's `formResponse`
+      endpoint, with the linked Google Sheet as the inbox
 - [ ] **Booking link**: `BOOKING_URL` in `contact.astro` points to a
       placeholder Cal.com URL
 - [ ] **Founder bio + photo**: `src/pages/about.astro` (marked in-page)

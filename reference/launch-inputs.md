@@ -73,7 +73,7 @@ will reject a published offer without one.
 
 | ☐ | Item | Notes |
 |---|---|---|
-| ☐ | Formspree form ID | Contact page posts to a placeholder endpoint |
+| ☑ | Contact form endpoint | Native form → Google Forms `formResponse`; Sheet is the inbox |
 | ☐ | `public/CNAME` | Custom domain for GitHub Pages |
 
 ---

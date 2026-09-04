@@ -183,10 +183,9 @@ page reads before editing content.
 Tracked in the [README](README.md) checklist and [reference/punchlist.md](reference/punchlist.md).
 The ones that will bite an agent:
 
-- **Contact form** — [src/pages/contact.astro](src/pages/contact.astro) posts to
-  `https://formspree.io/f/YOUR_FORM_ID`. It is not a working form.
-- **Booking link** — `BOOKING_URL` in the same file is a placeholder Cal.com URL.
-  Neither it nor the form endpoint is in structured data yet, on purpose.
+- **Booking link** — `BOOKING_URL` in
+  [contact.astro](src/pages/contact.astro) is a placeholder Cal.com URL, and
+  stays out of structured data until it is real.
 - **Stats** — [StatsStrip.astro](src/components/sections/StatsStrip.astro) numbers are invented.
 - **Blog** — all seven posts are ghost-written and unreviewed.
 - **Products** — Northstar Metrics and StackAudit are `placeholder: true`.
@@ -216,15 +215,22 @@ a CI run may not have them.
   It respects existing design tokens — point it at [src/styles/](src/styles/) so
   it extends the system instead of inventing a parallel one.
 
-- **`google-form-native`** — not currently wired up, but it is the cheapest
-  answer to the open contact-form placeholder. The site is static with no
-  backend, so a hand-built form POSTing to a Google Form's `formResponse`
-  endpoint (Sheets as the inbox) is a free alternative to the Formspree ID that
-  still needs creating. It ships an `entry.*` extractor and, more importantly,
-  documents the silent-failure traps: the hidden sink iframe's `load` event fires
-  whether Google accepted the POST or rejected it, so a field required in Google
-  Forms but optional in the HTML shows the visitor a success message and writes
-  nothing. Read its `references/gotchas.md` before wiring any field names.
+- **`google-form-native`** — the contact form's whole architecture. The site is
+  static with no backend, so the form in
+  [contact.astro](src/pages/contact.astro) is hand-built and POSTs straight to a
+  Google Form's `formResponse` endpoint, with the linked Google Sheet as the
+  inbox. Use it for any change to that form, to add a second form elsewhere, or
+  to pull `entry.*` field IDs out of a Google Form — it ships an extractor and,
+  more importantly, documents the silent-failure traps.
+
+  The big one: the hidden sink iframe's `load` event fires whether Google
+  accepted the POST or rejected it, so a field that is required in Google Forms
+  but optional in the HTML shows the visitor a success message and writes
+  nothing to the sheet. Today no field is required on Google's side, which is
+  the safe direction — HTML may be stricter without consequence. Do not invert
+  that. Dropdown `value`s must also string-match the form's options exactly; a
+  mismatch is rejected silently. Read `references/gotchas.md` before touching
+  field names, required flags, or option text.
 
 ### Built in
 
