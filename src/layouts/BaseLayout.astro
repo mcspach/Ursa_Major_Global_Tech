@@ -6,6 +6,13 @@ import Header from "../components/sections/Header.astro";
 import Footer from "../components/sections/Footer.astro";
 import ConstellationMark from "../components/ui/ConstellationMark.astro";
 import { toAbsoluteUrl, withBase } from "../utils/paths";
+import {
+  breadcrumbs,
+  organization,
+  orgId,
+  webPage,
+  website,
+} from "../utils/schema";
 
 const SITE_NAME = "Ursa Major Global Tech";
 const DEFAULT_TITLE = "Ursa Major Global Tech | AI Automation & Custom Software";
@@ -21,11 +28,59 @@ const {
   socialImagePath = DEFAULT_SOCIAL_IMAGE_PATH,
   ogType = "website",
   noindex = false,
+  // Structured data. Pages pass only the nodes specific to them; Organization,
+  // WebSite, WebPage, and BreadcrumbList are added here so every page carries
+  // them and the breadcrumb trail can't drift from the canonical URL.
+  schema = [],
+  // WebPage name and the final breadcrumb. Defaults to the <title> with the
+  // site-name suffix trimmed off.
+  pageName,
+  // Overrides the WebPage @type: AboutPage, ContactPage, CollectionPage…
+  pageType = "WebPage",
+  // The primary entity the page is about, by @id.
+  pageAbout,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
 const canonicalUrl = toAbsoluteUrl(canonicalPath, siteUrl);
 const socialImageUrl = toAbsoluteUrl(socialImagePath, siteUrl);
+
+const resolvedPageName =
+  pageName ?? title.replace(new RegExp(`\\s*\\|\\s*${SITE_NAME}\\s*$`), "");
+
+const trail = breadcrumbs(canonicalPath, siteUrl, resolvedPageName);
+
+/**
+ * One @graph per page. A noindex page gets none: structured data exists to be
+ * indexed, so emitting it on a page we've asked crawlers to skip is noise at
+ * best and a contradiction at worst.
+ */
+const graph = noindex
+  ? null
+  : [
+      organization(siteUrl),
+      website(siteUrl),
+      webPage({
+        path: canonicalPath,
+        site: siteUrl,
+        name: resolvedPageName,
+        description,
+        type: pageType,
+        hasBreadcrumb: Boolean(trail),
+        // The homepage and the about page are both about the studio itself.
+        about:
+          pageAbout ??
+          (canonicalPath === "/" || pageType === "AboutPage"
+            ? orgId(siteUrl)
+            : undefined),
+      }),
+      ...(trail ? [trail] : []),
+      ...schema.filter(Boolean),
+    ];
+
+const jsonLd = graph
+  ? JSON.stringify({ "@context": "https://schema.org", "@graph": graph })
+  : null;
 ---
 
 <!doctype html>
@@ -90,7 +145,7 @@ const socialImageUrl = toAbsoluteUrl(socialImagePath, siteUrl);
             root.classList.add("um-intro-boot");
           }
         } catch {
-          // Storage unavailable — boot uncovered.
+          // Storage unavailable, so boot uncovered.
         }
 
         // If the motion module never boots, force-reveal all hidden content.
@@ -98,7 +153,11 @@ const socialImageUrl = toAbsoluteUrl(socialImagePath, siteUrl);
       })();
     </script>
 
-    {/* Per-page additions — structured data lives here. */}
+    {jsonLd && (
+      <script type="application/ld+json" is:inline set:html={jsonLd} />
+    )}
+
+    {/* Per-page additions. */}
     <slot name="head" />
   </head>
   <body>

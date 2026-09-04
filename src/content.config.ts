@@ -47,7 +47,7 @@ const services = defineCollection({
 });
 
 /* ------------------------------------------------------------------
-   Offers — the productized service set.
+   Offers: the productized service set.
    Replaces `services` as offers are migrated over. Cards, advisory steps,
    and retainers share one shape: a price, a purchase path, a fixed scope,
    stated exclusions, and a named next purchase.
@@ -64,9 +64,9 @@ const money = z.object({
 // Purchase paths, keyed to price band (offering doc §2.9).
 const buying = z.object({
   mode: z.enum([
-    "buy-now", // under $2,500 and $2,500 fixed tiers — Stripe Payment Link
-    "call-then-link", // starting-at tiers — 20-min call, then a link
-    "call-then-proposal", // over $12,000 — call, proposal, deposit link
+    "buy-now", // under $2,500 and $2,500 fixed tiers: Stripe Payment Link
+    "call-then-link", // starting-at tiers: 20-min call, then a link
+    "call-then-proposal", // over $12,000: call, proposal, deposit link
     "inquire", // sold in conversation
   ]),
   checkoutUrl: z.string().url().optional(),
@@ -108,7 +108,7 @@ const offers = defineCollection({
          -------------------------------------------------------------- */
       // The generic category this offer belongs to, in the words a buyer
       // would search. Our product names are proprietary and have no search
-      // volume of their own — this sits beside them so the page can rank for
+      // volume of their own, so this sits beside them and the page can rank for
       // the category while keeping the name.
       category: z.string().optional(),
       // The question this step answers, phrased the way it gets typed
@@ -123,11 +123,11 @@ const offers = defineCollection({
 
       // draft: the only flag that controls whether an offer reaches the site.
       // A draft builds no page at all, so it can't be linked, crawled, or land
-      // in the sitemap. Default false — an offer is live unless it says
+      // in the sitemap. Default false, so an offer is live unless it says
       // otherwise. Set `draft: true` to pull one back.
       draft: z.boolean().default(false),
       // published: completeness, NOT visibility. Flipping this on turns the
-      // guardrails below into build errors — see superRefine. Leave it false
+      // guardrails below into build errors. See superRefine. Leave it false
       // while an offer is still missing its checkout and intake URLs.
       published: z.boolean().default(false),
       // unlisted: keeps its page, drops out of indexes.
@@ -205,7 +205,7 @@ const offers = defineCollection({
         }
         if (path.mode === "buy-now" && !path.checkoutUrl) {
           fail(
-            `published offer "${label}" is buy-now but has no \`buying.checkoutUrl\` — it would render a dead button`,
+            `published offer "${label}" is buy-now but has no \`buying.checkoutUrl\`, so it would render a dead button`,
           );
         }
       }
@@ -225,6 +225,14 @@ const blog = defineCollection({
     description: z.string(),
     category: z.string(),
     pubDate: z.coerce.date(),
+    // Bump this whenever a post is substantively revised. It becomes
+    // `dateModified` in the BlogPosting node; left unset, no dateModified is
+    // emitted, because claiming a revision date we don't have is worse than
+    // claiming none. Copy-edits are not revisions.
+    updatedDate: z.coerce.date().optional(),
+    // Defaults to the Organization in structured data. Set only when a post
+    // carries a real personal byline.
+    author: z.string().optional(),
     // Derived from the body by `readingTime()` unless set explicitly here.
     readTime: z.string().optional(),
     // A draft still builds its page so it can be previewed at its real URL,

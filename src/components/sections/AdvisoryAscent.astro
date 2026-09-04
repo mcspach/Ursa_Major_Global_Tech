@@ -7,7 +7,7 @@
  *   - The band is a FIXED 96px tall and fluid-width. The polyline lives in a
  *     `preserveAspectRatio="none"` viewBox of 0 0 100 96, so x stretches with
  *     the container while y stays in real pixels.
- *   - Node dots are CSS elements, not SVG circles — non-uniform scaling would
+ *   - Node dots are CSS elements, not SVG circles, so non-uniform scaling would
  *     squash circles into ellipses.
  *   - Each column's `--drop` is 96 minus its node's y, so the hairline rising
  *     out of the column lands exactly on the node. Change one, change both.
@@ -37,9 +37,7 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
           <h2 data-animate="fade-up">AI advisory that ends with a number</h2>
           <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
             Before anyone writes code, someone has to decide what's worth
-            building. Four ways to buy that decision — every price published up
-            front, and what you spend deciding comes off what you spend
-            building.
+            the time. Four ways to buy that decision, with upfront pricing, and always a way to keep building on what you started.
           </p>
         </header>
 
@@ -52,7 +50,7 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
               stroke-width="1"
               vector-effect="non-scaling-stroke"
             />
-            {/* The asterism continues past both ends — it isn't a closed set. */}
+            {/* The asterism continues past both ends; it isn't a closed set. */}
             <polyline
               points={`4,88 ${NODE_X[0]},${NODE_Y[0]}`}
               fill="none"
@@ -87,7 +85,7 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
             >
               {/* The category, not a step number. Our product names carry no
                   search volume on their own, so the generic term sits beside
-                  them — and it reads as "here's what this is" rather than
+                  them, and it reads as "here's what this is" rather than
                   "here's rung one of four". */}
               {offer.data.category && (
                 <span class="ascent__category">{offer.data.category}</span>
@@ -112,7 +110,7 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
         <div class="ascent__foot" data-animate="fade-up">
           <p>
             <b>If you build with us, the audit is free.</b> The $2,500 audit
-            credits back in full against any build over $10,000 — so deciding
+            credits back in full against any build over $10,000, so deciding
             properly costs you nothing but the time.
           </p>
           <a href={withBase("/advisory/")} class="btn btn--primary">
@@ -135,7 +133,7 @@ const polyline = NODE_X.map((x, i) => `${x},${NODE_Y[i]}`).join(" ");
     border-block: 1px solid var(--color-border);
     overflow: hidden;
     /* Contain the pattern's blend mode so it can't reach the sections above
-       and below — same guard the CTA band uses. */
+       and below, the same guard the CTA band uses. */
     isolation: isolate;
   }
 

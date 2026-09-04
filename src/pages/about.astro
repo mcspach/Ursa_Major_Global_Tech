@@ -9,7 +9,7 @@ const PRINCIPLES = [
   {
     title: "Production-ready or not shipped",
     detail:
-      "Every build gets real auth, real error handling, and a real deploy pipeline. \"It's just an MVP\" is never an excuse for fragile software — minimum scope, maximum integrity.",
+      "Every build gets real auth, real error handling, and a real deploy pipeline. \"It's just an MVP\" is never an excuse for fragile software. Minimum scope, maximum integrity.",
   },
   {
     title: "Speed is a discipline, not a shortcut",
@@ -39,24 +39,26 @@ const STACK_GROUPS = [
   },
   {
     label: "AI & Automation",
-    items: ["Claude Code", "OpenAI", "n8n", "Make", "Gumloop"],
+    items: ["Claude Code", "OpenAI", "n8n", "Make", "Lovable"],
   },
   {
     label: "Ship",
-    items: ["Vercel", "GitHub Actions", "Sentry", "PostHog"],
+    items: ["Vercel", "GitHub Actions"],
   },
 ];
 ---
 
 <BaseLayout
   title="About | Ursa Major Global Tech"
-  description="Ursa Major Global Tech is an AI-accelerated software studio. We build production-ready MVPs, automation systems, and white-label products — in weeks, not quarters."
+  pageName="About"
+  pageType="AboutPage"
+  description="Ursa Major Global Tech is an AI-accelerated software studio. We build production-ready MVPs, automation systems, and white-label products in weeks, not quarters."
   canonicalPath="/about/"
 >
   <PageHero
     eyebrow="About Us"
     title="Built to help you navigate"
-    lead="For thousands of years, travelers found their way by Ursa Major — follow the pointer stars and you find true north. That's the job: pointing product ideas at the shortest honest path to production."
+    lead="For thousands of years, travelers found their way by Ursa Major: follow the pointer stars and you find true north. That's the job: pointing product ideas at the shortest honest path to production."
   />
 
   <section class="section section--flush-top">
@@ -72,7 +74,7 @@ const STACK_GROUPS = [
           </p>
           <p>
             We build MVPs for founders, automation systems for operators, and
-            white-label products for agencies — and we ship our own products in
+            white-label products for agencies, and we ship our own products in
             between, because nothing keeps engineering judgment sharp like
             running software you have to answer for.
           </p>
@@ -84,7 +86,7 @@ const STACK_GROUPS = [
         </div>
         <div class="about-story__visual" data-animate="fade" data-animate-delay="0.2">
           <ConstellationMark class="about-story__mark" />
-          <p class="mono-note">Ursa Major — the Great Bear.<br />Home of the pointer stars.</p>
+          <p class="mono-note">Ursa Major, the Great Bear.<br />Home of the pointer stars.</p>
         </div>
       </div>
     </div>
@@ -117,7 +119,7 @@ const STACK_GROUPS = [
         <p class="eyebrow" data-animate="fade">The Stack</p>
         <h2 data-animate="fade-up">Boring where it should be, sharp where it counts</h2>
         <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
-          We pick proven tools and know them deeply — the innovation budget gets
+          We pick proven tools and know them deeply, so the innovation budget gets
           spent on your product, not our stack.
         </p>
       </header>
@@ -147,7 +149,7 @@ const STACK_GROUPS = [
         </div>
         <div class="about-founder__text">
           <p class="eyebrow">The Founder</p>
-          <h2>Ryan — builder in chief</h2>
+          <h2>Ryan, builder in chief</h2>
           <p>
             Ursa Major is led by Ryan, a product engineer who has spent his
             career shipping software at the messy intersection of "the business
@@ -156,7 +158,7 @@ const STACK_GROUPS = [
             development cycles that AI-era tooling had already made obsolete.
           </p>
           <p class="mono-note">
-            Placeholder bio — swap in the real story and a photo before launch.
+            Placeholder bio. Swap in the real story and a photo before launch.
           </p>
           <a href={withBase("/contact/")} class="btn btn--ghost">Say hello</a>
         </div>
@@ -166,7 +168,7 @@ const STACK_GROUPS = [
 
   <CTABand
     title="Let's find your true north"
-    copy="Thirty minutes, no pitch deck. Bring the idea — we'll bring an honest read on scope, cost, and timeline."
+    copy="Thirty minutes, no pitch deck. Bring the idea and we'll bring an honest read on scope, cost, and timeline."
   />
 </BaseLayout>
 

@@ -3,12 +3,12 @@ title: Executive Advisory
 family: advisory
 step: 4
 kicker: Advisory step 4
-summary: Two sessions a month plus async access. Judgment on demand, no delivery — for teams who now own the work and want a second opinion that already knows the context.
+summary: Two sessions a month plus async access. Judgment on demand, no delivery, for teams who now own the work and want a second opinion that already knows the context.
 forWho: Post-engagement clients running AI themselves, who want someone in the room at the next budget cycle rather than starting cold.
 category: AI advisory retainer
 question: Who pressure-tests our AI decisions once we own the work?
 situation: We're running it ourselves. We want a second opinion in the room.
-answer: "Someone who already knows your business and has no stake in you building more. Executive Advisory is $4,000 a month for two 60-minute sessions plus async access, cancel on 30 days' notice — architecture and vendor decisions checked before you commit, so a bad call gets caught while it's still cheap."
+answer: "Someone who already knows your business and has no stake in you building more. Executive Advisory is $4,000 a month for two 60-minute sessions plus async access, cancel on 30 days' notice. Architecture and vendor decisions get checked before you commit, so a bad call gets caught while it's still cheap."
 order: 4
 timeline: Rolling, 30-day notice
 
@@ -23,7 +23,7 @@ buying:
   ctaLabel: Ask about it
   # intakeUrl: TODO
 
-revisionCap: Not applicable — no deliverables
+revisionCap: Not applicable, no deliverables
 exitArtifact: A re-engagement path back into builds or Fractional whenever scope justifies it.
 
 deliverables:
@@ -31,10 +31,10 @@ deliverables:
   - Async access between sessions for the questions that can't wait
   - Architecture and vendor decisions pressure-tested before you commit
   - A read on what's worth building next, and what isn't
-  - Continuity — you're not re-explaining the business every time
+  - Continuity, so you're not re-explaining the business every time
 
 notFor:
-  - Not a delivery engagement — nothing gets built
+  - Not a delivery engagement; nothing gets built
   - Not an on-call or support arrangement
   - Not a substitute for an internal owner
 
@@ -55,5 +55,5 @@ This is the floor under that. Two sessions a month is enough to keep the thread
 alive, catch a bad architectural call before it's expensive, and be in the room
 when next year's budget is set.
 
-**No delivery.** That's the point — it stays cheap, it stays honest, and it never
+**No delivery.** That's the point. It stays cheap, it stays honest, and it never
 competes for the capacity that builds things.

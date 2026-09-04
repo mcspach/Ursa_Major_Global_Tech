@@ -1,61 +1,188 @@
 /**
- * Hero "sparkle field" — a warped grid of dots over a drifting starfield.
+ * Hero "clean horizon": a scattered star field over a low ground plane.
  *
- * A full-bleed grid of purple dots rides a shallow dome: dots near the centre
- * bulge toward the viewer while the edges fall away, and slow diagonal waves
- * ripple through the field in depth, morphing each dot from a circle into a
- * four-point sparkle at the crest. Behind it, a randomised starfield twinkles
- * and drifts to seat the grid in space. The pointer parallaxes both layers —
- * nearer dots track the cursor more than far ones — and the whole field also
- * scrolls up a touch slower than the hero content. Static single render under
- * reduced motion.
+ * The field is a grid jittered hard enough to read as scattered stars while
+ * keeping a trace of the underlying order, dialled well back in size and
+ * brightness so the gradient headline is always the brightest thing in the
+ * frame. Below it, a faint perspective grid recedes from a horizon that is
+ * measured from the hero's own layout — it sits in the gap between the lead
+ * paragraph and the button row, so it tracks the text at every breakpoint
+ * instead of landing on a fixed fraction of the frame. A shooting star crosses
+ * every few seconds, visible for a fraction of its period so it stays an event
+ * rather than an effect. Static single render under reduced motion.
  */
 
 // Colours.
-const COL_NEAR = [188, 196, 255]; // grid gradient, left edge (periwinkle)
-const COL_FAR = [96, 80, 220]; // grid gradient, right edge (violet)
 const STAR_WHITE = [236, 240, 253];
 const STAR_PERI = [165, 175, 251];
+const GRID_PERI = [165, 175, 251];
+const GLOW_VIOLET = [109, 92, 245];
+const HORIZON_ICE = [174, 184, 244];
 
-// Grid + wave.
-const SPACING = 46; // px between grid dots
-const DOT_SIZE = 2.0; // base dot radius in px
+// Star field. FIELD_ALPHA is the brightness ceiling for the whole layer: the
+// per-star alpha is a fraction of it, never above it.
+const SPACING_DIVISOR = 24; // cell size relative to canvas width
+const SPACING_MIN = 14;
+const SPACING_MAX = 48;
+const JITTER = 0.66; // cell-relative scatter; 0 is a lattice, 1 is a full cell
+const SPARKLE_SHARE = 0.06; // fraction of stars that open into 4-point sparkles
+const FIELD_ALPHA = 0.4;
+const MARK_SCALE = 0.78;
 const SHARPNESS = 3.6; // sparkle arm sharpness (circle → 4-point star)
-const WAVE_SPEED = 0.3; // wave advance, radians/sec-ish
-const WAVE_SCALE = 0.006; // spatial frequency of the waves
-const WAVE_DEPTH = 0.45; // how far crests ripple toward the viewer (0–1)
+const WAVE_SPEED = 0.24;
+const WAVE_SCALE = 0.0055;
 
-// 3D warp / projection.
-const WARP = 0.55; // dome bulge amount (0–1)
-const FOCAL = 720; // camera focal length
-const WARP_MAX = 270; // max dome depth in world units at WARP = 1
-const WAVE_MAX = 150; // max wave depth in world units at WAVE_DEPTH = 1
-const Z_CAP = FOCAL - 120; // clamp so projection never blows up
+// Ground plane.
+const GRID_ALPHA = 0.14;
+const GRID_ROWS = 12;
+const GRID_COLS = 11;
+const GRID_SPEED = 0.04; // rows drifting toward the viewer
+const GRID_FALLOFF = 2.4; // row spacing exponent; higher = faster acceleration
+const HORIZON_ALPHA = 0.2;
+// Used only when the hero's lead or button row cannot be measured.
+const HORIZON_FALLBACK = 0.755;
+// The canvas is taller than the hero (see .hero__canvas) so the scroll
+// parallax never reveals an edge. This is the share of that overhang sitting
+// above the hero's top edge, and it converts hero-local y into canvas-local y.
+const CANVAS_OVERHANG_TOP = 0.2;
 
-// Starfield.
-const SCATTER_AREA = 13000; // one scatter star per this many px²
-const SCATTER_SPREAD = 1.5; // world extent relative to the viewport
+// Shooting star.
+const SHOOT_PERIOD = 6.5; // seconds between streaks
+const SHOOT_LIVE = 0.13; // share of the period the streak is on screen
+const SHOOT_AMP = 0.46; // brightness, trail width and head size, all at once
 
-// Pointer + scroll parallax.
-const POINTER_PARALLAX = 0.6; // strength of the mouse-driven depth
-const POINTER_EASE = 0.05; // pointer follow smoothing per frame
-const PAR_K = 60; // pointer offset scale in px
-const DOME_FOLLOW = 0.18; // how far the dome peak drifts toward the cursor
+// Pointer parallax. Deliberately tiny, and applied to the sky only: the ground
+// plane is the frame's anchor, and a horizon that slides with the cursor reads
+// as the scene tipping rather than the viewer moving. Per-star depth means the
+// field shifts in layers instead of sliding as one sheet.
+const POINTER_SHIFT_X = 18; // px of travel at the extremes of the viewport
+const POINTER_SHIFT_Y = 12; // less vertical: it is the more noticeable axis
+const POINTER_EASE = 0.06; // follow smoothing per frame
+
 const PARALLAX = 0.18; // fraction of scroll the background lags behind by
 
-// Shared brightness ceiling for both layers (accessibility cap).
-const BRIGHTNESS = 0.78;
-
-const rand = (min, max) => min + Math.random() * (max - min);
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
-const lerp = (a, b, m) => a + (b - a) * m;
 const wrap = (v, max) => ((v % max) + max) % max;
-// Sign-preserving power — drives the circle→sparkle morph.
+// Sign-preserving power, which drives the circle→sparkle morph.
 const spow = (v, e) => Math.sign(v) * Math.pow(Math.abs(v), e);
+const lerp = (a, b, m) => a + (b - a) * m;
 const mixColor = (c1, c2, m) =>
   `rgb(${Math.round(lerp(c1[0], c2[0], m))}, ${Math.round(
     lerp(c1[1], c2[1], m),
   )}, ${Math.round(lerp(c1[2], c2[2], m))})`;
+const rgba = (c, a) => `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${a})`;
+
+// Deterministic PRNG, so a resize reseeds the field the same way every time
+// and the layout never shuffles between renders of the same viewport.
+const mulberry32 = (seed) => {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+/**
+ * The perspective ground plane: verticals converging on a vanishing point,
+ * horizontals accelerating toward the viewer, an atmosphere gradient above the
+ * horizon and the horizon itself. Module scope because the hero and the band
+ * above the footer draw the same plane and must stay identical — the only
+ * difference between them is where the horizon sits.
+ */
+const drawGroundPlane = (context, width, height, horizonY, time) => {
+  const vanishX = width / 2;
+  const depth = height - horizonY;
+
+  context.save();
+  context.beginPath();
+  context.rect(0, horizonY, width, height - horizonY);
+  context.clip();
+  context.lineWidth = 1;
+
+  // Verticals converging on the vanishing point.
+  for (let i = -GRID_COLS; i <= GRID_COLS; i += 1) {
+    if (i === 0) {
+      continue;
+    }
+    const fade = 1 - Math.abs(i) / (GRID_COLS + 2);
+    context.strokeStyle = rgba(GRID_PERI, GRID_ALPHA * fade);
+    context.beginPath();
+    context.moveTo(vanishX, horizonY);
+    context.lineTo(vanishX + i * (width / (GRID_COLS * 0.55)), height * 1.2);
+    context.stroke();
+  }
+
+  // Horizontals accelerating toward the viewer.
+  const offset = wrap(time * GRID_SPEED, 1 / GRID_ROWS);
+  for (let i = 0; i < GRID_ROWS; i += 1) {
+    const u = Math.pow(i / GRID_ROWS + offset, GRID_FALLOFF);
+    if (u > 1) {
+      continue;
+    }
+    const y = horizonY + depth * u;
+    context.strokeStyle = rgba(GRID_PERI, GRID_ALPHA * (0.22 + 0.9 * u));
+    context.beginPath();
+    context.moveTo(0, y);
+    context.lineTo(width, y);
+    context.stroke();
+  }
+  context.restore();
+
+  // Atmosphere above the horizon, then the horizon itself.
+  const glow = context.createLinearGradient(
+    0,
+    horizonY - height * 0.15,
+    0,
+    horizonY + height * 0.05,
+  );
+  glow.addColorStop(0, rgba(GLOW_VIOLET, 0));
+  glow.addColorStop(0.74, rgba(GLOW_VIOLET, 0.1));
+  glow.addColorStop(1, rgba(GRID_PERI, 0.04));
+  context.fillStyle = glow;
+  context.fillRect(0, horizonY - height * 0.15, width, height * 0.2);
+
+  context.strokeStyle = rgba(HORIZON_ICE, HORIZON_ALPHA);
+  context.lineWidth = 1;
+  context.beginPath();
+  context.moveTo(0, horizonY);
+  context.lineTo(width, horizonY);
+  context.stroke();
+};
+
+
+/**
+ * Run `start`/`stop` in step with the canvas being on screen and the tab being
+ * visible. Both fields use it, so neither burns frames on a plane nobody can
+ * see — and since the hero has scrolled away by the time the footer band
+ * arrives, only one of them is ever running.
+ */
+const observeCanvas = (canvas, start, stop) => {
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stop();
+    } else {
+      start();
+    }
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          start();
+        } else {
+          stop();
+        }
+      }
+    },
+    { threshold: 0 },
+  );
+
+  observer.observe(canvas);
+};
 
 export const initConstellation = (canvas, { animate = true } = {}) => {
   const context = canvas.getContext("2d");
@@ -63,10 +190,15 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
     return;
   }
 
+  const hero = canvas.closest(".hero");
+  const lead = hero?.querySelector(".hero__lead");
+  const actions = hero?.querySelector(".hero__actions");
+
   let width = 0;
   let height = 0;
   let dpr = 1;
-  let scatter = [];
+  let field = [];
+  let horizonY = 0;
   let rafId = 0;
   let running = false;
   let lastTime = 0;
@@ -78,22 +210,76 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
   let targetX = 0;
   let targetY = 0;
 
-  const seedScatter = () => {
-    const count = Math.round((width * height) / SCATTER_AREA);
-    const rx = width * SCATTER_SPREAD;
-    const ry = height * SCATTER_SPREAD;
-    scatter = Array.from({ length: count }, () => ({
-      x: (Math.random() - 0.5) * rx,
-      y: (Math.random() - 0.5) * ry,
-      z: rand(-190, 40),
-      r: rand(0.5, 1.9),
-      a: rand(0.1, 0.42),
-      tint: Math.random(),
-      phase: Math.random() * Math.PI * 2,
-      twinkle: rand(0.4, 1.3),
-      vx: (Math.random() - 0.5) * 5,
-      vy: (Math.random() * 0.4 + 0.1) * 4,
-    }));
+  /**
+   * Offset of an element within the hero, walking the offsetParent chain.
+   *
+   * Deliberately not getBoundingClientRect: the lead and the button row both
+   * carry `data-animate="fade-up"`, so GSAP holds a transform on them until
+   * their reveal finishes, and a rect measured before then is displaced by the
+   * animation. offsetTop is layout-only and ignores transforms, so it reports
+   * the resting position even mid-reveal. It also sidesteps the canvas's own
+   * parallax transform, which a rect-based measurement would have to subtract.
+   */
+  const offsetWithinHero = (element) => {
+    let y = 0;
+    let node = element;
+    while (node && node !== hero) {
+      y += node.offsetTop;
+      node = node.offsetParent;
+    }
+    return y;
+  };
+
+  /**
+   * Put the horizon in the gap between the lead paragraph and the buttons.
+   * Clamped so an unexpected layout can never park it off-canvas or halfway up
+   * the headline.
+   */
+  const measureHorizon = () => {
+    if (!hero || !lead || !actions || !hero.offsetHeight) {
+      horizonY = height * HORIZON_FALLBACK;
+      return;
+    }
+    const leadBottom = offsetWithinHero(lead) + lead.offsetHeight;
+    const actionsTop = offsetWithinHero(actions);
+    if (actionsTop <= leadBottom) {
+      horizonY = height * HORIZON_FALLBACK;
+      return;
+    }
+    const heroLocal = (leadBottom + actionsTop) / 2;
+    horizonY = clamp(
+      heroLocal + hero.offsetHeight * CANVAS_OVERHANG_TOP,
+      height * 0.45,
+      height * 0.95,
+    );
+  };
+
+  /**
+   * Precompute the field on resize rather than reseeding per frame: only the
+   * twinkle and the sparkle crest are time-dependent, so per-frame work stays
+   * a transform and a fill.
+   */
+  const seedField = () => {
+    const spacing = clamp(width / SPACING_DIVISOR, SPACING_MIN, SPACING_MAX);
+    const random = mulberry32(91);
+    field = [];
+
+    for (let y = -spacing; y < height + spacing * 2; y += spacing) {
+      for (let x = -spacing; x < width + spacing * 2; x += spacing) {
+        const px = x + (random() - 0.5) * spacing * JITTER * 2;
+        const py = y + (random() - 0.5) * spacing * JITTER * 2;
+        const sparkle = random() < SPARKLE_SHARE;
+        field.push({
+          x: px,
+          y: py,
+          sparkle,
+          radius: (0.62 + random() * 0.98) * MARK_SCALE * (sparkle ? 1.4 : 1),
+          depth: 0.35 + random() * 0.65,
+          tint: random() < 0.24 ? 1 : 0,
+          phase: random() * Math.PI * 2,
+        });
+      }
+    }
   };
 
   const resize = () => {
@@ -104,6 +290,8 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    measureHorizon();
+    seedField();
   };
 
   const applyParallax = () => {
@@ -111,21 +299,9 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
     canvas.style.transform = `translate3d(0, ${offset}px, 0)`;
   };
 
-  // Project a world point (X, Y, Z) to the screen. Nearer points (higher Z)
-  // scale up and take a larger share of the pointer parallax.
-  const project = (x, y, z) => {
-    const zc = z > Z_CAP ? Z_CAP : z;
-    const s = FOCAL / (FOCAL - zc);
-    return {
-      sx: width / 2 + x * s + pointerX * POINTER_PARALLAX * s * PAR_K,
-      sy: height / 2 + y * s + pointerY * POINTER_PARALLAX * s * PAR_K,
-      s,
-    };
-  };
-
-  // Trace one dot: a circle at m = 0 morphing to a 4-point sparkle at m = 1.
-  const traceDot = (cx, cy, radius, m) => {
-    const segments = 32;
+  // A circle at m = 0 morphing to a 4-point sparkle at m = 1.
+  const traceMark = (cx, cy, radius, m) => {
+    const segments = m > 0 ? 24 : 12;
     context.beginPath();
     for (let i = 0; i <= segments; i += 1) {
       const angle = (i / segments) * Math.PI * 2;
@@ -142,95 +318,92 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
     context.closePath();
   };
 
-  const renderScene = (time) => {
-    context.clearRect(0, 0, width, height);
-
-    // Starfield behind the grid.
-    const rx = width * SCATTER_SPREAD;
-    const ry = height * SCATTER_SPREAD;
-    for (const star of scatter) {
-      const wx = wrap(star.x + star.vx * time + rx / 2, rx) - rx / 2;
-      const wy = wrap(star.y + star.vy * time + ry / 2, ry) - ry / 2;
-      const { sx, sy, s } = project(wx, wy, star.z);
-      if (sx < -30 || sx > width + 30 || sy < -30 || sy > height + 30) {
+  const drawField = (time) => {
+    for (const star of field) {
+      const x = star.x + pointerX * POINTER_SHIFT_X * star.depth;
+      const y = star.y + pointerY * POINTER_SHIFT_Y * star.depth;
+      if (y > horizonY - 2) {
         continue;
       }
-      const twinkle = 0.6 + 0.4 * Math.sin(time * star.twinkle + star.phase);
-      context.globalAlpha = clamp(
-        star.a * twinkle * BRIGHTNESS * clamp(s * 0.8, 0.35, 1.3),
-        0,
-        1,
-      );
-      context.fillStyle = mixColor(STAR_WHITE, STAR_PERI, star.tint * 0.7);
-      context.beginPath();
-      context.arc(sx, sy, Math.max(0.3, star.r * s), 0, Math.PI * 2);
+      const crest =
+        0.5 +
+        0.5 *
+          Math.sin((star.x + star.y) * WAVE_SCALE + time * WAVE_SPEED + star.phase);
+      const m = star.sparkle ? crest * crest : 0;
+      context.globalAlpha = clamp(FIELD_ALPHA * (0.34 + 0.66 * crest), 0, 1);
+      context.fillStyle = mixColor(STAR_WHITE, STAR_PERI, star.tint);
+      traceMark(x, y, star.radius * (1 + m * 0.9), m);
       context.fill();
     }
-
-    // Warped sparkle grid in front.
-    const cols = Math.ceil(width / SPACING);
-    const rows = Math.ceil(height / SPACING);
-    const margin = 3;
-    const maxR = Math.hypot(width / 2, height / 2);
-    const domeCx = pointerX * width * DOME_FOLLOW;
-    const domeCy = pointerY * height * DOME_FOLLOW;
-
-    for (let gx = -margin; gx <= cols + margin; gx += 1) {
-      const worldX = gx * SPACING - width / 2;
-      const nx = clamp(worldX / width + 0.5, 0, 1);
-      const color = mixColor(COL_NEAR, COL_FAR, nx);
-      for (let gy = -margin; gy <= rows + margin; gy += 1) {
-        const worldY = gy * SPACING - height / 2;
-
-        const nR = Math.hypot(worldX - domeCx, worldY - domeCy) / maxR;
-        const zDome = WARP * WARP_MAX * (1 - nR * nR);
-
-        const phase = (worldX * 0.9 + worldY * 1.5) * WAVE_SCALE;
-        const w =
-          Math.sin(time * WAVE_SPEED - phase) * 0.55 +
-          Math.sin(time * WAVE_SPEED * 0.48 - phase * 0.6) * 0.45;
-        let m = Math.max(0, w);
-        m *= m; // mostly dots; sparkle on the crest
-
-        const z = zDome + w * WAVE_DEPTH * WAVE_MAX;
-        const { sx, sy, s } = project(worldX, worldY, z);
-        if (sx < -40 || sx > width + 40 || sy < -40 || sy > height + 40) {
-          continue;
-        }
-
-        const radius = DOT_SIZE * (1 + m * 0.7) * s;
-        const nearBoost = clamp(0.5 + (s - 1) * 0.5, 0.35, 1.25);
-        context.fillStyle = color;
-
-        // Soft bloom on the crest so sparkles glow rather than just pop.
-        if (m > 0.35) {
-          context.globalAlpha = clamp((m - 0.35) * 0.5 * BRIGHTNESS, 0, 1);
-          traceDot(sx, sy, radius * 2.1, m);
-          context.fill();
-        }
-
-        context.globalAlpha = clamp(
-          (0.26 + m * 0.5) * BRIGHTNESS * nearBoost,
-          0,
-          1,
-        );
-        traceDot(sx, sy, radius, m);
-        context.fill();
-      }
-    }
-
     context.globalAlpha = 1;
   };
 
-  // Fixed-phase, pointer-centred frame for initial paint and reduced motion.
-  const drawStatic = () => {
-    const px = pointerX;
-    const py = pointerY;
-    pointerX = 0;
-    pointerY = 0;
-    renderScene(0);
-    pointerX = px;
-    pointerY = py;
+  /**
+   * Deterministic from the clock, so a frozen frame and a live frame agree and
+   * no state has to be carried between renders. Alpha follows a sine over the
+   * streak's life, so it fades in and out rather than popping.
+   */
+  const drawShootingStar = (time) => {
+    const phase = (time % SHOOT_PERIOD) / SHOOT_PERIOD;
+    if (phase > SHOOT_LIVE) {
+      return;
+    }
+    const u = phase / SHOOT_LIVE;
+    const random = mulberry32(300 + Math.floor(time / SHOOT_PERIOD) * 7919);
+    const startX = width * (0.06 + random() * 0.88);
+    const startY = height * (0.02 + random() * 0.34);
+    const direction = random() > 0.5 ? 1 : -1;
+    const angle = 0.3 + random() * 0.42;
+    const vx = direction * Math.cos(angle);
+    const vy = Math.sin(angle);
+    const travel = Math.min(width, height) * (0.42 + random() * 0.24);
+
+    const driftX = pointerX * POINTER_SHIFT_X * 0.7;
+    const driftY = pointerY * POINTER_SHIFT_Y * 0.7;
+    const headX = startX + vx * travel * u + driftX;
+    const headY = startY + vy * travel * u + driftY;
+    if (headY > horizonY) {
+      return;
+    }
+    const tail = Math.min(width, height) * 0.13 * Math.sin(u * Math.PI);
+    const tailX = headX - vx * tail;
+    const tailY = headY - vy * tail;
+    const alpha = Math.sin(u * Math.PI) * 0.62 * SHOOT_AMP;
+
+    const trail = context.createLinearGradient(tailX, tailY, headX, headY);
+    trail.addColorStop(0, rgba(STAR_PERI, 0));
+    trail.addColorStop(0.7, rgba(HORIZON_ICE, alpha * 0.4));
+    trail.addColorStop(1, rgba(STAR_WHITE, alpha));
+    context.strokeStyle = trail;
+    context.lineWidth = 0.85 + 0.65 * SHOOT_AMP;
+    context.lineCap = "round";
+    context.beginPath();
+    context.moveTo(tailX, tailY);
+    context.lineTo(headX, headY);
+    context.stroke();
+
+    const headRadius = 3.5 + 3.5 * SHOOT_AMP;
+    const head = context.createRadialGradient(
+      headX,
+      headY,
+      0,
+      headX,
+      headY,
+      headRadius,
+    );
+    head.addColorStop(0, rgba(STAR_WHITE, alpha * 0.95));
+    head.addColorStop(1, rgba(GLOW_VIOLET, 0));
+    context.fillStyle = head;
+    context.beginPath();
+    context.arc(headX, headY, headRadius, 0, Math.PI * 2);
+    context.fill();
+  };
+
+  const renderScene = (time) => {
+    context.clearRect(0, 0, width, height);
+    drawField(time);
+    drawShootingStar(time);
+    drawGroundPlane(context, width, height, horizonY, time);
   };
 
   const tick = (now) => {
@@ -261,8 +434,17 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
   };
 
   resize();
-  seedScatter();
-  drawStatic();
+  renderScene(0);
+
+  // The real faces change the lead's height, which moves the horizon.
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      measureHorizon();
+      if (!running) {
+        renderScene(elapsed);
+      }
+    });
+  }
 
   if (!animate) {
     return;
@@ -277,33 +459,115 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
 
   window.addEventListener("resize", () => {
     resize();
-    seedScatter();
     if (!running) {
-      drawStatic();
+      renderScene(elapsed);
     }
   });
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      stop();
-    } else {
-      start();
+  observeCanvas(canvas, start, stop);
+};
+
+/**
+ * Horizon band: the hero's ground plane again, in the strip above the footer,
+ * behind the CTA card. Grid only — no star field and no shooting star, since
+ * the strip is short and mostly covered by the card.
+ */
+const BAND_HORIZON = 0.16; // horizon as a fraction of the band's height
+const FLIP_FADE = 0.86; // share of a flipped band spent fading out toward the top
+// Flipped, the vanishing point belongs on the footer line itself rather than
+// tucked up behind the card, so it gets its own horizon almost at the edge.
+const FLIP_HORIZON = 0.02;
+
+export const initHorizonBand = (canvas, { animate = true, flip = false } = {}) => {
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return;
+  }
+
+  let width = 0;
+  let height = 0;
+  let rafId = 0;
+  let running = false;
+  let lastTime = 0;
+  let elapsed = 0;
+
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = rect.width;
+    height = rect.height;
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const render = (time) => {
+    context.clearRect(0, 0, width, height);
+
+    if (!flip) {
+      drawGroundPlane(context, width, height, height * BAND_HORIZON, time);
+      return;
+    }
+
+    // Mirrored: the vanishing point sits on the bottom edge and the plane
+    // climbs the band.
+    context.save();
+    context.translate(0, height);
+    context.scale(1, -1);
+    drawGroundPlane(context, width, height, height * FLIP_HORIZON, time);
+    context.restore();
+
+    // The plane brightens away from its horizon, so mirroring puts the
+    // brightest rows along the top edge — a hard bright line exactly where the
+    // band should be dissolving. Erase upward instead of trying to invert the
+    // ramp inside the shared renderer.
+    const fade = context.createLinearGradient(0, 0, 0, height * FLIP_FADE);
+    fade.addColorStop(0, "rgba(0, 0, 0, 1)");
+    fade.addColorStop(1, "rgba(0, 0, 0, 0)");
+    context.save();
+    context.globalCompositeOperation = "destination-out";
+    context.fillStyle = fade;
+    context.fillRect(0, 0, width, height * FLIP_FADE);
+    context.restore();
+  };
+
+  const tick = (now) => {
+    if (!running) {
+      return;
+    }
+    const dt = lastTime ? Math.min(0.05, (now - lastTime) / 1000) : 0.016;
+    lastTime = now;
+    elapsed += dt;
+    render(elapsed);
+    rafId = window.requestAnimationFrame(tick);
+  };
+
+  const start = () => {
+    if (!running && animate) {
+      running = true;
+      lastTime = 0;
+      rafId = window.requestAnimationFrame(tick);
+    }
+  };
+
+  const stop = () => {
+    running = false;
+    window.cancelAnimationFrame(rafId);
+  };
+
+  resize();
+  render(0);
+
+  if (!animate) {
+    return;
+  }
+
+  window.addEventListener("resize", () => {
+    resize();
+    if (!running) {
+      render(elapsed);
     }
   });
 
-  // Only animate while the canvas is on screen.
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          start();
-        } else {
-          stop();
-        }
-      }
-    },
-    { threshold: 0 },
-  );
-
-  observer.observe(canvas);
+  observeCanvas(canvas, start, stop);
 };

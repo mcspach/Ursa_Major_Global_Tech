@@ -1,6 +1,6 @@
 :root {
   /* ------------------------------------------------------------------
-     Palette — deep-space navy + periwinkle
+     Palette: deep-space navy + periwinkle
      ------------------------------------------------------------------ */
   --ink-950: #060912;
   --ink-900: #0a0e1a;
@@ -24,10 +24,18 @@
   --violet-500: #6d5cf5;
   --ice-300: #aeb8f4;
 
-  /* Blue accents — the interactive/action family, layered on the
-     periwinkle brand: blue-400 for links, blue-600 for primary actions. */
+  /* Blue accents: the interactive/action family, layered on the
+     periwinkle brand: blue-400 for links and focus rings, blue-600 for
+     primary actions.
+
+     blue-600 is pinned by contrast, not taste: primary buttons put
+     --star-100 on it at 14px/560, which needs 4.5:1. The old #2f6fe6 gave
+     4.24:1, and its hover mixed in white, which lightened the ground and
+     dropped it to 3.24:1. This value reads 4.97:1 at rest and 6.11:1 on
+     hover, which now darkens instead. Re-check both states before changing
+     it. */
   --blue-400: #74a7f4;
-  --blue-600: #2f6fe6;
+  --blue-600: #1b61e4;
 
   --emerald-400: #34d399;
   --amber-400: #fbc65c;
@@ -52,7 +60,10 @@
   --color-link: var(--blue-400);
   --color-link-strong: color-mix(in srgb, var(--blue-400) 68%, white);
   --color-action: var(--blue-600);
-  --color-focus: var(--blue-600);
+  /* Not blue-600: focus rings sit on the near-black surfaces rather than
+     under text, so they want the lighter blue. blue-400 reads 7.86:1 on
+     ink-900 against blue-600's 3.55:1. */
+  --color-focus: var(--blue-400);
   --color-positive: var(--emerald-400);
   --color-warning: var(--amber-400);
 
@@ -129,7 +140,7 @@
   --shadow-card: 0 24px 60px rgba(3, 5, 12, 0.5);
   --glow-accent: 0 0 80px rgba(109, 92, 245, 0.16);
   --glow-accent-strong: 0 0 40px rgba(165, 175, 251, 0.28);
-  --glow-action: 0 0 40px rgba(47, 111, 230, 0.17);
+  --glow-action: 0 0 40px rgba(27, 97, 228, 0.17);
   --transition-fast: 160ms ease;
   --transition-base: 260ms cubic-bezier(0.33, 1, 0.68, 1);
   --transition-slow: 500ms cubic-bezier(0.33, 1, 0.68, 1);

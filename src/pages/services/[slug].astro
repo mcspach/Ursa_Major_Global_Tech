@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CTABand from "../../components/sections/CTABand.astro";
 import { withBase } from "../../utils/paths";
+import { serviceNode } from "../../utils/schema";
 
 export async function getStaticPaths() {
   const services = await getCollection("services");
@@ -16,12 +17,17 @@ const { service } = Astro.props;
 const { Content } = await render(service);
 const { title, summary, priceLabel, timeline, deliverables, process, forWho } =
   service.data;
+
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [serviceNode(service, siteUrl)];
 ---
 
 <BaseLayout
   title={`${title} | Ursa Major Global Tech`}
   description={summary}
   canonicalPath={`/services/${service.id}/`}
+  pageName={title}
+  schema={schema}
   ogType="article"
 >
   <article class="service-page">

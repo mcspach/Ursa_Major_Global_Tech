@@ -5,11 +5,11 @@ import ConstellationMark from "../ui/ConstellationMark.astro";
 const year = new Date().getFullYear();
 
 const QUICK_LINKS = [
-  { label: "Products", href: "/products/" },
   { label: "Services", href: "/services/" },
   { label: "Advisory", href: "/advisory/" },
   { label: "Blog", href: "/blog/" },
   { label: "About", href: "/about/" },
+  { label: "Products", href: "/products/" },
 ];
 ---
 
@@ -17,7 +17,7 @@ const QUICK_LINKS = [
   <div class="container container--wide">
     <div class="site-footer__grid">
       <div class="site-footer__brand">
-        <a href={withBase("/")} class="site-footer__brand-link" aria-label="Ursa Major Global Tech — home">
+        <a href={withBase("/")} class="site-footer__brand-link" aria-label="Ursa Major Global Tech, home">
           <ConstellationMark class="site-footer__mark" />
           <span class="site-footer__name">Ursa Major Global Tech</span>
         </a>

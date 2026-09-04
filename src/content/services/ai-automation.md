@@ -1,15 +1,15 @@
 ---
 title: AI Automation Systems
-summary: Workflow automation that actually ships — n8n, Make, and custom LLM pipelines that take the repetitive work off your team's plate.
+summary: Workflow automation that actually ships, built on n8n, Make, and custom LLM pipelines that take the repetitive work off your team's plate.
 priceLabel: Project-Based
 timeline: 2–4 weeks
 order: 2
-forWho: Teams drowning in copy-paste work — lead routing, report building, document processing — that a well-built automation could do overnight.
+forWho: Teams drowning in copy-paste work like lead routing, report building, and document processing that a well-built automation could do overnight.
 deliverables:
   - Automation architecture mapped to your actual workflow
-  - Built on n8n, Make, Gumloop, or custom code — whatever fits
+  - Built on n8n, Make, Gumloop, or custom code, whatever fits
   - LLM integration for the fuzzy steps (classification, drafting, extraction)
-  - Error handling, retries, and alerting — not a house of cards
+  - Error handling, retries, and alerting, not a house of cards
   - Human-in-the-loop checkpoints where judgment matters
   - Runbook documentation your ops team can actually follow
   - Team training session and 30 days of tuning
@@ -24,7 +24,7 @@ process:
 
 Every business has a stack of work that's too structured for a human to enjoy
 and too fuzzy for old-school automation to handle. That's exactly the gap
-modern LLM tooling closes — and it's where we build.
+modern LLM tooling closes, and it's where we build.
 
 We're not selling a chatbot. We build production automation systems: lead
 enrichment that runs while you sleep, document pipelines that turn PDFs into

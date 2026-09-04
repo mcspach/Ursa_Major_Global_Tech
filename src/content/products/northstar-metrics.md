@@ -1,7 +1,7 @@
 ---
 title: Northstar Metrics
 tagline: One dashboard. Every number that matters.
-summary: A focused analytics platform for indie SaaS founders — MRR, churn, activation, and runway in one glance, with AI-written weekly summaries.
+summary: A focused analytics platform for indie SaaS founders, covering MRR, churn, activation, and runway in one glance, with AI-written weekly summaries.
 thumbnail: ../../assets/northstar-metrics-placeholder.png
 status: coming-soon
 order: 2
@@ -21,7 +21,7 @@ features:
   - title: Founder-First Dashboard
     points:
       - MRR, churn, activation, and runway on one screen
-      - No query language, no setup maze — connect Stripe and go
+      - No query language, no setup maze; connect Stripe and go
       - Mobile-first layout for the daily pulse check
   - title: AI Weekly Digest
     points:

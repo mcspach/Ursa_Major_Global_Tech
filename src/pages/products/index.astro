@@ -4,21 +4,38 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/sections/PageHero.astro";
 import CTABand from "../../components/sections/CTABand.astro";
 import ProductCard from "../../components/ui/ProductCard.astro";
+import { pageItemList } from "../../utils/schema";
 
 const products = (await getCollection("products")).sort(
   (a, b) => a.data.order - b.data.order,
 );
+
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [
+  pageItemList(
+    "/products/",
+    products.map((product) => ({
+      path: `/products/${product.id}/`,
+      name: product.data.title,
+    })),
+    siteUrl,
+    "Products",
+  ),
+];
 ---
 
 <BaseLayout
   title="Products | Ursa Major Global Tech"
-  description="Software products built in-house by Ursa Major Global Tech — live platforms, betas, and products available for acquisition."
+  description="Software products built in-house by Ursa Major Global Tech: live platforms, betas, and products available for acquisition."
   canonicalPath="/products/"
+  pageName="Products"
+  pageType="CollectionPage"
+  schema={schema}
 >
   <PageHero
     eyebrow="What We've Built"
     title="Products in the wild"
-    lead="We don't just build for clients — we ship our own products. Live platforms, betas on the way up, and select products available for acquisition."
+    lead="We don't just build for clients; we ship our own products. Live platforms, betas on the way up, and select products available for acquisition."
   />
 
   <section class="section section--flush-top">

@@ -4,16 +4,31 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/sections/PageHero.astro";
 import CTABand from "../../components/sections/CTABand.astro";
 import PostCard from "../../components/ui/PostCard.astro";
+import { blogNode, pageItemList } from "../../utils/schema";
 
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [
+  blogNode(siteUrl),
+  pageItemList(
+    "/blog/",
+    posts.map((post) => ({ path: `/blog/${post.id}/`, name: post.data.title })),
+    siteUrl,
+    "Posts",
+  ),
+];
 ---
 
 <BaseLayout
   title="Blog | Ursa Major Global Tech"
-  description="Notes from the workshop — practical writing on AI-assisted development, architecture decisions, automation, and shipping software fast."
+  description="Notes from the workshop: practical writing on AI-assisted development, architecture decisions, automation, and shipping software fast."
   canonicalPath="/blog/"
+  pageName="Blog"
+  pageType="CollectionPage"
+  schema={schema}
 >
   <PageHero
     eyebrow="The Blog"

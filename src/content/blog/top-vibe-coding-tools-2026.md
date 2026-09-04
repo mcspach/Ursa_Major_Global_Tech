@@ -13,7 +13,7 @@ projects this year. These five earned a permanent slot in the stack.
 ## 1. Claude Code
 
 The workhorse. Terminal-native, reads the whole repo, plans before it edits,
-and — critically — can run your tests and actually verify its own work. Where
+and, critically, can run your tests and actually verify its own work. Where
 other tools generate plausible code, Claude Code behaves like a senior engineer
 who happens to type at 4,000 words per minute. Nearly every production feature
 we shipped this year went through it.
@@ -31,7 +31,8 @@ first-draft interfaces, then graduate the code into a real repo for hardening.
 ## 3. v0
 
 Component-level generation with taste. When a design needs a complex, polished
-piece — a pricing table, a dashboard shell — v0 gets you 80% there in one shot.
+piece like a pricing table or a dashboard shell, v0 gets you 80% there in one
+shot.
 
 **Best for:** individual components and layout exploration.
 
@@ -47,7 +48,7 @@ lives here for the tight-loop editing between bigger Claude Code passes.
 
 Not a coding tool, but it earns the spot: half of "we need an app for this"
 requests are actually "we need an automation for this." n8n with LLM nodes
-handles the fuzzy middle steps — classify, extract, draft — and saves clients
+handles the fuzzy middle steps (classify, extract, draft) and saves clients
 five figures of unnecessary custom development.
 
 **Best for:** internal workflows that don't deserve a whole application.
@@ -56,5 +57,5 @@ five figures of unnecessary custom development.
 
 None of these replace judgment. The teams getting hurt by AI tooling are the
 ones who confused *generating code* with *engineering software*. The tools make
-the typing nearly free — deciding what to build, and knowing when the output is
+the typing nearly free. Deciding what to build, and knowing when the output is
 wrong, is still the job.

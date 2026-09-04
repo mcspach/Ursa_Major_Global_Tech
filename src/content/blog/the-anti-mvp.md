@@ -1,13 +1,13 @@
 ---
 title: "The Anti-MVP: Why Modern Founders Should Stop Shipping Fragile Products"
-description: The MVP playbook was written when building software was slow and expensive. It isn't anymore. Here's the Anti-MVP approach — production-ready from day one.
+description: The MVP playbook was written when building software was slow and expensive. It isn't anymore. Here's the Anti-MVP approach, production-ready from day one.
 category: MVP
 pubDate: 2026-05-27
 ---
 
 The Minimum Viable Product was a rational response to a world where software
 took a year to build. Ship something embarrassing, learn, iterate. Fine advice
-— in 2011.
+back in 2011.
 
 But the playbook has curdled into an excuse. "It's just an MVP" now justifies
 products with no real authentication, payments held together with manual
@@ -29,7 +29,7 @@ your own bugs.
 
 Building production-grade software used to cost 10x the janky version. With
 AI-assisted development, the multiple is maybe 1.5x. Auth, payments, role
-based access, admin tooling, CI/CD — the undifferentiated heavy lifting that
+based access, admin tooling, CI/CD: the undifferentiated heavy lifting that
 used to eat months now takes days when you know exactly what you're doing.
 
 When the cost gap collapses, the trade-off flips. Why would you ship fragile
@@ -37,20 +37,20 @@ when solid costs 50% more, not 900% more?
 
 ## The Anti-MVP checklist
 
-Still minimum in *scope* — one core loop, ruthlessly cut features. But
+Still minimum in *scope*, with one core loop and features cut ruthlessly. But
 production-grade in *execution*:
 
-- **Auth you'd trust with your own data** — not a hand-rolled session hack
-- **Payments from day one** — willingness to pay is the only signal that counts
-- **A schema with constraints** — your future self will send thanks
-- **Error monitoring** — you can't fix what you can't see
-- **A deploy pipeline** — shipping should be boring
+- **Auth you'd trust with your own data.** Not a hand-rolled session hack
+- **Payments from day one.** Willingness to pay is the only signal that counts
+- **A schema with constraints.** Your future self will send thanks
+- **Error monitoring.** You can't fix what you can't see
+- **A deploy pipeline.** Shipping should be boring
 
 ## Minimum scope, maximum integrity
 
 Cut features ruthlessly. Ship one workflow that works completely rather than
 five that mostly work. But make what you do ship *solid*, because everything
-downstream — user trust, clean experiment data, your ability to iterate fast —
+downstream (user trust, clean experiment data, your ability to iterate fast)
 compounds on that foundation.
 
 The startups that win this decade won't be the ones that shipped fastest.

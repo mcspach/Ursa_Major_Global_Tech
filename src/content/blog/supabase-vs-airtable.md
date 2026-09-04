@@ -15,7 +15,7 @@ This isn't an Airtable hit piece. It's a decision framework.
 ## Where Airtable genuinely wins
 
 **Internal tools with humans in the loop.** If the "app" is really a shared
-workspace — an editorial calendar, a hiring pipeline, a vendor tracker —
+workspace (an editorial calendar, a hiring pipeline, a vendor tracker),
 Airtable is unbeatable. The UI is the product, non-technical teammates can
 change the schema, and you ship in an afternoon.
 
@@ -27,14 +27,14 @@ product even is, that flexibility is worth real money.
 
 **Anything customer-facing.** The moment real users touch your product, you
 need row-level security, real authentication, and query performance that
-doesn't degrade with row count. Supabase gives you actual Postgres — indexes,
-joins, transactions, constraints — plus auth, storage, edge functions, and
-realtime subscriptions in one bill.
+doesn't degrade with row count. Supabase gives you actual Postgres, with
+indexes, joins, transactions, and constraints, plus auth, storage, edge
+functions, and realtime subscriptions in one bill.
 
 **Anything with an API at its core.** Airtable's API is a convenience layer
 with rate limits designed to keep you from treating it like a database.
 Supabase *is* the database. PostgREST gives you a full API for free, and when
-you outgrow it, it's still just Postgres underneath — you can take your data
+you outgrow it, it's still just Postgres underneath, so you can take your data
 anywhere.
 
 **Anything you might sell.** Due diligence on an Airtable-backed product is a
@@ -45,7 +45,7 @@ a base with 40 undocumented automations is a liability.
 
 > If the spreadsheet UI is a feature, Airtable. If it's a workaround, Supabase.
 
-Most products we build ship on Supabase from day one — with AI-assisted
+Most products we build ship on Supabase from day one. With AI-assisted
 development, the "Airtable is faster to start" argument has mostly evaporated.
 Scaffolding a Postgres schema with auth and RLS policies takes us hours, not
 weeks, and you skip the painful migration later.

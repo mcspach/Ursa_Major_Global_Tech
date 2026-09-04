@@ -11,7 +11,7 @@ import ServiceCard from "../components/ui/ServiceCard.astro";
 import PostCard from "../components/ui/PostCard.astro";
 import { withBase } from "../utils/paths";
 import { getAdvisorySteps } from "../utils/offers";
-import { advisoryCatalog } from "../utils/schema";
+import { advisoryCatalog, pageItemList } from "../utils/schema";
 
 const products = (await getCollection("products")).sort(
   (a, b) => a.data.order - b.data.order,
@@ -29,13 +29,21 @@ const posts = (await getCollection("blog"))
 // The Ascent section renders these four steps, so the catalog describes what
 // the page actually shows. AdvisoryAscent fetches the same list itself.
 const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
-const advisoryLd = advisoryCatalog(await getAdvisorySteps(), siteUrl);
+const schema = [
+  advisoryCatalog(await getAdvisorySteps(), siteUrl),
+  pageItemList(
+    "/services/",
+    services.map((service) => ({
+      path: `/services/${service.id}/`,
+      name: service.data.title,
+    })),
+    siteUrl,
+    "Services",
+  ),
+];
 ---
 
-<BaseLayout canonicalPath="/">
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(advisoryLd)} />
-  </Fragment>
+<BaseLayout canonicalPath="/" pageName="Home" schema={schema}>
 
   <Hero />
 
@@ -72,7 +80,7 @@ const advisoryLd = advisoryCatalog(await getAdvisorySteps(), siteUrl);
         <p class="eyebrow" data-animate="fade">What We've Built</p>
         <h2 data-animate="fade-up">Products in the wild</h2>
         <p class="lead" data-animate="fade-up" data-animate-delay="0.1">
-          Real platforms with real users — built in-house, battle-tested, and in
+          Real platforms with real users, built in-house, battle-tested, and in
           some cases available for acquisition.
         </p>
       </header>

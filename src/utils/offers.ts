@@ -3,8 +3,8 @@ import { getCollection } from "astro:content";
 /**
  * The advisory ladder in step order.
  *
- * Four surfaces render this same list — the homepage Ascent section, the
- * /advisory/ ladder, the Decision Desk, and the OfferCatalog structured data —
+ * Four surfaces render this same list: the homepage Ascent section, the
+ * /advisory/ ladder, the Decision Desk, and the OfferCatalog structured data.
  * so the filter lives here rather than being retyped in each one. Anything
  * draft or unlisted is excluded: draft builds no page at all, unlisted keeps
  * its page but drops out of indexes.

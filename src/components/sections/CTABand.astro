@@ -3,13 +3,14 @@ import { withBase } from "../../utils/paths";
 
 const {
   title = "Ready to Move Fast?",
-  copy = "Book a free discovery call. No fluff, no pitch decks — just a real conversation about what you need built.",
+  copy = "Book a free discovery call. No fluff, no pitch decks, just a real conversation about what you need built.",
   buttonLabel = "Book a Discovery Call",
   buttonHref = "/contact/",
 } = Astro.props;
 ---
 
-<section class="section section--sm">
+<section class="section section--sm cta-section">
+  <canvas class="cta-section__grid" data-horizon-band="flip" aria-hidden="true"></canvas>
   <div class="container">
     <div class="cta-band" data-animate="fade-up">
       <div class="cta-band__bg" aria-hidden="true">
@@ -26,6 +27,27 @@ const {
 </section>
 
 <style lang="scss">
+  /* The hero's ground plane again, running full-bleed behind the card so the
+     page closes on the same horizon it opens with. The card sits on top by
+     source order: both are positioned, and .container comes second. */
+  .cta-section {
+    position: relative;
+  }
+
+  .cta-section__grid {
+    position: absolute;
+    /* Anchored to the bottom at half the section's height, so the plane runs
+       into the footer rather than filling the whole band. */
+    inset: auto 0 0;
+    width: 100%;
+    height: 50%;
+    pointer-events: none;
+  }
+
+  .cta-section > .container {
+    position: relative;
+  }
+
   .cta-band {
     position: relative;
     display: flex;

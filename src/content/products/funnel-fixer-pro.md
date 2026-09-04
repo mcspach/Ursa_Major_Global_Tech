@@ -1,7 +1,7 @@
 ---
 title: Funnel Fixer Pro
 tagline: Optimize Every Stage. Maximize Every Dollar. Convert Every Click.
-summary: AI-powered funnel analysis and conversion optimization that finds where your marketing is leaking revenue — and tells you exactly how to fix it.
+summary: AI-powered funnel analysis and conversion optimization that finds where your marketing is leaking revenue, then tells you exactly how to fix it.
 thumbnail: ../../assets/funnelfixerpro1.png
 status: live
 acquire: true
@@ -45,7 +45,7 @@ features:
   - title: Headline & Copy Optimization Suite
     points:
       - Multi-dimensional headline scoring and analysis
-      - Marketing copy generation — taglines, angles, elevator pitches
+      - Marketing copy generation for taglines, angles, elevator pitches
       - Email subject line and send-time optimization
   - title: Offer Intelligence Platform
     points:
@@ -71,4 +71,4 @@ data-driven insights and concrete recommendations at every stage of the funnel.
 
 Most teams juggle five tools to answer one question: *where is my funnel losing
 money?* FunnelFixer Pro answers it in under two minutes, then hands you a
-prioritized fix list — so you stop guessing and start converting.
+prioritized fix list, so you stop guessing and start converting.

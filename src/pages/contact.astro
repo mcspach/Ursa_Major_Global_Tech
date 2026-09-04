@@ -1,73 +1,178 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/sections/PageHero.astro";
+import { contactPoint } from "../utils/schema";
 
-// Placeholder endpoint — create a Formspree form (or similar) and swap the ID.
-const FORM_ACTION = "https://formspree.io/f/YOUR_FORM_ID";
-// Placeholder booking link — swap for the real Cal.com / Calendly URL.
+/**
+ * The form posts straight to a Google Form's `formResponse` endpoint and
+ * responses land in the linked Google Sheet, so a static site gets a working
+ * inbox with no backend. The cost: the endpoint is public and unauthenticated.
+ * See the heuristics note in the script below.
+ */
+const FORM_ACTION =
+  "https://docs.google.com/forms/d/e/1FAIpQLScB-J4rzTEDSshVLxiDY2Gt2l-c23Fca7N5syGy7cHrf3vt1A/formResponse";
+const FORM_SINK = "contact-form-sink";
+
+/**
+ * `entry.*` names read off the live form. If the Google Form's questions
+ * change, re-run the extractor rather than guessing:
+ *   node ~/.claude/skills/google-form-native/scripts/extract-fields.mjs <viewform-url>
+ *
+ * No field is required on Google's side, which is the safe direction: HTML may
+ * be stricter without consequence. The reverse silently writes nothing, because
+ * the sink iframe's `load` event fires whether Google accepted the POST or
+ * rejected it, and the response body is unreadable cross-origin.
+ */
+const fields = {
+  name: "entry.807438370",
+  email: "entry.340864082",
+  interest: "entry.702003666",
+  message: "entry.65340386",
+};
+
+/**
+ * Submitted verbatim, so each string must match one of the dropdown's options
+ * exactly — whitespace, casing, curly apostrophes and all. A mismatch is
+ * rejected silently, which is why these are the labels and not URL slugs.
+ */
+const INTEREST_OPTIONS = [
+  "MVP Build",
+  "AI Automation System",
+  "White-Label Product",
+  "Ongoing Product Engineering",
+  "Product Acquisition Inquiry",
+  "Something else",
+];
+
+const CONTACT_EMAIL = "hello@ursamajorglobaltech.com";
+
+// Placeholder booking link. Swap for the real Cal.com / Calendly URL.
 const BOOKING_URL = "https://cal.com/ursamajor/discovery";
+
+// The email and the form endpoint are real. The booking URL is still a
+// placeholder, so it stays out of structured data. See reference/punchlist.md.
+const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
+const schema = [contactPoint(siteUrl)];
 ---
 
 <BaseLayout
   title="Contact | Ursa Major Global Tech"
-  description="Book a free discovery call or send us a note about your project. No fluff, no pitch decks — just a real conversation about what you need built."
+  description="Book a free discovery call or send us a note about your project. No fluff, no pitch decks, just a real conversation about what you need built."
   canonicalPath="/contact/"
+  pageName="Contact"
+  pageType="ContactPage"
+  schema={schema}
 >
   <PageHero
     eyebrow="Contact"
     title="Let's talk about what you're building"
-    lead="Tell us where you're headed and we'll give you an honest read on scope, cost, and timeline — usually within one business day."
+    lead="Tell us where you're headed and we'll give you an honest read on scope, cost, and timeline. We don't let messages sit."
   />
 
   <section class="section section--flush-top">
     <div class="container">
       <div class="contact-layout">
+        <!--
+          `target="_blank"` is in the markup on purpose: without JS the form
+          still posts and the visitor sees Google's own confirmation page. The
+          script rewrites the target to the hidden sink iframe on boot so the
+          enhanced path reports the result inline instead.
+        -->
         <form
           class="contact-form"
           action={FORM_ACTION}
           method="POST"
+          target="_blank"
           data-animate="fade-up"
+          data-contact-form
+          data-contact-email={CONTACT_EMAIL}
         >
           <div class="contact-form__row">
             <div class="contact-form__field">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" required autocomplete="name" />
+              <label for="contact-name">Name</label>
+              <input
+                type="text"
+                id="contact-name"
+                name={fields.name}
+                required
+                autocomplete="name"
+              />
             </div>
             <div class="contact-form__field">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required autocomplete="email" />
+              <label for="contact-email">Email</label>
+              <input
+                type="email"
+                id="contact-email"
+                name={fields.email}
+                required
+                autocomplete="email"
+              />
             </div>
           </div>
 
           <div class="contact-form__field">
-            <label for="interest">What do you need?</label>
-            <select id="interest" name="interest">
-              <option value="mvp-build">MVP Build</option>
-              <option value="ai-automation">AI Automation System</option>
-              <option value="white-label">White-Label Product</option>
-              <option value="product-engineering">Ongoing Product Engineering</option>
-              <option value="acquisition">Product Acquisition Inquiry</option>
-              <option value="other">Something else</option>
+            <label for="contact-interest">What do you need?</label>
+            <select id="contact-interest" name={fields.interest}>
+              {INTEREST_OPTIONS.map((option) => <option value={option}>{option}</option>)}
             </select>
           </div>
 
           <div class="contact-form__field">
-            <label for="message">Tell us about the project</label>
+            <label for="contact-message">Tell us about the project</label>
             <textarea
-              id="message"
-              name="message"
+              id="contact-message"
+              name={fields.message}
               rows="6"
               required
-              placeholder="What are you building, who is it for, and when do you need it?"></textarea>
+              placeholder="What are you building, who is it for, and when do you need it?"
+            ></textarea>
           </div>
 
-          <button type="submit" class="btn btn--primary btn--lg">
+          <div class="contact-form__consent">
+            <input
+              type="checkbox"
+              id="contact-human"
+              name="humanCheck"
+              value="yes"
+              required
+              data-contact-human
+            />
+            <label for="contact-human">I'm not a robot</label>
+          </div>
+
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="contact-company-url">Leave this field empty</label>
+            <input
+              type="text"
+              id="contact-company-url"
+              name="company_url"
+              tabindex="-1"
+              autocomplete="off"
+              data-contact-honeypot
+            />
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--lg" data-contact-submit>
             Send Message <span class="btn__arrow">→</span>
           </button>
-          <p class="mono-note">
-            Form posts to a placeholder endpoint — wire up Formspree before launch.
-          </p>
+
+          <div
+            class="contact-form__status"
+            role="status"
+            aria-live="polite"
+            data-contact-status
+          >
+            <p class="contact-form__status-title" data-contact-status-title></p>
+            <p class="contact-form__status-body" data-contact-status-body></p>
+          </div>
         </form>
+
+        <iframe
+          class="contact-form__sink"
+          name={FORM_SINK}
+          title="Form submission target"
+          aria-hidden="true"
+          tabindex="-1"></iframe>
 
         <aside class="contact-aside" data-animate-children>
           <div class="contact-aside__panel">
@@ -99,9 +204,9 @@ const BOOKING_URL = "https://cal.com/ursamajor/discovery";
           <div class="contact-aside__panel">
             <h2>What happens next</h2>
             <ol class="contact-aside__steps">
-              <li>We reply within one business day</li>
-              <li>A short call to understand the project</li>
-              <li>A written proposal — scope, price, timeline</li>
+              <li>We'll send a rapid response from a member of our team</li>
+              <li>We'll schedule a call to understand the project</li>
+              <li>We'll deliver a written proposal covering scope, price, and timeline</li>
             </ol>
           </div>
         </aside>
@@ -109,6 +214,142 @@ const BOOKING_URL = "https://cal.com/ursamajor/discovery";
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+  const sink = document.querySelector<HTMLIFrameElement>(".contact-form__sink");
+
+  if (form && sink) {
+    const submitButton = form.querySelector<HTMLButtonElement>("[data-contact-submit]");
+    const status = form.querySelector<HTMLElement>("[data-contact-status]");
+    const statusTitle = form.querySelector<HTMLElement>("[data-contact-status-title]");
+    const statusBody = form.querySelector<HTMLElement>("[data-contact-status-body]");
+    const honeypot = form.querySelector<HTMLInputElement>("[data-contact-honeypot]");
+    const humanCheck = form.querySelector<HTMLInputElement>("[data-contact-human]");
+    const defaultLabel = submitButton?.innerHTML ?? "Send Message";
+    const fallbackEmail = form.dataset.contactEmail ?? "hello@ursamajorglobaltech.com";
+
+    /**
+     * Bot heuristics, not security. The Google Forms endpoint is public and
+     * unauthenticated, so a targeted bot can POST straight past every check
+     * below. These only filter crawlers that scrape and submit the rendered
+     * form. Do not treat any of it as validation.
+     */
+    const MIN_FILL_MS = 3000;
+    const loadedAt = Date.now();
+    let checkedByHuman = false;
+
+    // A scripted `checkbox.checked = true` fires no event at all, and a
+    // synthetic click reports isTrusted === false. Only a real pointer or
+    // keypress flips this.
+    humanCheck?.addEventListener("change", (event) => {
+      checkedByHuman = event.isTrusted && humanCheck.checked;
+    });
+
+    // Progressive enhancement: the markup targets _blank so a no-JS visitor
+    // still submits and lands on Google's confirmation. Now that JS is running,
+    // route the POST into the hidden frame and report the result inline.
+    form.target = sink.name;
+
+    let pending = false;
+    let failsafe = 0;
+
+    const setStatus = (
+      title: string,
+      body: string,
+      state: "success" | "error" | "",
+    ) => {
+      if (!status) return;
+      if (statusTitle) statusTitle.textContent = title;
+      if (statusBody) statusBody.textContent = body;
+      if (state) {
+        status.dataset.state = state;
+      } else {
+        delete status.dataset.state;
+      }
+    };
+
+    const finish = (
+      title: string,
+      body: string,
+      state: "success" | "error",
+    ) => {
+      if (!pending) return;
+      pending = false;
+      window.clearTimeout(failsafe);
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerHTML = defaultLabel;
+      }
+      setStatus(title, body, state);
+    };
+
+    form.addEventListener("submit", (event) => {
+      if (honeypot?.value) {
+        event.preventDefault();
+        return;
+      }
+
+      if (pending) {
+        event.preventDefault();
+        return;
+      }
+
+      if (humanCheck && !checkedByHuman) {
+        event.preventDefault();
+        setStatus(
+          "One more thing",
+          "Confirm the \u201cI\u2019m not a robot\u201d checkbox, then send again.",
+          "error",
+        );
+        humanCheck.focus();
+        return;
+      }
+
+      if (Date.now() - loadedAt < MIN_FILL_MS) {
+        event.preventDefault();
+        setStatus(
+          "One more thing",
+          "Take a moment to review your details, then send again.",
+          "error",
+        );
+        return;
+      }
+
+      pending = true;
+      setStatus("", "", "");
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending\u2026";
+      }
+
+      failsafe = window.setTimeout(() => {
+        finish(
+          "That didn\u2019t go through",
+          `Your message may not have reached us. Email ${fallbackEmail} and we\u2019ll pick it up from there.`,
+          "error",
+        );
+      }, 12000);
+    });
+
+    /**
+     * The only completion signal available. The frame is cross-origin, so the
+     * response is opaque: this fires whether Google accepted the submission or
+     * returned an error page. It is not proof of success, only of a round trip.
+     */
+    sink.addEventListener("load", () => {
+      if (!pending) return; // the initial about:blank load fires here too
+      form.reset();
+      checkedByHuman = false;
+      finish(
+        "Message sent",
+        "Thanks \u2014 your message is in. We\u2019ll be in touch.",
+        "success",
+      );
+    });
+  }
+</script>
 
 <style lang="scss">
   .contact-layout {
@@ -182,8 +423,87 @@ const BOOKING_URL = "https://cal.com/ursamajor/discovery";
     }
   }
 
+  .contact-form__consent {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    /* Escape .contact-form__field's padded, full-width input styling. */
+    input[type="checkbox"] {
+      flex: 0 0 auto;
+      width: 1.05rem;
+      height: 1.05rem;
+      accent-color: var(--color-action);
+      cursor: pointer;
+    }
+
+    label {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      cursor: pointer;
+    }
+  }
+
   .contact-form .btn {
     align-self: flex-start;
+
+    &[disabled] {
+      cursor: progress;
+      opacity: 0.65;
+    }
+  }
+
+  /* Hidden until the script writes a state, so the layout does not reserve
+     space for a message that may never appear. The border and tint carry the
+     outcome; the mono heading names it, matching the eyebrow treatment used
+     for labels elsewhere on the page. */
+  .contact-form__status {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-2xs);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+
+    &:not([data-state="success"]):not([data-state="error"]) {
+      display: none;
+    }
+
+    &[data-state="success"] {
+      border-color: color-mix(in srgb, var(--color-positive) 42%, transparent);
+      background: color-mix(in srgb, var(--color-positive) 9%, var(--ink-900));
+
+      .contact-form__status-title {
+        color: var(--color-positive);
+      }
+    }
+
+    &[data-state="error"] {
+      border-color: color-mix(in srgb, var(--color-warning) 42%, transparent);
+      background: color-mix(in srgb, var(--color-warning) 9%, var(--ink-900));
+
+      .contact-form__status-title {
+        color: var(--color-warning);
+      }
+    }
+  }
+
+  .contact-form__status-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .contact-form__status-body {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .contact-form__sink {
+    display: none;
   }
 
   .contact-aside {
