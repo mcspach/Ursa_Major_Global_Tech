@@ -18,7 +18,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import SplitType from "split-type";
-import { initConstellation } from "./constellation.js";
+import { initConstellation, initHorizonBand } from "./constellation.js";
 
 const prefersReducedMotion =
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -253,6 +253,15 @@ const boot = () => {
   if (constellationCanvas instanceof HTMLCanvasElement) {
     initConstellation(constellationCanvas, { animate: !prefersReducedMotion });
   }
+
+  document.querySelectorAll("[data-horizon-band]").forEach((element) => {
+    if (element instanceof HTMLCanvasElement) {
+      initHorizonBand(element, {
+        animate: !prefersReducedMotion,
+        flip: element.dataset.horizonBand === "flip",
+      });
+    }
+  });
 
   if (prefersReducedMotion) {
     return;
