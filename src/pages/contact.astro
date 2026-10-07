@@ -46,18 +46,23 @@ const INTEREST_OPTIONS = [
 
 const CONTACT_EMAIL = "hello@ursamajorglobaltech.com";
 
-// Placeholder booking link. Swap for the real Cal.com / Calendly URL.
-const BOOKING_URL = "https://cal.com/ursamajor/discovery";
+/**
+ * Google Calendar appointment schedule, offered only after the form is sent:
+ * the brief comes first, so there is no "book a call" link anywhere else on
+ * the site. The gate is friction, not access control, since this URL ships in
+ * the page source. It is kept out of structured data for the same reason it
+ * is kept out of the nav.
+ */
+const CALENDAR_URL =
+  "https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ZImCDIJtLkLY8WdQLycAt5UJ8KwN9N6SqQcAt2Frw15NH76bBikSsSXNr9NzCfFwZ6U2Y8IGp?gv=true";
 
-// The email and the form endpoint are real. The booking URL is still a
-// placeholder, so it stays out of structured data. See reference/punchlist.md.
 const siteUrl = Astro.site ?? new URL("https://www.ursamajorglobaltech.com");
 const schema = [contactPoint(siteUrl)];
 ---
 
 <BaseLayout
   title="Contact | Ursa Major Global Tech"
-  description="Book a free discovery call or send us a note about your project. No fluff, no pitch decks, just a real conversation about what you need built."
+  description="Tell us about your project and get an honest read on scope, cost, and timeline. No fluff, no pitch decks, just a straight answer on what it takes."
   canonicalPath="/contact/"
   pageName="Contact"
   pageType="ContactPage"
@@ -87,83 +92,101 @@ const schema = [contactPoint(siteUrl)];
           data-contact-form
           data-contact-email={CONTACT_EMAIL}
         >
-          <div class="contact-form__row">
+          <div class="contact-form__fields" data-contact-fields>
+            <div class="contact-form__row">
+              <div class="contact-form__field">
+                <label for="contact-name">Name</label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name={fields.name}
+                  required
+                  autocomplete="name"
+                />
+              </div>
+              <div class="contact-form__field">
+                <label for="contact-email">Email</label>
+                <input
+                  type="email"
+                  id="contact-email"
+                  name={fields.email}
+                  required
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+
             <div class="contact-form__field">
-              <label for="contact-name">Name</label>
+              <label for="contact-interest">What do you need?</label>
+              <select id="contact-interest" name={fields.interest}>
+                {INTEREST_OPTIONS.map((option) => <option value={option}>{option}</option>)}
+              </select>
+            </div>
+
+            <div class="contact-form__field">
+              <label for="contact-message">Tell us about the project</label>
+              <textarea
+                id="contact-message"
+                name={fields.message}
+                rows="6"
+                required
+                placeholder="What are you building, who is it for, and when do you need it?"
+              ></textarea>
+            </div>
+
+            <div class="contact-form__consent">
+              <input
+                type="checkbox"
+                id="contact-human"
+                name="humanCheck"
+                value="yes"
+                required
+                data-contact-human
+              />
+              <label for="contact-human">I'm not a robot</label>
+            </div>
+
+            <div class="visually-hidden" aria-hidden="true">
+              <label for="contact-company-url">Leave this field empty</label>
               <input
                 type="text"
-                id="contact-name"
-                name={fields.name}
-                required
-                autocomplete="name"
+                id="contact-company-url"
+                name="company_url"
+                tabindex="-1"
+                autocomplete="off"
+                data-contact-honeypot
               />
             </div>
-            <div class="contact-form__field">
-              <label for="contact-email">Email</label>
-              <input
-                type="email"
-                id="contact-email"
-                name={fields.email}
-                required
-                autocomplete="email"
-              />
-            </div>
-          </div>
 
-          <div class="contact-form__field">
-            <label for="contact-interest">What do you need?</label>
-            <select id="contact-interest" name={fields.interest}>
-              {INTEREST_OPTIONS.map((option) => <option value={option}>{option}</option>)}
-            </select>
+            <button type="submit" class="btn btn--primary btn--lg" data-contact-submit>
+              Send Message <span class="btn__arrow">→</span>
+            </button>
           </div>
-
-          <div class="contact-form__field">
-            <label for="contact-message">Tell us about the project</label>
-            <textarea
-              id="contact-message"
-              name={fields.message}
-              rows="6"
-              required
-              placeholder="What are you building, who is it for, and when do you need it?"
-            ></textarea>
-          </div>
-
-          <div class="contact-form__consent">
-            <input
-              type="checkbox"
-              id="contact-human"
-              name="humanCheck"
-              value="yes"
-              required
-              data-contact-human
-            />
-            <label for="contact-human">I'm not a robot</label>
-          </div>
-
-          <div class="visually-hidden" aria-hidden="true">
-            <label for="contact-company-url">Leave this field empty</label>
-            <input
-              type="text"
-              id="contact-company-url"
-              name="company_url"
-              tabindex="-1"
-              autocomplete="off"
-              data-contact-honeypot
-            />
-          </div>
-
-          <button type="submit" class="btn btn--primary btn--lg" data-contact-submit>
-            Send Message <span class="btn__arrow">→</span>
-          </button>
 
           <div
             class="contact-form__status"
             role="status"
             aria-live="polite"
+            tabindex="-1"
             data-contact-status
           >
             <p class="contact-form__status-title" data-contact-status-title></p>
             <p class="contact-form__status-body" data-contact-status-body></p>
+          </div>
+
+          <!--
+            `data-src`, not `src`: the frame stays blank, and makes no request to
+            Google, until a submission succeeds. `hidden` keeps it out of the
+            no-JS path, where the visitor lands on Google's confirmation instead.
+          -->
+          <div class="contact-form__booking" hidden data-contact-booking>
+            <p class="contact-form__booking-lead">
+              Want to talk it through? Pick a time that works for you.
+            </p>
+            <iframe
+              class="contact-form__calendar"
+              title="Schedule a call with Ursa Major Global Tech"
+              data-src={CALENDAR_URL}></iframe>
           </div>
         </form>
 
@@ -175,22 +198,6 @@ const schema = [contactPoint(siteUrl)];
           tabindex="-1"></iframe>
 
         <aside class="contact-aside" data-animate-children>
-          <div class="contact-aside__panel">
-            <h2>Book a Discovery Call</h2>
-            <p>
-              Thirty minutes, free, no obligation. Bring the idea; we'll bring
-              questions and an honest read.
-            </p>
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn--primary contact-aside__btn"
-            >
-              Pick a Time ↗
-            </a>
-          </div>
-
           <div class="contact-aside__panel">
             <h2>Email</h2>
             <p>
@@ -226,6 +233,8 @@ const schema = [contactPoint(siteUrl)];
     const statusBody = form.querySelector<HTMLElement>("[data-contact-status-body]");
     const honeypot = form.querySelector<HTMLInputElement>("[data-contact-honeypot]");
     const humanCheck = form.querySelector<HTMLInputElement>("[data-contact-human]");
+    const booking = form.querySelector<HTMLElement>("[data-contact-booking]");
+    const calendar = booking?.querySelector<HTMLIFrameElement>("iframe");
     const defaultLabel = submitButton?.innerHTML ?? "Send Message";
     const fallbackEmail = form.dataset.contactEmail ?? "hello@ursamajorglobaltech.com";
 
@@ -334,6 +343,21 @@ const schema = [contactPoint(siteUrl)];
     });
 
     /**
+     * Swaps the spent fields for the calendar. Focus moves to the status first:
+     * the submit button it would otherwise sit on is about to be hidden, and
+     * focus on a hidden element drops back to <body>.
+     */
+    const showBooking = () => {
+      form.dataset.sent = "";
+      status?.focus();
+      if (!booking || !calendar) return;
+      if (!calendar.src && calendar.dataset.src) calendar.src = calendar.dataset.src;
+      booking.hidden = false;
+      // The page just changed height; let ScrollTrigger re-measure.
+      window.dispatchEvent(new Event("resize"));
+    };
+
+    /**
      * The only completion signal available. The frame is cross-origin, so the
      * response is opaque: this fires whether Google accepted the submission or
      * returned an error page. It is not proof of success, only of a round trip.
@@ -347,6 +371,7 @@ const schema = [contactPoint(siteUrl)];
         "Thanks \u2014 your message is in. We\u2019ll be in touch.",
         "success",
       );
+      showBooking();
     });
   }
 </script>
@@ -502,6 +527,44 @@ const schema = [contactPoint(siteUrl)];
     color: var(--color-text);
   }
 
+  .contact-form__fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .contact-form[data-sent] .contact-form__fields {
+    display: none;
+  }
+
+  .contact-form__status:focus {
+    outline: none;
+  }
+
+  .contact-form__booking {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .contact-form__booking-lead {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Google's scheduler is light-only and cannot be themed, so it sits in a
+     framed well rather than pretending to belong to the dark surface. It
+     stacks its calendar over the slot list at narrow widths, hence the
+     taller frame on phones. */
+  .contact-form__calendar {
+    display: block;
+    width: 100%;
+    height: 600px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: white;
+  }
+
   .contact-form__sink {
     display: none;
   }
@@ -530,10 +593,6 @@ const schema = [contactPoint(siteUrl)];
       color: var(--color-text-muted);
       line-height: 1.65;
     }
-  }
-
-  .contact-aside__btn {
-    align-self: flex-start;
   }
 
   .contact-aside__email {
@@ -573,6 +632,12 @@ const schema = [contactPoint(siteUrl)];
 
     .contact-form__row {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .contact-form__calendar {
+      height: 820px;
     }
   }
 </style>

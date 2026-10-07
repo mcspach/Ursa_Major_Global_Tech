@@ -256,7 +256,7 @@ export const advisoryCatalog = (offers: OfferLike[], site: Site) => ({
   "@id": anchor("/advisory/", site, "catalog"),
   name: "AI Advisory",
   description:
-    "Four ways to decide what AI is worth before you build it: an opportunity audit, a strategy engagement, fractional AI leadership, and an advisory retainer. Every price is published, and what you spend deciding credits toward what you build.",
+    "Four ways to decide what AI is worth before you build it: an opportunity audit, a strategy engagement, fractional AI leadership, and an advisory retainer. Prices are published, and what you spend deciding credits toward what you build.",
   provider: ref(orgId(site)),
   itemListElement: offers.map((offer, index) => {
     const url = toAbsoluteUrl(`/advisory/${offer.id}/`, site);
