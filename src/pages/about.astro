@@ -3,7 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/sections/PageHero.astro";
 import CTABand from "../components/sections/CTABand.astro";
 import ConstellationMark from "../components/ui/ConstellationMark.astro";
+import { Image } from "astro:assets";
 import { withBase } from "../utils/paths";
+import ryanHeadshot from "../assets/UM_headshot_ryan.webp";
 
 const PRINCIPLES = [
   {
@@ -39,11 +41,11 @@ const STACK_GROUPS = [
   },
   {
     label: "AI & Automation",
-    items: ["Claude Code", "OpenAI", "n8n", "Make", "Lovable"],
+    items: ["Claude Code", "OpenAI", "n8n", "Make", "Gumloop"],
   },
   {
     label: "Ship",
-    items: ["Vercel", "GitHub Actions"],
+    items: ["Vercel", "GitHub Actions", "Sentry", "PostHog"],
   },
 ];
 ---
@@ -87,6 +89,41 @@ const STACK_GROUPS = [
         <div class="about-story__visual" data-animate="fade" data-animate-delay="0.2">
           <ConstellationMark class="about-story__mark" />
           <p class="mono-note">Ursa Major, the Great Bear.<br />Home of the pointer stars.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="about-founder" data-animate="fade-up">
+        <div class="about-founder__portrait">
+          <Image
+            src={ryanHeadshot}
+            alt="Ryan Jacobson, founder of Ursa Major Global Tech"
+            widths={[320, 598]}
+            sizes="(max-width: 900px) 20rem, 30vw"
+          />
+        </div>
+        <div class="about-founder__text">
+          <p class="eyebrow">The Founder</p>
+          <h2>Ryan Jacobson</h2>
+          <p>
+            Ryan founded Ursa Major to give teams executive-level product and
+            technical judgment without the cost of a full-time hire.
+          </p>
+          <p>
+            He's been on both sides of the table. As co-founder and CTO of a
+            startup that raised funding before it had earned a dollar of
+            revenue, he learned to make every technical decision justify itself
+            to investors. As fractional CPO for an agency, every product call
+            was also a budget call and a promise to a client.
+          </p>
+          <p>
+            He still builds every day, so his advice is grounded in what
+            actually ships.
+          </p>
+          <a href={withBase("/contact/")} class="btn btn--ghost">Get in touch</a>
         </div>
       </div>
     </div>
@@ -141,30 +178,6 @@ const STACK_GROUPS = [
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <div class="about-founder" data-animate="fade-up">
-        <div class="about-founder__portrait" aria-hidden="true">
-          <span>✦</span>
-        </div>
-        <div class="about-founder__text">
-          <p class="eyebrow">The Founder</p>
-          <h2>Ryan, builder in chief</h2>
-          <p>
-            Ursa Major is led by Ryan, a product engineer who has spent his
-            career shipping software at the messy intersection of "the business
-            needs it Friday" and "it still has to work in a year." He started
-            the studio after watching too many good ideas die in six-month
-            development cycles that AI-era tooling had already made obsolete.
-          </p>
-          <p class="mono-note">
-            Placeholder bio. Swap in the real story and a photo before launch.
-          </p>
-          <a href={withBase("/contact/")} class="btn btn--ghost">Say hello</a>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <CTABand
     title="Let's find your true north"
@@ -308,18 +321,18 @@ const STACK_GROUPS = [
   }
 
   .about-founder__portrait {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 1;
+    align-self: start;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
     border-radius: var(--radius-lg);
-    background:
-      radial-gradient(70% 70% at 50% 35%, rgba(139, 147, 214, 0.2) 0%, transparent 70%),
-      var(--ink-700);
+    background: var(--ink-700);
     border: 1px solid var(--color-border);
 
-    span {
-      font-size: 3rem;
-      color: var(--peri-400);
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 20%;
     }
   }
 
@@ -340,6 +353,10 @@ const STACK_GROUPS = [
     .about-founder {
       grid-template-columns: 1fr;
       gap: var(--space-lg);
+    }
+
+    .about-founder__portrait {
+      max-width: 20rem;
     }
 
     .about-principles {
