@@ -1,0 +1,356 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import { withBase } from "../utils/paths";
+
+/**
+ * Privacy policy.
+ *
+ * Every claim on this page has to stay true of the shipped site. If you add a
+ * tracker, a form, an embed, or a payment path, this page changes in the same
+ * PR. The services listed below map one-to-one to code:
+ *   Google Analytics + Microsoft Clarity  → BaseLayout.astro (PROD only)
+ *   Google Forms / Sheets                 → contact.astro FORM_ACTION
+ *   Google Calendar scheduler             → contact.astro CALENDAR_URL
+ *   GitHub Pages                          → .github/workflows/deploy.yml
+ *
+ * Bump LAST_UPDATED on any substantive change.
+ */
+const LAST_UPDATED = "October 7, 2026";
+const CONTACT_EMAIL = "hello@ursamajorglobaltech.com";
+
+// TODO: must match Admin → Data settings → Data retention in GA4.
+// GA4 offers 2 or 14 months for event data.
+const GA_RETENTION = "14 months";
+
+// TODO: confirm. How long rows stay in the contact-form Google Sheet before
+// they're cleared.
+const CONTACT_RETENTION = "24 months after our last contact with you";
+
+// TODO: add the legal entity name and a mailing address once settled
+// (same open item as Organization.address in reference/punchlist.md).
+---
+
+<BaseLayout
+  title="Privacy Policy | Ursa Major Global Tech"
+  description="What Ursa Major Global Tech collects when you visit the site or contact us, which services process it, and how to have it corrected or deleted."
+  canonicalPath="/privacy/"
+  pageName="Privacy Policy"
+>
+  <PageHero
+    eyebrow="Privacy"
+    title="Privacy policy"
+    lead="What we collect when you visit this site or get in touch, who processes it on our behalf, and how to have it corrected or deleted."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container container--narrow">
+      <p class="privacy__updated">Last updated {LAST_UPDATED}</p>
+
+      <div class="prose">
+        <h2>The short version</h2>
+        <p>
+          We collect what you type into our contact form, basic analytics about
+          how the site is used, and anything you send us by email or when you
+          book a call. We use it to reply to you and to improve the site. We do
+          not sell your information, and we do not use it for advertising.
+        </p>
+
+        <h2>Who we are</h2>
+        <p>
+          This site is run by Ursa Major Global Tech ("we", "us"). We are
+          responsible for the personal information described here. Questions
+          about this policy go to
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        </p>
+
+        <h2>What we collect</h2>
+
+        <h3>Information you give us</h3>
+        <p>
+          <strong>Contact form.</strong> Your name, email address, the type of
+          project you select, and your message. The form also contains checks
+          that help us filter out automated spam; these run in your browser and
+          are not stored.
+        </p>
+        <p>
+          <strong>Email.</strong> Whatever you choose to include when you write
+          to us directly.
+        </p>
+        <p>
+          <strong>Booking a call.</strong> After you send the contact form, we
+          offer a Google Calendar scheduler. If you book a time, Google collects
+          your name, email, and the details you enter, and shares them with us so
+          the meeting can happen. The scheduler does not load until you have
+          submitted the form.
+        </p>
+
+        <h3>Information collected automatically</h3>
+        <p>
+          <strong>Analytics.</strong> We use Google Analytics to understand which
+          pages are visited, how people arrive at the site, and roughly where they
+          are (country and region, not precise location). We use Microsoft
+          Clarity to see how pages are used: clicks, scrolling, and anonymized
+          session replays and heatmaps. Clarity masks text you type into form
+          fields. Both services set cookies and receive your IP address, device
+          and browser details, and the pages you view.
+        </p>
+        <p>
+          <strong>Hosting logs.</strong> The site is hosted on GitHub Pages.
+          GitHub may log your IP address and request details for security and
+          operation of its service.
+        </p>
+        <p>
+          <strong>Browser storage.</strong> The site stores two small flags in
+          your browser's session storage so the intro animation plays once per
+          visit and page transitions run smoothly. They contain no personal
+          information and clear when you close the tab.
+        </p>
+        <p>
+          Our fonts are hosted on our own server, so loading a page does not send
+          a request to a third-party font service.
+        </p>
+
+        <h2>How we use it</h2>
+        <ul>
+          <li>To reply to your inquiry and, if you choose, schedule a call.</li>
+          <li>To prepare proposals and deliver work you have engaged us for.</li>
+          <li>To understand how the site is used and fix what isn't working.</li>
+          <li>To protect the site and our inbox from spam and abuse.</li>
+        </ul>
+        <p>
+          We do not use your information for advertising, and we do not add you
+          to a mailing list unless you ask to be added.
+        </p>
+        <p>
+          If you are in the European Economic Area or the United Kingdom, we rely
+          on these legal bases: taking steps at your request before entering into
+          a contract (replying to an inquiry), our legitimate interest in running
+          and improving the site, and your consent where the law requires it for
+          analytics cookies.
+        </p>
+      </div>
+
+      <section class="privacy__services" aria-labelledby="privacy-services">
+        <h2 id="privacy-services">Services that process your information</h2>
+        <p>
+          These companies process information on our behalf. Each has its own
+          privacy policy, linked below.
+        </p>
+        <dl>
+          <div>
+            <dt>Google Forms and Google Sheets</dt>
+            <dd>
+              Receives and stores contact-form submissions.
+              <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google Privacy Policy</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Google Calendar</dt>
+            <dd>
+              Appointment scheduling, offered after the form is sent.
+              <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google Privacy Policy</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Google Analytics</dt>
+            <dd>
+              Site usage statistics.
+              <a href="https://policies.google.com/technologies/partner-sites" rel="noopener noreferrer" target="_blank">How Google uses data from sites</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Microsoft Clarity</dt>
+            <dd>
+              Session replays and heatmaps.
+              <a href="https://www.microsoft.com/privacy/privacystatement" rel="noopener noreferrer" target="_blank">Microsoft Privacy Statement</a>
+            </dd>
+          </div>
+          <div>
+            <dt>GitHub Pages</dt>
+            <dd>
+              Hosting.
+              <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener noreferrer" target="_blank">GitHub Privacy Statement</a>
+            </dd>
+          </div>
+          {/* Uncomment when the first Stripe Payment Link goes live.
+          <div>
+            <dt>Stripe</dt>
+            <dd>
+              Processes payments. We never see or store your full card number.
+              <a href="https://stripe.com/privacy" rel="noopener noreferrer" target="_blank">Stripe Privacy Policy</a>
+            </dd>
+          </div>
+          */}
+        </dl>
+      </section>
+
+      <div class="prose">
+        <h2>Cookies and your choices</h2>
+        <p>
+          Google Analytics and Microsoft Clarity set cookies to tell visits
+          apart. You can block or delete cookies in your browser settings, and
+          the site works fully without them. Google also offers a
+          <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener noreferrer" target="_blank">browser add-on</a>
+          that opts you out of Google Analytics on every site.
+        </p>
+        <p>
+          <strong>Do Not Track.</strong> Browsers handle Do Not Track signals
+          inconsistently, and this site does not currently change its behavior in
+          response to them. Blocking cookies, as described above, is the reliable
+          way to opt out.
+        </p>
+
+        <h2>Sharing</h2>
+        <p>
+          We do not sell your personal information, and we do not share it for
+          cross-context behavioral advertising. We share it only with the
+          services listed above, and when the law requires it.
+        </p>
+
+        <h2>How long we keep it</h2>
+        <p>
+          Contact-form submissions and email correspondence are kept for up to
+          {CONTACT_RETENTION}, unless you become a client, in which case we keep
+          what we need for the engagement and for tax and accounting records.
+          Google Analytics data is retained for {GA_RETENTION}. Clarity and
+          GitHub keep data according to their own policies.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          You can ask us to tell you what personal information we hold about you,
+          correct it, or delete it. Email
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we'll respond
+          within 30 days. We may need to confirm your identity first, usually by
+          replying to the email address you contacted us from.
+        </p>
+        <p>
+          <strong>California residents</strong> have the right to know what
+          personal information is collected and how it is used, to request
+          deletion, to correct inaccurate information, and not to be
+          discriminated against for exercising these rights.
+        </p>
+        <p>
+          <strong>EEA and UK residents</strong> also have the right to object to
+          or restrict processing, to data portability, to withdraw consent at any
+          time, and to complain to your local data protection authority.
+        </p>
+
+        <h2>Where your information is processed</h2>
+        <p>
+          We are based in the United States, and the services above process data
+          in the United States and other countries. If you contact us from
+          outside the U.S., your information will be transferred there.
+        </p>
+
+        <h2>Children</h2>
+        <p>
+          This site is for businesses and is not directed at children under 16.
+          We do not knowingly collect information from them. If you believe a
+          child has sent us personal information, contact us and we'll delete it.
+        </p>
+
+        <h2>Security</h2>
+        <p>
+          The site is served over HTTPS, and access to the inbox and the sheet
+          that stores form submissions is limited to our team. No method of
+          transmission or storage is completely secure, so we can't guarantee
+          absolute security.
+        </p>
+
+        <h2>Changes to this policy</h2>
+        <p>
+          When we change how we handle personal information, we'll update this
+          page and the date at the top. Significant changes will be noted here
+          for at least 30 days.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Privacy questions and requests:
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. For anything
+          else, use the <a href={withBase("/contact/")}>contact page</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style lang="scss">
+  .privacy__updated {
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  /* The prose block's rhythm, applied by hand: this section sits outside
+     .prose so the service list can use its own definition-list layout. */
+  .privacy__services {
+    margin-block: 2em;
+
+    h2 {
+      font-size: var(--text-xl);
+      margin-bottom: 1.1em;
+    }
+
+    > p {
+      margin-bottom: var(--space-md);
+      line-height: 1.7;
+      color: var(--color-text);
+    }
+
+    dl {
+      margin: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--ink-850);
+    }
+
+    dl > div {
+      display: grid;
+      grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+      gap: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: 1px solid var(--color-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    dt {
+      font-size: var(--text-sm);
+      font-weight: 560;
+      color: var(--color-text-strong);
+    }
+
+    dd {
+      margin: 0;
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      color: var(--color-text);
+
+      a {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--color-link);
+        text-decoration: underline;
+        text-decoration-color: rgba(116, 167, 244, 0.45);
+        text-underline-offset: 3px;
+
+        &:hover {
+          color: var(--color-link-strong);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    .privacy__services dl > div {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>

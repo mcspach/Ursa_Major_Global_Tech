@@ -79,10 +79,10 @@ sips -z 630 1200 og_raw.png --out public/og_image.png && rm og_raw.png
       `/contact/` only after the form is sent (`CALENDAR_URL`)
 - [ ] **Founder bio + photo**: `src/pages/about.astro` (marked in-page)
 - [x] **Stats**: `src/components/sections/StatsStrip.astro` holds real figures
-- [ ] **Privacy policy**: Google Analytics and Microsoft Clarity load on every
-      production page and the contact form collects names and emails, so the
-      site needs a `/privacy/` page linked from the footer. Decide on a consent
-      banner for EU/UK visitors (Clarity requires consent there)
+- [ ] **Privacy policy**: `/privacy/` is live and linked from the footer.
+      Still open: confirm the GA4 and Sheet retention periods and add the legal
+      entity + address (TODOs in `src/pages/privacy.astro`), and decide on a
+      consent banner for EU/UK visitors (Clarity requires consent there)
 - [ ] **Placeholder products**: Northstar Metrics + StackAudit
       (`placeholder: true` in frontmatter); keep, edit, or delete
 - [ ] **Blog posts**: all seven are ghost-written; review before indexing
