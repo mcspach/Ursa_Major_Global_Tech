@@ -31,14 +31,18 @@ const fields = {
 };
 
 /**
- * Submitted verbatim, so each string must match one of the dropdown's options
- * exactly — whitespace, casing, curly apostrophes and all. A mismatch is
- * rejected silently, which is why these are the labels and not URL slugs.
+ * The Google Form takes this field as a short answer, not a dropdown, so the
+ * list lives here alone and can change without touching the form. Submitted
+ * verbatim and kept as labels, not slugs, so the sheet stays readable. If the
+ * question is ever switched back to a dropdown, these must match its options
+ * exactly or submissions are rejected silently.
  */
 const INTEREST_OPTIONS = [
   "AI Advisory",
-  "AI Automation Systems",
+  "AI Automation System",
+  "White-Label Product",
   "Software Development",
+  "Product Acquisition Inquiry",
   "Something else",
 ];
 

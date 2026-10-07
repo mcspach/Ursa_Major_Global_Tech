@@ -229,8 +229,10 @@ a CI run may not have them.
   but optional in the HTML shows the visitor a success message and writes
   nothing to the sheet. Today no field is required on Google's side, which is
   the safe direction — HTML may be stricter without consequence. Do not invert
-  that. Dropdown `value`s must also string-match the form's options exactly; a
-  mismatch is rejected silently. Read `references/gotchas.md` before touching
+  that. "What do you need?" is a short-answer question on Google's side, so the
+  site's `<select>` options can change in the repo alone; were it ever made a
+  dropdown again, the `value`s would have to string-match its options exactly
+  or be rejected silently. Read `references/gotchas.md` before touching
   field names, required flags, or option text.
 
 ### Built in
