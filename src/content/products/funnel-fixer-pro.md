@@ -8,7 +8,7 @@ acquire: true
 url: https://funnelfixerpro.ai
 order: 1
 heroStats:
-  - value: "44%"
+  - value: "24%"
     label: Average conversion increase
   - value: "<2 min"
     label: Analysis completion time

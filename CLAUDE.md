@@ -189,10 +189,8 @@ The ones that will bite an agent:
   call", and no link elsewhere points at the calendar. Offer `callUrl`s in
   [BuyButton.astro](src/components/ui/BuyButton.astro) are a separate, still
   unset path.
-- **Stats** — [StatsStrip.astro](src/components/sections/StatsStrip.astro) numbers are invented.
 - **Blog** — all seven posts are ghost-written and unreviewed.
 - **Products** — Northstar Metrics and StackAudit are `placeholder: true`.
-- **Founder bio + photo** — marked in-page in [about.astro](src/pages/about.astro).
 
 Do not present placeholder figures as facts in new copy, and do not add them to
 JSON-LD.
