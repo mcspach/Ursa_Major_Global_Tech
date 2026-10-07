@@ -183,9 +183,12 @@ page reads before editing content.
 Tracked in the [README](README.md) checklist and [reference/punchlist.md](reference/punchlist.md).
 The ones that will bite an agent:
 
-- **Booking link** — `BOOKING_URL` in
-  [contact.astro](src/pages/contact.astro) is a placeholder Cal.com URL, and
-  stays out of structured data until it is real.
+- **Booking is gated behind the contact form.** The Google Calendar scheduler
+  (`CALENDAR_URL` in [contact.astro](src/pages/contact.astro)) appears only
+  after a successful submit. Site copy says "get in touch", never "book a
+  call", and no link elsewhere points at the calendar. Offer `callUrl`s in
+  [BuyButton.astro](src/components/ui/BuyButton.astro) are a separate, still
+  unset path.
 - **Stats** — [StatsStrip.astro](src/components/sections/StatsStrip.astro) numbers are invented.
 - **Blog** — all seven posts are ghost-written and unreviewed.
 - **Products** — Northstar Metrics and StackAudit are `placeholder: true`.
