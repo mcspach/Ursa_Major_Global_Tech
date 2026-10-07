@@ -545,6 +545,11 @@ const schema = [contactPoint(siteUrl)];
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
+
+    /* `display: flex` outranks the UA's [hidden] rule, so restate it. */
+    &[hidden] {
+      display: none;
+    }
   }
 
   .contact-form__booking-lead {

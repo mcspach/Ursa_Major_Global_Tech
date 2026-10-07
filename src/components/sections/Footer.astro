@@ -1,6 +1,6 @@
 ---
 import { withBase } from "../../utils/paths";
-import ConstellationMark from "../ui/ConstellationMark.astro";
+import Wordmark from "../ui/Wordmark.astro";
 
 const year = new Date().getFullYear();
 
@@ -18,8 +18,7 @@ const QUICK_LINKS = [
     <div class="site-footer__grid">
       <div class="site-footer__brand">
         <a href={withBase("/")} class="site-footer__brand-link" aria-label="Ursa Major Global Tech, home">
-          <ConstellationMark class="site-footer__mark" />
-          <span class="site-footer__name">Ursa Major Global Tech</span>
+          <Wordmark />
         </a>
         <p class="site-footer__tagline">Bringing Frontier AI down to earth.</p>
         <p class="site-footer__blurb">
@@ -76,27 +75,6 @@ const QUICK_LINKS = [
     display: inline-flex;
     align-items: center;
     gap: 0.875rem;
-  }
-
-  .site-footer__mark {
-    width: 2.75rem;
-    height: auto;
-    color: var(--peri-400);
-
-    :global(.cstar) {
-      fill: var(--star-100);
-    }
-
-    :global(.cline) {
-      stroke: rgba(165, 175, 251, 0.55);
-    }
-  }
-
-  .site-footer__name {
-    font-family: var(--font-display);
-    font-size: var(--text-md);
-    font-weight: 590;
-    color: var(--color-text-strong);
   }
 
   .site-footer__tagline {
