@@ -13,6 +13,7 @@ import { withBase } from "../utils/paths";
  *   Google Forms / Sheets                 → contact.astro FORM_ACTION
  *   Google Calendar scheduler             → contact.astro CALENDAR_URL
  *   GitHub Pages                          → .github/workflows/deploy.yml
+ *   Consent banner (time-zone gated)      → BaseLayout.astro + ConsentBanner.astro
  *
  * Bump LAST_UPDATED on any substantive change.
  */
@@ -104,7 +105,9 @@ const CONTACT_RETENTION = "24 months after our last contact with you";
           <strong>Browser storage.</strong> The site stores two small flags in
           your browser's session storage so the intro animation plays once per
           visit and page transitions run smoothly. They contain no personal
-          information and clear when you close the tab.
+          information and clear when you close the tab. If you accept or
+          decline analytics cookies, that choice is saved in your browser's
+          local storage so we don't ask again.
         </p>
         <p>
           Our fonts are hosted on our own server, so loading a page does not send
@@ -189,8 +192,13 @@ const CONTACT_RETENTION = "24 months after our last contact with you";
         <h2>Cookies and your choices</h2>
         <p>
           Google Analytics and Microsoft Clarity set cookies to tell visits
-          apart. You can block or delete cookies in your browser settings, and
-          the site works fully without them. Google also offers a
+          apart. If your browser is set to a European time zone, which covers
+          the European Economic Area, the United Kingdom, and Switzerland, we ask
+          before loading either of them, and nothing loads unless you accept.
+          Elsewhere they load by default. Wherever you are, you can accept or
+          decline at any time with <strong>Cookie Settings</strong> at the bottom
+          of every page. You can also block or delete cookies in your browser
+          settings, and the site works fully without them. Google also offers a
           <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener noreferrer" target="_blank">browser add-on</a>
           that opts you out of Google Analytics on every site.
         </p>
