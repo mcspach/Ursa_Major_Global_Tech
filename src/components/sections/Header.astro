@@ -1,6 +1,5 @@
 ---
 import { withBase } from "../../utils/paths";
-import ConstellationMark from "../ui/ConstellationMark.astro";
 import Wordmark from "../ui/Wordmark.astro";
 
 const NAV_LINKS = [
@@ -26,7 +25,6 @@ const isActive = (href: string) => {
 <header class="site-header" data-header>
   <div class="container container--wide site-header__inner">
     <a href={withBase("/")} class="site-header__brand" aria-label="Ursa Major Global Tech, home">
-      <ConstellationMark class="site-header__mark" />
       <Wordmark />
     </a>
 
@@ -157,21 +155,6 @@ const isActive = (href: string) => {
     align-items: center;
     gap: 0.75rem;
     min-width: 0;
-  }
-
-  .site-header__mark {
-    width: 2.4rem;
-    height: auto;
-    color: var(--peri-400);
-    flex-shrink: 0;
-
-    :global(.cstar) {
-      fill: var(--star-100);
-    }
-
-    :global(.cline) {
-      stroke: rgba(165, 175, 251, 0.55);
-    }
   }
 
   .site-header__nav {

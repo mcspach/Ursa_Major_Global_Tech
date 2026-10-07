@@ -1,11 +1,11 @@
 ---
-title: How We Ship a Production MVP in 4 Weeks (The Actual Playbook)
-description: No magic and no 80-hour weeks, just a repeatable four-week structure we run on every MVP build, from discovery sprint to production handoff.
+title: How We Ship a Production MVP in 5 Weeks (The Actual Playbook)
+description: No magic and no 80-hour weeks, just a repeatable five-week structure we run on every MVP build, from discovery sprint to production handoff.
 category: Process
 pubDate: 2026-03-25
 ---
 
-When we tell founders their MVP will be in production in four to six weeks,
+When we tell founders their MVP will be in production in five weeks,
 the reaction is usually polite disbelief. That's fair; the industry average for
 "simple app" is two quarters and a follow-up invoice. So here's the actual
 playbook, week by week.

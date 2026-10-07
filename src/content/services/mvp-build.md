@@ -2,7 +2,7 @@
 title: MVP Build
 summary: Get your product built right, fast, and production-ready. A complete MVP, not a demo, with auth, payments, admin tooling, and a real deployment pipeline.
 priceLabel: Project-Based
-timeline: 4–6 weeks
+timeline: 5 weeks
 order: 1
 # Retired as a headline SKU. App builds now live behind the Audit in Custom.
 # Page stays reachable so existing links and proposals still resolve.

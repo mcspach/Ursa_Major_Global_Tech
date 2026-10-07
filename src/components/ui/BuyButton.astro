@@ -38,9 +38,9 @@ const CONTACT = withBase("/contact/");
 
 const DEFAULT_LABELS: Record<Buying["mode"], string> = {
   "buy-now": "Buy Now",
-  "call-then-link": "Book a Scoping Call",
-  "call-then-proposal": "Book a Call",
-  inquire: "Enquire",
+  "call-then-link": "Get in Touch",
+  "call-then-proposal": "Get in Touch",
+  inquire: "Get in Touch",
 };
 
 const mode = buying?.mode ?? "inquire";
@@ -90,8 +90,8 @@ const secondaryCall = checkoutReady && buying?.callUrl ? buying.callUrl : null;
   {
     !live && (
       <p class="buy__pending">
-        Card checkout and invoicing both available. Tell us which and we'll send
-        the link today.
+        Card checkout and invoicing both available. Tell us which you'd prefer
+        and we'll take it from there.
       </p>
     )
   }

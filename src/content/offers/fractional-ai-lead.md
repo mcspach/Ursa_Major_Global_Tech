@@ -20,7 +20,7 @@ pricing:
   note: 3-month minimum
 buying:
   mode: call-then-proposal
-  ctaLabel: Book a call
+  ctaLabel: Get in Touch
   # callUrl: TODO
   # intakeUrl: TODO
 

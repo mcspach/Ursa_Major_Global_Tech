@@ -1,6 +1,6 @@
 ---
 title: "Do You Need an AI Strategy, or Just an Automation?"
-description: Two different purchases, two different buyers, and picking the wrong one is the expensive mistake. Here's the one-sentence test we use to tell which a company actually needs.
+description: Two purchases for two different buyers, and picking the wrong one is the expensive mistake. Here's the one-sentence test for telling them apart.
 category: Strategy
 pubDate: 2026-08-14
 ---
