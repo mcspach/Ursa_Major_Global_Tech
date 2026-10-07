@@ -22,8 +22,9 @@ const QUICK_LINKS = [
         </a>
         <p class="site-footer__tagline">Bringing Frontier AI down to earth.</p>
         <p class="site-footer__blurb">
-          We build MVPs, SaaS platforms, and custom applications with AI-accelerated
-          development. Production-ready software, shipped in weeks.
+          Workflow automation, custom applications, and AI systems that run in
+          production, not in a sandbox. Built by a small senior team, shipped in
+          weeks, and yours end to end.
         </p>
       </div>
 
@@ -93,7 +94,8 @@ const QUICK_LINKS = [
     margin-top: var(--space-sm);
     max-width: 34ch;
     font-size: var(--text-sm);
-    color: var(--color-text-subtle);
+    /* Not --color-text-subtle: 3.69:1 on --color-bg-deep fails AA. */
+    color: var(--color-text-muted);
   }
 
   .site-footer__heading {
@@ -138,7 +140,8 @@ const QUICK_LINKS = [
     button {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
-      color: var(--color-text-subtle);
+      /* Not --color-text-subtle: 3.69:1 on --color-bg-deep fails AA. */
+      color: var(--color-text-muted);
     }
 
     button {

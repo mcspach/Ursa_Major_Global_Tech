@@ -16,17 +16,12 @@ import { withBase } from "../../utils/paths";
 
 <div class="consent" role="region" aria-label="Cookie consent" hidden data-consent>
   <p class="consent__text">
-    We'd like to use analytics cookies (Google Analytics and Microsoft Clarity)
-    to see how the site is used. Nothing loads unless you accept.
-    <a href={withBase("/privacy/")}>Privacy policy</a>
+    Allow analytics cookies?
+    <a href={withBase("/privacy/")}>Details</a>
   </p>
   <div class="consent__actions">
-    <button type="button" class="btn btn--ghost consent__btn" data-consent-choice="denied">
-      Decline
-    </button>
-    <button type="button" class="btn btn--ghost consent__btn" data-consent-choice="granted">
-      Accept
-    </button>
+    <button type="button" class="consent__btn" data-consent-choice="denied">Decline</button>
+    <button type="button" class="consent__btn" data-consent-choice="granted">Accept</button>
   </div>
 </div>
 
@@ -61,23 +56,26 @@ import { withBase } from "../../utils/paths";
 </script>
 
 <style lang="scss">
-  /* Below the page-transition curtain (9999) so the intro still covers it,
+  /* Deliberately quiet: a small corner chip in the footer's mono type rather
+     than a modal or a full-width bar, so it reads as part of the site.
+     Below the page-transition curtain (9999) so the intro still covers it,
      above the header (9000) and its mobile menu. */
   .consent {
     position: fixed;
-    inset-inline: var(--space-md);
-    bottom: var(--space-md);
+    left: var(--space-sm);
+    bottom: var(--space-sm);
     z-index: 9500;
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    max-width: 52rem;
-    margin-inline: auto;
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-md);
-    background: var(--ink-850);
-    box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.45);
+    gap: var(--space-sm);
+    max-width: calc(100vw - 2 * var(--space-sm));
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ink-950) 88%, transparent);
+    backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
 
     &[hidden] {
       display: none;
@@ -85,18 +83,15 @@ import { withBase } from "../../utils/paths";
   }
 
   .consent__text {
-    flex: 1;
-    font-size: var(--text-sm);
-    line-height: 1.55;
-    color: var(--color-text);
+    color: var(--color-text-muted);
 
     a {
-      color: var(--color-link);
+      color: var(--color-text);
       text-decoration: underline;
       text-underline-offset: 3px;
 
       &:hover {
-        color: var(--color-link-strong);
+        color: var(--color-link);
       }
     }
   }
@@ -104,22 +99,19 @@ import { withBase } from "../../utils/paths";
   .consent__actions {
     display: flex;
     flex-shrink: 0;
-    gap: var(--space-xs);
+    gap: var(--space-sm);
   }
 
   .consent__btn {
-    padding: 0.6rem 1.2rem;
-    font-size: var(--text-sm);
-  }
+    padding: 0.2rem 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--color-text-strong);
+    cursor: pointer;
 
-  @media (max-width: 640px) {
-    .consent {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .consent__actions {
-      justify-content: flex-end;
+    &:hover {
+      color: var(--color-link);
     }
   }
 </style>
