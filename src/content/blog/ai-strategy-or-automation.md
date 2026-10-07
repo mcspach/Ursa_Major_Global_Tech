@@ -24,7 +24,7 @@ could have written on day one.
 
 If you can't, and the honest answer is "leadership is asking what our AI plan
 is and we don't have one," then automating something is premature. You'd be
-optimising a process that a strategy might have told you to eliminate.
+optimizing a process that a strategy might have told you to eliminate.
 
 ## What automation work actually answers
 

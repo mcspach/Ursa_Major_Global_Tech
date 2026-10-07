@@ -22,7 +22,7 @@ techStack:
   - label: Backend
     value: Supabase (PostgreSQL + Edge Functions)
   - label: AI Engine
-    value: OpenAI GPT-4o
+    value: OpenAI GPT-6
   - label: State Management
     value: React Query
   - label: Authentication
