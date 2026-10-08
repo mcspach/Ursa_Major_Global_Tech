@@ -79,10 +79,8 @@ sips -z 630 1200 og_raw.png --out public/og_image.png && rm og_raw.png
       `/contact/` only after the form is sent (`CALENDAR_URL`)
 - [ ] **Founder bio + photo**: `src/pages/about.astro` (marked in-page)
 - [x] **Stats**: `src/components/sections/StatsStrip.astro` holds real figures
-- [ ] **Privacy policy**: `/privacy/` is live and linked from the footer.
-      Still open: confirm the GA4 and Sheet retention periods and add the legal
-      entity + address (TODOs in `src/pages/privacy.astro`). The consent
-      banner is done: European time zones are asked before GA/Clarity load
+- [x] **Privacy policy**: `/privacy/`, linked from the footer, with a
+      time-zone consent banner plus Google Consent Mode region defaults
 - [ ] **Placeholder products**: Northstar Metrics + StackAudit
       (`placeholder: true` in frontmatter); keep, edit, or delete
 - [ ] **Blog posts**: all seven are ghost-written; review before indexing

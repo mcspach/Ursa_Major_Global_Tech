@@ -25,12 +25,12 @@ const CONTACT_EMAIL = "hello@ursamajorglobaltech.com";
 const GA_EVENT_RETENTION = "2 months";
 const GA_USER_RETENTION = "14 months";
 
-// TODO: confirm. How long rows stay in the contact-form Google Sheet before
-// they're cleared.
+// How long rows stay in the contact-form Google Sheet before they're cleared.
 const CONTACT_RETENTION = "24 months after our last contact with you";
 
-// TODO: add the legal entity name and a mailing address once settled
-// (same open item as Organization.address in reference/punchlist.md).
+// No street address on purpose: GDPR asks for identity and contact details,
+// and the email covers contact. If the registered entity name ever differs
+// from the brand, name it in "Who we are".
 ---
 
 <BaseLayout
