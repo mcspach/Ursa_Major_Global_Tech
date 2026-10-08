@@ -20,9 +20,10 @@ import { withBase } from "../utils/paths";
 const LAST_UPDATED = "October 7, 2026";
 const CONTACT_EMAIL = "hello@ursamajorglobaltech.com";
 
-// TODO: must match Admin → Data settings → Data retention in GA4.
-// GA4 offers 2 or 14 months for event data.
-const GA_RETENTION = "14 months";
+// Must match GA4 Admin → Data collection and modification → Data retention.
+// Event data is set to 2 months; user data to 14, reset on each new visit.
+const GA_EVENT_RETENTION = "2 months";
+const GA_USER_RETENTION = "14 months";
 
 // TODO: confirm. How long rows stay in the contact-form Google Sheet before
 // they're cleared.
@@ -224,7 +225,9 @@ const CONTACT_RETENTION = "24 months after our last contact with you";
           Contact-form submissions and email correspondence are kept for up to
           {CONTACT_RETENTION}, unless you become a client, in which case we keep
           what we need for the engagement and for tax and accounting records.
-          Google Analytics data is retained for {GA_RETENTION}. Clarity and
+          Google Analytics keeps event data for {GA_EVENT_RETENTION}, and data
+          tied to a returning visitor for {GA_USER_RETENTION} after their last
+          visit. Clarity and
           GitHub keep data according to their own policies.
         </p>
 
