@@ -5,7 +5,7 @@ import CTABand from "../components/sections/CTABand.astro";
 import { Image } from "astro:assets";
 import { withBase } from "../utils/paths";
 import ryanHeadshot from "../assets/UM_headshot_ryan.webp";
-import compassIcon from "../assets/um-icon-compass-detail.svg";
+import CompassIcon from "../assets/um-icon-compass-detail.svg";
 
 const PRINCIPLES = [
   {
@@ -90,18 +90,8 @@ const STACK_GROUPS = [
             and you watch working software appear every Friday.
           </p>
         </div>
-        <!--
-          An <img>, not an inline SVG: the file carries a ~10KB C2PA provenance
-          block that would otherwise be pasted into the page's HTML.
-        -->
         <div class="about-story__visual" data-animate="fade" data-animate-delay="0.2">
-          <img
-            class="about-story__icon"
-            src={compassIcon.src}
-            width={compassIcon.width}
-            height={compassIcon.height}
-            alt=""
-          />
+          <CompassIcon class="about-story__icon" aria-hidden="true" data-rotate="24" />
         </div>
       </div>
     </div>
@@ -251,9 +241,24 @@ const STACK_GROUPS = [
     background-position: center;
   }
 
-  .about-story__icon {
+  /* Inlined, so the drawing's hex colors can be pinned to tokens here. CSS
+     outranks SVG presentation attributes; the file keeps the hex values so it
+     still renders on its own. */
+  .about-story__visual :global(.about-story__icon) {
     width: min(18rem, 62%);
     height: auto;
+
+    :global([stroke="#8b93d6"]) {
+      stroke: var(--peri-500);
+    }
+
+    :global([stroke="#74a7f4"]) {
+      stroke: var(--blue-400);
+    }
+
+    :global([fill="#f2f5fd"]) {
+      fill: var(--star-100);
+    }
   }
 
   .about-principles {

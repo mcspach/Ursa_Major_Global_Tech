@@ -27,7 +27,8 @@ npm run build    # dist/ + relativized paths
 - `src/scripts/transitions.js`: intro loader + curtain page transitions
   (sessionStorage keys `um:hasSeenIntro`, `um:navCover`)
 - `src/scripts/motion.js`: Lenis/GSAP boot + `data-animate`, `data-split`,
-  `data-marquee`, `data-counter`, `data-magnetic`, `data-parallax` primitives
+  `data-marquee`, `data-counter`, `data-magnetic`, `data-parallax`, `data-rotate`
+  primitives
 - `src/scripts/constellation.js`: hero star-field canvas (Big Dipper asterism)
 - All animation is progressive enhancement: no JS / reduced motion → fully
   visible static site
