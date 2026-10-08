@@ -15,7 +15,7 @@ deliverables:
   - Cancel monthly. We earn the renewal.
 process:
   - step: Embed
-    detail: First two weeks inside your codebase. We map it with StackAudit, fix quick wins, and calibrate velocity.
+    detail: First two weeks inside your codebase. We map it, fix quick wins, and calibrate velocity.
   - step: Ship on Rhythm
     detail: A weekly cadence of shipped, demoed work. Roadmap planned monthly, adjusted as reality happens.
   - step: Compound

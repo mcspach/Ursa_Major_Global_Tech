@@ -1,0 +1,117 @@
+---
+import { withBase } from "../../utils/paths";
+
+/**
+ * Cookie consent for visitors whose time zone reads as European. Whether to
+ * show it, and what each choice does, is decided by the head script in
+ * BaseLayout.astro (window.umConsent); this file is only the UI.
+ *
+ * Accept and Decline carry equal weight on purpose. UK and EU regulators
+ * treat a dimmer "reject" button as steering, and steered consent isn't valid.
+ *
+ * Any element with [data-consent-open] reopens the banner, which is how the
+ * footer's "Cookie settings" lets a visitor change their mind.
+ */
+---
+
+<div class="consent" role="region" aria-label="Cookie consent" hidden data-consent>
+  <p class="consent__text">
+    Allow analytics cookies?
+    <a href={withBase("/privacy/")}>Details</a>
+  </p>
+  <div class="consent__actions">
+    <button type="button" class="consent__btn" data-consent-choice="denied">Decline</button>
+    <button type="button" class="consent__btn" data-consent-choice="granted">Accept</button>
+  </div>
+</div>
+
+<script>
+  type Choice = "granted" | "denied";
+  type Consent = {
+    needsConsent: boolean;
+    stored: string | null;
+    set: (choice: Choice) => void;
+  };
+
+  const banner = document.querySelector<HTMLElement>("[data-consent]");
+  const consent = (window as Window & { umConsent?: Consent }).umConsent;
+
+  if (banner && consent) {
+    if (consent.needsConsent && !consent.stored) banner.hidden = false;
+
+    banner.addEventListener("click", (event) => {
+      const button = (event.target as Element).closest<HTMLElement>("[data-consent-choice]");
+      if (!button) return;
+      consent.set(button.dataset.consentChoice as Choice);
+      banner.hidden = true;
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!(event.target as Element).closest("[data-consent-open]")) return;
+      event.preventDefault();
+      banner.hidden = false;
+      banner.querySelector<HTMLButtonElement>("[data-consent-choice]")?.focus();
+    });
+  }
+</script>
+
+<style lang="scss">
+  /* Deliberately quiet: a small corner chip in the footer's mono type rather
+     than a modal or a full-width bar, so it reads as part of the site.
+     Below the page-transition curtain (9999) so the intro still covers it,
+     above the header (9000) and its mobile menu. */
+  .consent {
+    position: fixed;
+    left: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 9500;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    max-width: calc(100vw - 2 * var(--space-sm));
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ink-950) 88%, transparent);
+    backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .consent__text {
+    color: var(--color-text-muted);
+
+    a {
+      color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+
+      &:hover {
+        color: var(--color-link);
+      }
+    }
+  }
+
+  .consent__actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--space-sm);
+  }
+
+  .consent__btn {
+    padding: 0.2rem 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--color-text-strong);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-link);
+    }
+  }
+</style>

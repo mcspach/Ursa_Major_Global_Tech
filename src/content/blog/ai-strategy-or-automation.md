@@ -1,6 +1,6 @@
 ---
 title: "Do You Need an AI Strategy, or Just an Automation?"
-description: Two different purchases, two different buyers, and picking the wrong one is the expensive mistake. Here's the one-sentence test we use to tell which a company actually needs.
+description: Two purchases for two different buyers, and picking the wrong one is the expensive mistake. Here's the one-sentence test for telling them apart.
 category: Strategy
 pubDate: 2026-08-14
 ---
@@ -24,7 +24,7 @@ could have written on day one.
 
 If you can't, and the honest answer is "leadership is asking what our AI plan
 is and we don't have one," then automating something is premature. You'd be
-optimising a process that a strategy might have told you to eliminate.
+optimizing a process that a strategy might have told you to eliminate.
 
 ## What automation work actually answers
 

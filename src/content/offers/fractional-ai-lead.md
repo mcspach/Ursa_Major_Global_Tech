@@ -20,11 +20,11 @@ pricing:
   note: 3-month minimum
 buying:
   mode: call-then-proposal
-  ctaLabel: Book a call
+  ctaLabel: Get in Touch
   # callUrl: TODO
   # intakeUrl: TODO
 
-revisionCap: Not applicable, continuous delivery reprioritised monthly
+revisionCap: Not applicable, continuous delivery reprioritized monthly
 exitArtifact: Executive Advisory at $4,000/mo when the heavy lift is done, so the relationship doesn't end at zero.
 
 deliverables:

@@ -12,7 +12,7 @@
  * rather than an effect. Static single render under reduced motion.
  */
 
-// Colours.
+// Colors.
 const STAR_WHITE = [236, 240, 253];
 const STAR_PERI = [165, 175, 251];
 const GRID_PERI = [165, 175, 251];
@@ -204,7 +204,7 @@ export const initConstellation = (canvas, { animate = true } = {}) => {
   let lastTime = 0;
   let elapsed = 0;
 
-  // Eased pointer, in [-0.5, 0.5] from the viewport centre.
+  // Eased pointer, in [-0.5, 0.5] from the viewport center.
   let pointerX = 0;
   let pointerY = 0;
   let targetX = 0;

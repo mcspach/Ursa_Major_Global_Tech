@@ -5,6 +5,7 @@ import Grain from "../components/sections/Grain.astro";
 import Header from "../components/sections/Header.astro";
 import Footer from "../components/sections/Footer.astro";
 import ConstellationMark from "../components/ui/ConstellationMark.astro";
+import ConsentBanner from "../components/ui/ConsentBanner.astro";
 import { toAbsoluteUrl, withBase } from "../utils/paths";
 import {
   breadcrumbs,
@@ -153,27 +154,119 @@ const jsonLd = graph
       })();
     </script>
 
-    {/* Analytics run only in production builds so local dev doesn't pollute the data. */}
-    {import.meta.env.PROD && (
-      <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-MDMRGHN0PC"></script>
-    )}
-    {import.meta.env.PROD && (
-      <script is:inline>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag("js", new Date());
-        gtag("config", "G-MDMRGHN0PC");
-      </script>
-    )}
-    {import.meta.env.PROD && (
-      <script is:inline>
-        (function (c, l, a, r, i, t, y) {
-          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
-          t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
-          y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", "yu2vk610fc");
-      </script>
-    )}
+    {/*
+      Analytics behind a consent check. A static site can't geolocate, so the
+      browser's time zone stands in: any Europe/* zone (EU, EEA, UK,
+      Switzerland, and some countries that don't need it) gets the banner in
+      ConsentBanner.astro and nothing loads until Accept. Over-matching is the
+      safe direction; the miss is a European visitor on a non-European clock.
+      Elsewhere analytics load unless the visitor has declined. The privacy
+      page describes this, so change both together.
+
+      Google Consent Mode backs this up for GA: storage defaults to denied for
+      CONSENT_REGIONS, which Google resolves from the visitor's real location,
+      so a European visitor on a non-European clock still gets no GA cookies
+      until they accept. Clarity has no equivalent and relies on the time zone.
+      Ad signals are denied everywhere because the site runs no advertising.
+
+      `analytics` is false outside production builds, so local dev never
+      pollutes the data, but the banner and choices still work for testing.
+    */}
+    <script is:inline define:vars={{ analytics: import.meta.env.PROD }}>
+      (() => {
+        const KEY = "um:consent";
+        // EU and EEA, plus the UK and Switzerland.
+        const CONSENT_REGIONS = [
+          "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE",
+          "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT",
+          "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH",
+        ];
+        const EUROPEAN_ATLANTIC = [
+          "Atlantic/Azores",
+          "Atlantic/Canary",
+          "Atlantic/Faroe",
+          "Atlantic/Madeira",
+          "Atlantic/Reykjavik",
+          "Arctic/Longyearbyen",
+        ];
+
+        let zone = "";
+        try {
+          zone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        } catch {
+          // No zone reported; treated as needing consent below.
+        }
+        const needsConsent =
+          !zone || zone.startsWith("Europe/") || EUROPEAN_ATLANTIC.includes(zone);
+
+        let stored = null;
+        try {
+          stored = window.localStorage.getItem(KEY);
+        } catch {
+          // Storage blocked: no remembered choice, so ask again.
+        }
+
+        let loaded = false;
+        const load = () => {
+          if (loaded || !analytics) return;
+          loaded = true;
+
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            window.dataLayer.push(arguments);
+          };
+          const ads = {
+            ad_storage: "denied",
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+          };
+          window.gtag("consent", "default", { ...ads, analytics_storage: "granted" });
+          window.gtag("consent", "default", {
+            ...ads,
+            analytics_storage: "denied",
+            region: CONSENT_REGIONS,
+          });
+          if (stored === "granted") {
+            window.gtag("consent", "update", { analytics_storage: "granted" });
+          }
+          window.gtag("js", new Date());
+          window.gtag("config", "G-MDMRGHN0PC");
+          const ga = document.createElement("script");
+          ga.async = true;
+          ga.src = "https://www.googletagmanager.com/gtag/js?id=G-MDMRGHN0PC";
+          document.head.appendChild(ga);
+
+          (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+          })(window, document, "clarity", "script", "yu2vk610fc");
+        };
+
+        window.umConsent = {
+          needsConsent,
+          stored,
+          set(choice) {
+            try {
+              window.localStorage.setItem(KEY, choice);
+            } catch {
+              // Not remembered; the choice still applies to this page.
+            }
+            stored = choice;
+            this.stored = choice;
+            if (choice === "granted") {
+              load();
+            } else if (loaded) {
+              // Already-running trackers can't be unloaded; a reload comes
+              // back without them.
+              window.location.reload();
+            }
+          },
+        };
+
+        if (stored === "granted" || (!stored && !needsConsent)) load();
+      })();
+    </script>
 
     {jsonLd && (
       <script type="application/ld+json" is:inline set:html={jsonLd} />
@@ -198,6 +291,8 @@ const jsonLd = graph
       </main>
       <Footer />
     </div>
+
+    <ConsentBanner />
 
     <Grain />
 

@@ -1,6 +1,6 @@
 ---
 import { withBase } from "../../utils/paths";
-import ConstellationMark from "../ui/ConstellationMark.astro";
+import Wordmark from "../ui/Wordmark.astro";
 
 const year = new Date().getFullYear();
 
@@ -18,13 +18,13 @@ const QUICK_LINKS = [
     <div class="site-footer__grid">
       <div class="site-footer__brand">
         <a href={withBase("/")} class="site-footer__brand-link" aria-label="Ursa Major Global Tech, home">
-          <ConstellationMark class="site-footer__mark" />
-          <span class="site-footer__name">Ursa Major Global Tech</span>
+          <Wordmark class="site-footer__wordmark" />
         </a>
         <p class="site-footer__tagline">Bringing Frontier AI down to earth.</p>
         <p class="site-footer__blurb">
-          We build MVPs, SaaS platforms, and custom applications with AI-accelerated
-          development. Production-ready software, shipped in weeks.
+          Workflow automation, custom applications, and AI systems that run in
+          production, not in a sandbox. Built by a small senior team, shipped in
+          weeks, and yours end to end.
         </p>
       </div>
 
@@ -46,13 +46,19 @@ const QUICK_LINKS = [
         <ul>
           <li><a href="mailto:hello@ursamajorglobaltech.com">hello@ursamajorglobaltech.com</a></li>
           <li><a href={withBase("/contact/")}>Contact Us</a></li>
+          <li>
+            <a href="https://www.linkedin.com/company/ursa-major-global-tech/" rel="noopener noreferrer" target="_blank">LinkedIn</a>
+          </li>
         </ul>
       </div>
     </div>
 
     <div class="site-footer__bottom">
       <p>© {year} Ursa Major Global Tech</p>
-      <p class="site-footer__bottom-tag">Bringing Frontier AI down to earth.</p>
+      <div class="site-footer__legal">
+        <a href={withBase("/privacy/")}>Privacy Policy</a>
+        <button type="button" data-consent-open>Cookie Settings</button>
+      </div>
     </div>
   </div>
 </footer>
@@ -76,27 +82,12 @@ const QUICK_LINKS = [
     display: inline-flex;
     align-items: center;
     gap: 0.875rem;
-  }
 
-  .site-footer__mark {
-    width: 2.75rem;
-    height: auto;
-    color: var(--peri-400);
-
-    :global(.cstar) {
-      fill: var(--star-100);
+    /* Footer-only scale. Nested under the link so it outranks the Wordmark's
+       own scoped 1.05rem; the sub-line follows at 0.524em (about 0.89rem). */
+    :global(.site-footer__wordmark) {
+      font-size: 1.7rem;
     }
-
-    :global(.cline) {
-      stroke: rgba(165, 175, 251, 0.55);
-    }
-  }
-
-  .site-footer__name {
-    font-family: var(--font-display);
-    font-size: var(--text-md);
-    font-weight: 590;
-    color: var(--color-text-strong);
   }
 
   .site-footer__tagline {
@@ -112,7 +103,8 @@ const QUICK_LINKS = [
     margin-top: var(--space-sm);
     max-width: 34ch;
     font-size: var(--text-sm);
-    color: var(--color-text-subtle);
+    /* Not --color-text-subtle: 3.69:1 on --color-bg-deep fails AA. */
+    color: var(--color-text-muted);
   }
 
   .site-footer__heading {
@@ -152,11 +144,31 @@ const QUICK_LINKS = [
     padding-top: var(--space-lg);
     border-top: 1px solid var(--color-border);
 
-    p {
+    p,
+    a,
+    button {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
-      color: var(--color-text-subtle);
+      /* Not --color-text-subtle: 3.69:1 on --color-bg-deep fails AA. */
+      color: var(--color-text-muted);
     }
+
+    button {
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+
+    a:hover,
+    button:hover {
+      color: var(--color-link);
+    }
+  }
+
+  .site-footer__legal {
+    display: flex;
+    gap: var(--space-md);
   }
 
   @media (max-width: 800px) {

@@ -53,9 +53,9 @@ scope:
 deliverables:
   - Strategy document, 25–40 pages, including what was rejected and why
   - Capability assessment across five dimensions, scored, with the evidence
-  - Findings organised by theme, with quotes attributed by role
+  - Findings organized by theme, with quotes attributed by role
   - Build-versus-buy analysis per capability area
-  - Operating model covering who owns AI and how work gets requested and prioritised
+  - Operating model covering who owns AI and how work gets requested and prioritized
   - Hiring and skills plan, and a governance and acceptable-use policy
   - Executive deck, 15–20 slides, built as an argument for a room
   - 12-month roadmap, phased, with dependencies and decision gates
@@ -72,7 +72,7 @@ notFor:
 exclusions:
   - No implementation, builds, integrations, or configuration
   - No vendor RFP management or contract negotiation
-  - No change management programme design or delivery
+  - No change management program design or delivery
   - No training delivery
   - No data engineering, migration, or remediation
   - No custom financial modeling beyond the included investment model

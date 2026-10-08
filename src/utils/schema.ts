@@ -48,9 +48,25 @@ const ref = (id: string) => ({ "@id": id });
  * postal address, and we don't publish one, so claiming that type would assert
  * something the site doesn't say.
  *
- * `logo` and `sameAs` are deliberately absent until there is a square raster
- * mark and confirmed profile URLs. See reference/punchlist.md.
+ * The facts below are each stated on a page: founding year, cities, and
+ * "worldwide" in the about page's studio section, the founder in its founder
+ * section, LinkedIn in the footer. Cities go in `location` at city level, never
+ * a street, for the same reason. `foundingDate` is when the business started
+ * (2021), not the LLC filing (2022).
+ *
+ * `logo` is deliberately absent until there is a square raster mark. See
+ * reference/punchlist.md.
  */
+const city = (locality: string, region: string, country: string) => ({
+  "@type": "Place",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: locality,
+    addressRegion: region,
+    addressCountry: country,
+  },
+});
+
 export const organization = (site: Site) => ({
   "@type": "Organization",
   "@id": orgId(site),
@@ -58,6 +74,19 @@ export const organization = (site: Site) => ({
   url: toAbsoluteUrl("/", site),
   description: ORG_DESCRIPTION,
   email: CONTACT_EMAIL,
+  foundingDate: "2021",
+  areaServed: "Worldwide",
+  location: [city("Pasadena", "CA", "US"), city("Da Nang", "Da Nang", "VN")],
+  sameAs: ["https://www.linkedin.com/company/ursa-major-global-tech/"],
+  // Defined inline rather than referenced: this node ships on every page, and
+  // a bare @id reference would dangle everywhere except /about/.
+  founder: {
+    "@type": "Person",
+    "@id": anchor("/about/", site, "founder"),
+    name: "Ryan Jacobson",
+    jobTitle: "Founder",
+    url: toAbsoluteUrl("/about/", site),
+  },
 });
 
 export const website = (site: Site) => ({

@@ -1,0 +1,38 @@
+---
+// The stacked "Ursa Major / Global Tech" lockup. One component so the header
+// and footer can't drift into two versions of the brand.
+//
+// The sub-line is sized in em, so setting font-size on the root (via `class`)
+// scales the whole lockup and keeps the header's proportions: 1.05rem over
+// 0.55rem, a ratio of 0.524.
+const { class: className = "" } = Astro.props;
+---
+
+<span class:list={["wordmark", className]}>
+  Ursa Major
+  <span class="wordmark__sub">Global Tech</span>
+</span>
+
+<style lang="scss">
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 590;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--color-text-strong);
+    white-space: nowrap;
+  }
+
+  .wordmark__sub {
+    font-family: var(--font-mono);
+    font-size: 0.524em;
+    font-weight: 500;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--peri-400);
+    margin-top: 0.364em;
+  }
+</style>

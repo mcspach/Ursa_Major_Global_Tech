@@ -22,7 +22,7 @@ techStack:
   - label: Backend
     value: Supabase (PostgreSQL + Edge Functions)
   - label: AI Engine
-    value: OpenAI GPT-4o
+    value: OpenAI GPT-6
   - label: State Management
     value: React Query
   - label: Authentication
@@ -64,11 +64,11 @@ features:
       - Template library and progress visualization
 ---
 
-FunnelFixer Pro is an all-in-one, AI-powered marketing optimization platform
+Funnel Fixer Pro is an all-in-one, AI-powered marketing optimization platform
 that covers the entire customer acquisition journey. From planning ad spend to
 diagnosing conversion killers to sharpening your offers and copy, it delivers
 data-driven insights and concrete recommendations at every stage of the funnel.
 
 Most teams juggle five tools to answer one question: *where is my funnel losing
-money?* FunnelFixer Pro answers it in under two minutes, then hands you a
+money?* Funnel Fixer Pro answers it in under two minutes, then hands you a
 prioritized fix list, so you stop guessing and start converting.

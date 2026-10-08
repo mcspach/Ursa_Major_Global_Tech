@@ -39,8 +39,7 @@ Mostly shipped in §3. What's left here needs facts, not code.
 - [x] `AboutPage` + `BreadcrumbList`.
 - [ ] Add `FAQPage` JSON-LD matching the new FAQ block verbatim, once the FAQ
       block exists. `faqPage()` in `src/utils/schema.ts` already builds it.
-- [ ] Fill the Organization gaps listed in §3: logo, sameAs, areaServed,
-      foundingDate, founder.
+- [x] Fill the Organization gaps listed in §3 (all but the logo).
 
 ### Images
 - [ ] Source or produce real imagery: founder/team photo, workspace or process shot,
@@ -101,20 +100,16 @@ to a reader, so a crawler must not be able to read the number either.
 
 ### Open inputs, all needing a real fact rather than a guess
 
-- [ ] **`sameAs` profiles.** LinkedIn / GitHub / X URLs. Omitted entirely for
-      now rather than guessed. Add to `organization()` in `schema.ts`.
+- [x] **`sameAs` profiles.** LinkedIn company page, also linked in the footer.
 - [ ] **`Organization.logo`.** Needs a square raster mark; `og_image.png` is
       1200x630 and wrong for this. Blocked on the logo/iconography set.
-- [ ] **`areaServed` / `address`.** Left off, which is also why the node is
-      `Organization` and not `ProfessionalService`: the LocalBusiness family
-      expects a postal address, and claiming that type without one would assert
-      something the site never says. Revisit once the address is settled.
-- [ ] **Founder `Person` node.** Held back entirely. The about page shows
-      "Ryan" over an explicitly placeholder bio, and the surname needs
-      confirming before it goes into structured data (Jocobson or Jacobson?).
-      Once the official name, title, bio, and photo land, add a `Person` and
-      point `Organization.founder` at it.
-- [ ] **`foundingDate`.** Not stated anywhere on the site yet.
+- [x] **`areaServed` / `location`.** "Worldwide", plus Pasadena, CA and
+      Da Nang, Vietnam at city level (no street address, so the node stays
+      `Organization`). Stated on the about page.
+- [x] **Founder `Person` node.** Ryan Jacobson, defined inline as
+      `Organization.founder` so it resolves on every page.
+- [x] **`foundingDate`.** 2021 (the LLC was filed in 2022; the business
+      date is the one used). Stated on the about page.
 
 ### Decisions already made, recorded so they don't get re-litigated
 
