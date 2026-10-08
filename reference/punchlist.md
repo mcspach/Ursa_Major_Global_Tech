@@ -39,7 +39,7 @@ Mostly shipped in §3. What's left here needs facts, not code.
 - [x] `AboutPage` + `BreadcrumbList`.
 - [ ] Add `FAQPage` JSON-LD matching the new FAQ block verbatim, once the FAQ
       block exists. `faqPage()` in `src/utils/schema.ts` already builds it.
-- [x] Fill the Organization gaps listed in §3 (all but the logo).
+- [x] Fill the Organization gaps listed in §3.
 
 ### Images
 - [ ] Source or produce real imagery: founder/team photo, workspace or process shot,
@@ -101,8 +101,7 @@ to a reader, so a crawler must not be able to read the number either.
 ### Open inputs, all needing a real fact rather than a guess
 
 - [x] **`sameAs` profiles.** LinkedIn company page, also linked in the footer.
-- [ ] **`Organization.logo`.** Needs a square raster mark; `og_image.png` is
-      1200x630 and wrong for this. Blocked on the logo/iconography set.
+- [x] **`Organization.logo`.** `public/logo.png`, 224x224.
 - [x] **`areaServed` / `location`.** "Worldwide", plus Pasadena, CA and
       Da Nang, Vietnam at city level (no street address, so the node stays
       `Organization`). Stated on the about page.
