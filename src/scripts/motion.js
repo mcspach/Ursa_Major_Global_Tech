@@ -9,6 +9,7 @@
  *   [data-marquee]                      infinite marquee (slows on hover)
  *   [data-counter data-target="24"]     count-up stat on enter
  *   [data-parallax data-parallax-speed] scrubbed parallax drift
+ *   [data-rotate="24"]                  scrubbed rotation in place (degrees)
  *
  * Everything here is progressive enhancement: without JS (or with reduced
  * motion) the html.um-js class is absent and all content is fully visible.
@@ -246,6 +247,36 @@ const initParallax = () => {
 };
 
 /* ------------------------------------------------------------------
+   Scroll rotation
+   ------------------------------------------------------------------ */
+/**
+ * Turns the element through its total sweep (default 24°) while it crosses
+ * the viewport, centered so it reads upright at the midpoint. Rotation only:
+ * the element never moves, so layout and neighbors are untouched.
+ */
+const initRotate = () => {
+  document.querySelectorAll("[data-rotate]").forEach((element) => {
+    const sweep = Number.parseFloat(element.dataset.rotate || "24");
+
+    gsap.fromTo(
+      element,
+      { rotation: -sweep / 2 },
+      {
+        rotation: sweep / 2,
+        transformOrigin: "50% 50%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: element.parentElement ?? element,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      },
+    );
+  });
+};
+
+/* ------------------------------------------------------------------
    Boot
    ------------------------------------------------------------------ */
 const boot = () => {
@@ -283,6 +314,7 @@ const boot = () => {
   initMarquees();
   initCounters();
   initParallax();
+  initRotate();
 };
 
 if (document.readyState === "loading") {

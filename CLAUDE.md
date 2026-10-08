@@ -135,7 +135,8 @@ error, check `node -v` first.
   file header before adding a node.
 - **[src/scripts/motion.js](src/scripts/motion.js)** boots Lenis + ScrollTrigger and
   implements the `data-animate`, `data-animate-children`, `data-split`,
-  `data-marquee`, `data-counter`, `data-parallax`, `data-magnetic` primitives.
+  `data-marquee`, `data-counter`, `data-parallax`, `data-rotate`, `data-magnetic`
+  primitives.
   New animation goes through these attributes, not a one-off GSAP call in a
   component.
 - **[src/scripts/transitions.js](src/scripts/transitions.js)** is the intro loader

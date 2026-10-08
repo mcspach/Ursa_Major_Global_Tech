@@ -54,8 +54,8 @@ const ref = (id: string) => ({ "@id": id });
  * a street, for the same reason. `foundingDate` is when the business started
  * (2021), not the LLC filing (2022).
  *
- * `logo` is deliberately absent until there is a square raster mark. See
- * reference/punchlist.md.
+ * `logo` is public/logo.png: square and raster because Google requires both
+ * (min 112x112), and in public/ so its URL never changes with a content hash.
  */
 const city = (locality: string, region: string, country: string) => ({
   "@type": "Place",
@@ -72,6 +72,7 @@ export const organization = (site: Site) => ({
   "@id": orgId(site),
   name: SITE_NAME,
   url: toAbsoluteUrl("/", site),
+  logo: toAbsoluteUrl("/logo.png", site),
   description: ORG_DESCRIPTION,
   email: CONTACT_EMAIL,
   foundingDate: "2021",
