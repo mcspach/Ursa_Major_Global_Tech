@@ -2,10 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/sections/PageHero.astro";
 import CTABand from "../components/sections/CTABand.astro";
-import ConstellationMark from "../components/ui/ConstellationMark.astro";
 import { Image } from "astro:assets";
 import { withBase } from "../utils/paths";
 import ryanHeadshot from "../assets/UM_headshot_ryan.webp";
+import compassIcon from "../assets/um-icon-compass-detail.svg";
 
 const PRINCIPLES = [
   {
@@ -90,9 +90,18 @@ const STACK_GROUPS = [
             and you watch working software appear every Friday.
           </p>
         </div>
+        <!--
+          An <img>, not an inline SVG: the file carries a ~10KB C2PA provenance
+          block that would otherwise be pasted into the page's HTML.
+        -->
         <div class="about-story__visual" data-animate="fade" data-animate-delay="0.2">
-          <ConstellationMark class="about-story__mark" />
-          <p class="mono-note">Ursa Major, the Great Bear.<br />Home of the pointer stars.</p>
+          <img
+            class="about-story__icon"
+            src={compassIcon.src}
+            width={compassIcon.width}
+            height={compassIcon.height}
+            alt=""
+          />
         </div>
       </div>
     </div>
@@ -212,35 +221,39 @@ const STACK_GROUPS = [
     }
   }
 
+  /* A drafting-table grid that fades toward the center, so the compass sits
+     in a pool of darkness and the lines read most at the edges. Layers, top
+     to bottom: the center fade, then vertical and horizontal 1px rules. */
   .about-story__visual {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-xl) var(--space-md);
+    --grid-cell: 3rem;
+    --grid-line: rgba(165, 175, 251, 0.09);
+
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background:
-      radial-gradient(80% 90% at 50% 20%, rgba(109, 92, 245, 0.12) 0%, transparent 70%),
-      var(--ink-850);
-
-    .mono-note {
-      text-align: center;
-      line-height: 1.7;
-    }
+    overflow: hidden;
+    background-color: var(--ink-850);
+    background-image:
+      radial-gradient(
+        closest-side,
+        var(--ink-950) 0%,
+        color-mix(in srgb, var(--ink-950) 70%, transparent) 55%,
+        transparent 100%
+      ),
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      var(--grid-cell) var(--grid-cell),
+      var(--grid-cell) var(--grid-cell);
+    background-position: center;
   }
 
-  .about-story__mark {
-    width: min(16rem, 70%);
-    color: var(--peri-400);
-
-    :global(.cstar) {
-      fill: var(--star-100);
-    }
-
-    :global(.cline) {
-      stroke: rgba(165, 175, 251, 0.45);
-    }
+  .about-story__icon {
+    width: min(18rem, 62%);
+    height: auto;
   }
 
   .about-principles {
