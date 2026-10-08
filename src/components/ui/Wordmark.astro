@@ -1,6 +1,10 @@
 ---
 // The stacked "Ursa Major / Global Tech" lockup. One component so the header
 // and footer can't drift into two versions of the brand.
+//
+// The sub-line is sized in em, so setting font-size on the root (via `class`)
+// scales the whole lockup and keeps the header's proportions: 1.05rem over
+// 0.55rem, a ratio of 0.524.
 const { class: className = "" } = Astro.props;
 ---
 
@@ -24,11 +28,11 @@ const { class: className = "" } = Astro.props;
 
   .wordmark__sub {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.524em;
     font-weight: 500;
     letter-spacing: 0.38em;
     text-transform: uppercase;
     color: var(--peri-400);
-    margin-top: 0.2rem;
+    margin-top: 0.364em;
   }
 </style>

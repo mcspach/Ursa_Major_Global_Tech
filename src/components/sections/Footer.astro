@@ -18,7 +18,7 @@ const QUICK_LINKS = [
     <div class="site-footer__grid">
       <div class="site-footer__brand">
         <a href={withBase("/")} class="site-footer__brand-link" aria-label="Ursa Major Global Tech, home">
-          <Wordmark />
+          <Wordmark class="site-footer__wordmark" />
         </a>
         <p class="site-footer__tagline">Bringing Frontier AI down to earth.</p>
         <p class="site-footer__blurb">
@@ -82,6 +82,12 @@ const QUICK_LINKS = [
     display: inline-flex;
     align-items: center;
     gap: 0.875rem;
+
+    /* Footer-only scale. Nested under the link so it outranks the Wordmark's
+       own scoped 1.05rem; the sub-line follows at 0.524em (about 1.05rem). */
+    :global(.site-footer__wordmark) {
+      font-size: 2rem;
+    }
   }
 
   .site-footer__tagline {
